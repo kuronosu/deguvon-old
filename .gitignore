@@ -57,3 +57,8 @@ buck-out/
 
 # Python
 venv/*
+test.py
+ddbb.sqlite3
+*.pyc
+__pycache__/
+animes.txt
