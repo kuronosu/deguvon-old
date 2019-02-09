@@ -1,4 +1,5 @@
 from db.actions import DataBase
+from scraping.utils import generate_tokens
 import sys
 
 class Menus:
@@ -61,4 +62,5 @@ class Menus:
 
 if __name__ == '__main__':
     DataBase.create_tables()
+    generate_tokens()
     Menus.main_menu()

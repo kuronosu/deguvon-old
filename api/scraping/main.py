@@ -1,16 +1,19 @@
-import re, sys
+import re, sys, json, cfscrape
 import requests
+from requests import Session
 from bs4 import BeautifulSoup
 
+from .utils import request, replace_html_entities, get_script_gata
+
 class AnimeFactory:
-    
-    url = 'animeflv.net'
+
+    url = 'https://www.animeflv.net'
 
     @staticmethod
     def start_page_scraping(page=1):
         list_anime_links = []
         rute = '/browse?order=title&page={}'.format(page)
-        response = requests.get("https://" + AnimeFactory.url + rute)
+        response = request(AnimeFactory.url + rute)
         soup = BeautifulSoup(response.content, 'html.parser')
         listAnimes = soup.find_all('article', {'class':'Anime'})
 
@@ -23,7 +26,7 @@ class AnimeFactory:
     @staticmethod
     def get_total_pages():
         rute = '/browse'
-        response = requests.get("https://" + AnimeFactory.url + rute)
+        response = request(AnimeFactory.url + rute)
         soup = BeautifulSoup(response.content, 'html.parser')
         pagination = soup.find('ul', {'class': 'pagination'}).find_all('a')
         last_page = pagination[len(pagination)-2]['href'].split('page=')[-1]
@@ -44,52 +47,32 @@ class AnimeFactory:
     def get_anime(url):
         print('Analizando: ', url)
         rute = url
-        response = requests.get("https://" + AnimeFactory.url + rute)
+        response = request(AnimeFactory.url + rute)
+        if response.status_code != 200:
+            return None
         soup = BeautifulSoup(response.content, 'html.parser')
         containers = soup.find_all('div', {'class': 'Container'})
 
         scripts = soup.find_all('script')
         scripts.reverse()
-        script = None
-        for i in scripts:
-            if "var anime_info" in i.get_text() and "var episodes" in i.get_text():
-                script = i
-                break
-        if script is None:
-            print("Error en: " + url)
-            sys.exit(1)
-        script = script.get_text()
+        aid, name, slug, nexte_date, script = get_script_gata(scripts)
 
         # Type
         typea = containers[1].find('span', {'class': 'Type'}).string
         image = containers[2].find('div', {'class': 'AnimeCover'}).find('img')['src']
         state = containers[2].find('p', {'class': 'AnmStts'}).find('span').string
 
-        # Informacion en el script
-        anime_info = (
-                re.compile(r'var anime_info = \[[0-9"]+,.*\];')
-                    .search(script)
-                    .group(0)
-            )
-        anime_info = (re.compile(r'[0-9"]+,.*').search(anime_info).group(0)
-            .replace('"', '')
-            .replace(']', '')
-            .replace(';', '')
-            .split(','))
-
         episodes = re.compile(r"var episodes = \[.*\];").search(script).group(0)
         episodes = re.compile(r'\[[0-9,.]+\]').findall(episodes)
         episodes = [s[1:-1].split(',') for s in episodes]
 
-        aid = anime_info[0]
-        name = anime_info[1]
-        slug = anime_info[2]
-
-
         # Synopsis
         synopsis = containers[2].find('div', {'class': 'Description'}).find('p')
         synopsis = synopsis.string or synopsis.get_text()
-        synopsis = synopsis.split(';')[6][23:]
+        try:
+            synopsis = synopsis.split(';')[6][23:]
+        except Exception:
+            pass
 
         if 'idolmaster' in url or 'idolmster' in url:
             synopsis = synopsis.replace('[email protected]', 'iDOLM@STER')
@@ -105,7 +88,7 @@ class AnimeFactory:
         for e in episodes:
             episode_list.append(EpisodeScraping(
                 'Episodio {}'.format(e[0]),
-                '/ver/{}/{}-{}'.format(e[1], slug, e[0]),
+                '/ver/{}/{}-{}'.format(e[1], slug, e[0]).lower(),
                 'https://cdn.animeflv.net/screenshots/{}/{}/th_3.jpg'.format(aid, e[0])
             ))
 
@@ -116,7 +99,8 @@ class AnimeFactory:
             for i in cont_listAnmRel:
                 link = i.find('a')['href']
                 rel = re.compile(r'\([A-Za-z,\- ]+\)').search(i.get_text()).group(0)[1:-1]
-                listAnmRel.append(AnimeReltionScraping(link, rel))
+                if re.compile(r'/[0-9]+/[0-9a-zA-z\-]+').search(link):
+                    listAnmRel.append(AnimeReltionScraping(link, rel))
             del cont_listAnmRel
         else:
             listAnmRel = []
@@ -125,33 +109,22 @@ class AnimeFactory:
     
     @staticmethod
     def get_episode_data(ep_url):
-        response = requests.get("https://" + AnimeFactory.url + AnimeFactory.get_animeUrl_by_ep(ep_url))
+        response = request(AnimeFactory.url + AnimeFactory.get_animeUrl_by_ep(ep_url))
+        if response.status_code != 200:
+            return None
         soup = BeautifulSoup(response.content, 'html.parser')
         containers = soup.find_all('div', {'class': 'Container'})
 
         scripts = soup.find_all('script')
         scripts.reverse()
-        script = None
-        for i in scripts:
-            if "var anime_info" in i.get_text() and "var episodes" in i.get_text():
-                script = i.get_text()
-                break
-        
-        anime_info = re.compile(r'var anime_info = \[[0-9"]+,.*\];').search(script).group(0)
-        anime_info = (re.compile(r'[0-9"]+,.*').search(anime_info).group(0)
-            .replace('"', '')
-            .replace(']', '')
-            .replace(';', '')
-            .split(','))
-        aid = anime_info[0]
-        slug = anime_info[2]
+        aid, name, slug, nexte_date, script = get_script_gata(scripts)
 
         episodes = re.compile(r"var episodes = \[.*\];").search(script).group(0)
         episodes = re.compile(r'\[[0-9,.]+\]').findall(episodes)
         episodes = [s[1:-1].split(',') for s in episodes]
 
         for e in episodes:
-            if '/ver/{}/{}-{}'.format(e[1], slug, e[0]) == ep_url:
+            if '/ver/{}/{}-{}'.format(e[1], slug, e[0]).lower() == ep_url.lower():
                 return EpisodeScraping(
                     'Episodio {}'.format(e[0]),
                     '/ver/{}/{}-{}'.format(e[1], slug, e[0]),
@@ -160,8 +133,9 @@ class AnimeFactory:
     
     @staticmethod
     def check_recents():
-        AnimeFactory.url
-        response  = requests.get("https://" + AnimeFactory.url)
+        response  = request(AnimeFactory.url)
+        if response.status_code != 200 or response == None:
+            return []
         soup = BeautifulSoup(response.content, 'html.parser')
         lis = soup.find('ul', {'class': 'ListEpisodios'}).find_all('li')
 
@@ -175,12 +149,12 @@ class AnimeFactory:
                 'episodeText': episode_text,
                 'id': eid,
             })
-            
+
         return episodes
 
     @staticmethod
     def get_animeUrl_by_ep(ep_url):
-        response  = requests.get("https://" + AnimeFactory.url + ep_url)
+        response  = request(AnimeFactory.url + ep_url)
         soup = BeautifulSoup(response.content, 'html.parser')
         return soup.find('a', {'class': 'CapNvLs'})['href']
 

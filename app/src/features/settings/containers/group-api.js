@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
+import { View, Text } from 'react-native';
 import ApiSetting from '../components/api-setting';
 import settingsManager from '../../../utils/settings-manager';
 
 class Api extends Component {
   state = {
-    text: ''
+    text: '',
+    saveState: 'Cambios Guardados'
   }
   componentWillMount(){
     settingsManager.getSetting('API_SERVER').then(val => {
@@ -15,15 +17,27 @@ class Api extends Component {
   }
   onChangeText = text => {
     this.setState({
-      text: text
+      text: text,
+      saveState: 'Guardando cambios'
     })
+    settingsManager.setSetting('API_SERVER', text)
+      .then(val => {
+        state = {
+          saveState: 'Cambios Guardados'
+        }
+      }).catch( e => {
+        console.error(e)
+      })
   }
   render() {
     return (
-      <ApiSetting
-        text={this.state.text}
-        onChangeText={this.onChangeText}
-      />
+      <View>
+        <ApiSetting
+          text={this.state.text}
+          onChangeText={this.onChangeText}
+        />
+        <Text>{this.state.saveState}</Text>
+      </View>
     );
   }
 }

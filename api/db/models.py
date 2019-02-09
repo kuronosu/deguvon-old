@@ -55,9 +55,3 @@ class Episode(BaseModel):
 
     class Meta:
         db_table = 'Episodes'
-
-class Recent(BaseModel):
-    episode = pw.ForeignKeyField(Episode, related_name='episode')
-
-    class Meta:
-        db_table = 'Recents'

@@ -20,7 +20,7 @@ class SettingsManager{
     const exits = await this.verifyExistingSettings()
     let settings = await Storage.retrieveData('SETTINGS')
     settings[setting] = value
-    Storage.storeData(setting, value)
+    Storage.storeData('SETTINGS', settings[setting])
   }
   async getSetting(setting){
     const exits = await this.verifyExistingSettings()

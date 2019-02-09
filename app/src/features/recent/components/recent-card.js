@@ -16,14 +16,14 @@ const RecentCard = props => {
         <Image
           style={styles.cover}
           source={{
-            uri: props.image
+            uri: `http://animeflv.net${props.anime.image}`
           }}
         />
         <View style={styles.episode}>
-          <Text style={styles.episodeText}>{props.episodeText}</Text>
+          <Text style={styles.episodeText}>{props.name}</Text>
         </View>
         <View style={styles.name}>
-          <Text  numberOfLines={1} style={styles.nameText}>{props.animeName}</Text>
+          <Text  numberOfLines={1} style={styles.nameText}>{props.anime.name}</Text>
         </View>
       </View>
     </TouchableOpacity>
@@ -39,7 +39,7 @@ const styles = StyleSheet.create({
     width: screenWidth * sizePorcent,
     backgroundColor: '#484848',
     position: 'absolute',
-    bottom: 0,
+    bottom: -1,
     margin: 0,
     padding: 5,
     borderBottomRightRadius: 5,

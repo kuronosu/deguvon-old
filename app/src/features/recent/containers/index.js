@@ -16,18 +16,25 @@ export default class Recent extends Component{
   }
   fetchData(){
     this.setState({refreshing: true});
-    Api.getRecent().then(recent => {
-      this.setState({refreshing: false, recentList: recent});
-      Storage.storeData('recentList', recent);
-    }).catch(e => this.setState({refreshing: false}));
+    Api.getRecent()
+        .then(recent => {
+        console.log(recent)
+        this.setState({refreshing: false, recentList: recent});
+        Storage.storeData('recentList', recent);
+      })
+      .catch(e => {
+        this.setState({refreshing: false})
+        console.error(e)
+      });
   }
   _onRefresh = () => {
+    console.log("Recargando")
     this.fetchData()
   }
-  _onPressRecentCard({url, episodeText, id}) {
-    Alert.alert(episodeText)
+  _onPressRecentCard = () => {
   }
-  _onLongPressRecentCard(){ 
+  _onLongPressRecentCard = ({anime}) => {
+    this.props.onShowAnimeDetail(anime.aid)
   }
   renderEmtpy = () => <Empty text='Sin animes recientes'/>
   itemSeparator = () => <VerticalSeparator />

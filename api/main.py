@@ -1,7 +1,9 @@
-import requests, json, os
-from flask import Flask, jsonify, Response
+import requests, json, os, io
+from peewee import DoesNotExist
+from flask import Flask, jsonify, Response, make_response
 from bs4 import BeautifulSoup
 from db.actions import DataBase
+from scraping.utils import generate_tokens, request
 
 PORT = 3000
 DEBUG = True
@@ -11,10 +13,26 @@ app = Flask(__name__)
 app.config['JSON_AS_ASCII'] = False
 
 DataBase.create_tables()
+# generate_tokens()
+
+def json_response(data):
+    return app.response_class(
+        response=json.dumps(data, indent=1)
+            .replace("\\\\\"", "\\\"")
+            .replace("\\\\", "\\")
+            ,
+        status=200,
+        mimetype='application/json'
+    )
 
 @app.route('/api/v1/recent')
 def recent():
-    return jsonify(DataBase.update_recents())
+    return json_response(DataBase.update_recents(
+        # [
+        #     {'id': "51177", "episodeText": "Episodio 86", "url": "/ver/51177/yugioh-vrains-86"},
+        #     {'id': "51175", "episodeText": "Episodio 3", "url": "/ver/51175/kakegurui-xx-3"}
+        # ]
+    ))
 
 @app.route('/api/v1/search/<name>')
 def search(name):
@@ -23,12 +41,18 @@ def search(name):
     animes = DataBase.search(name)
     animes = [anime.to_json() for anime in animes]
     response['animes'] = animes
-    return jsonify(response)
+    return json_response(response)
 
 @app.route('/api/v1/anime/<aid>')
 def anime(aid):
     relations = {}
-    anime = DataBase.get_by_aid(aid)
+    try:
+        anime = DataBase.get_by_aid(aid)
+    except DoesNotExist:
+        return jsonify({
+            'anime': None,
+            'relations': None
+        })
     for rel in anime.listAnmRel:
         a = DataBase.get_by_url(rel.url)
         relations[a.url] = {
@@ -43,7 +67,18 @@ def anime(aid):
         'relations': relations,
         'anime': anime    
     }
-    return jsonify(response)
+    return json_response(response)
+
+@app.route('/uploads/animes/thumbs/<image>.<ext>')
+def uploads(image, ext):
+    r = request(f'https://animeflv.net/uploads/animes/thumbs/{image}.{ext}')
+    response = make_response(r.content)
+    response.headers.set('Content-Type', f'image/{ext}')
+    return response
+
+# @app.route('/screenshots/<image>.<ext>')
+
+#     return 
 
 if __name__ == '__main__':
     app.run(port = PORT, debug = DEBUG, host= '0.0.0.0')

@@ -62,3 +62,5 @@ ddbb.sqlite3
 *.pyc
 __pycache__/
 animes.txt
+scaracter.txt
+tokens.csv

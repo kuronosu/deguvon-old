@@ -3,7 +3,7 @@ import time
 from scraping.main import AnimeScraping, EpisodeScraping, AnimeReltionScraping
 from scraping.main import AnimeFactory as fla
 from db.settings import DATABASE 
-from .models import Genre, Anime, AnimeGenre, AnimeRelation, Episode, State, Recent
+from .models import Genre, Anime, AnimeGenre, AnimeRelation, Episode, State
 
 
 class DataBase:
@@ -22,12 +22,12 @@ class DataBase:
             Episode.create_table()
         if not State.table_exists():
             State.create_table()
-        if not Recent.table_exists():
-            Recent.create_table()
 
     @staticmethod
     def create_anime_record(anime):
         
+        if anime is None:
+            return
         if not isinstance(anime, AnimeScraping):
             raise TypeError("anime must be a AnimeScraping")
         
@@ -261,7 +261,7 @@ class DataBase:
         r = recent
         recent = None
         try:
-            recent = Recent.create(episode=Episode.get(Episode.url == r['url'])).save()
+            recent = Episode.get(Episode.url == r['url'])
         except DoesNotExist:
             try:
                 ep = fla.get_episode_data(r['url'])
@@ -271,31 +271,35 @@ class DataBase:
                     'image': ep.image,
                     'anime': Anime.get(Anime.url == fla.get_animeUrl_by_ep(r['url']))
                 }).save()
-                recent = Recent.create(episode=ep).save()
+                recent = Episode.get(Episode.url == r['url'])
             except DoesNotExist:
                 DataBase.create_anime_record(fla.get_anime(fla.get_animeUrl_by_ep(r['url'])))
-                recent = Recent.create(episode=Episode.get(Episode.url == r['url'])).save()
+                recent = Episode.get(Episode.url == r['url'])
+            except Exception as e:
+                print(e, r['url'], "277")
+        except Exception as e:
+                print(e, r['url'], "279")
         finally:
             return recent
 
     @staticmethod
-    def update_recents(recents=fla.check_recents()):
-        recents = list(reversed(recents))
-        recents_in_db = Recent.select()
+    def update_recents(recents=None):
+        recents_l = []
+        if not recents: recents = fla.check_recents()
 
         with DATABASE.atomic():
-            if recents_in_db.count() == 0:
-                for r in recents:
-                    DataBase.create_recent(r)
-            else:
-                rcs = [rc.episode.url for rc in recents_in_db]
-                for r in recents:
-                    if r['url'] not in rcs:
-                        DataBase.create_recent(r)
-
-        recents = []
-        for r in list(reversed(list(Recent.select())[-20:])):
-            recent = vars(EpisodeScraping(r.episode.name, r.episode.url, r.episode.image))
-            recent.update({'anime': r.episode.anime.url})
-            recents.append(recent)
-        return recents
+            for r in recents:
+                dr = DataBase.create_recent(r)
+                recent = vars(EpisodeScraping(dr.name, dr.url, dr.image))
+                aditional_data = {
+                    'anime': {
+                        'url': dr.anime.url,
+                        'name': dr.anime.name,
+                        'image': dr.anime.image,
+                        'aid': dr.anime.aid
+                    },
+                    'id':  dr.url.split('/')[2]
+                }
+                recent.update(aditional_data)
+                recents_l.append(recent)
+        return recents_l
