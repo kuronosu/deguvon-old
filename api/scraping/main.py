@@ -3,7 +3,7 @@ import requests
 from requests import Session
 from bs4 import BeautifulSoup
 
-from .utils import request, replace_html_entities, get_script_gata
+from .utils import make_request, replace_html_entities, get_script_gata
 
 class AnimeFactory:
 
@@ -13,7 +13,7 @@ class AnimeFactory:
     def start_page_scraping(page=1):
         list_anime_links = []
         rute = '/browse?order=title&page={}'.format(page)
-        response = request(AnimeFactory.url + rute)
+        response = make_request(AnimeFactory.url + rute)
         soup = BeautifulSoup(response.content, 'html.parser')
         listAnimes = soup.find_all('article', {'class':'Anime'})
 
@@ -26,7 +26,7 @@ class AnimeFactory:
     @staticmethod
     def get_total_pages():
         rute = '/browse'
-        response = request(AnimeFactory.url + rute)
+        response = make_request(AnimeFactory.url + rute)
         soup = BeautifulSoup(response.content, 'html.parser')
         pagination = soup.find('ul', {'class': 'pagination'}).find_all('a')
         last_page = pagination[len(pagination)-2]['href'].split('page=')[-1]
@@ -47,7 +47,7 @@ class AnimeFactory:
     def get_anime(url):
         print('Analizando: ', url)
         rute = url
-        response = request(AnimeFactory.url + rute)
+        response = make_request(AnimeFactory.url + rute)
         if response.status_code != 200:
             return None
         soup = BeautifulSoup(response.content, 'html.parser')
@@ -109,7 +109,7 @@ class AnimeFactory:
     
     @staticmethod
     def get_episode_data(ep_url):
-        response = request(AnimeFactory.url + AnimeFactory.get_animeUrl_by_ep(ep_url))
+        response = make_request(AnimeFactory.url + AnimeFactory.get_animeUrl_by_ep(ep_url))
         if response.status_code != 200:
             return None
         soup = BeautifulSoup(response.content, 'html.parser')
@@ -127,22 +127,21 @@ class AnimeFactory:
             if '/ver/{}/{}-{}'.format(e[1], slug, e[0]).lower() == ep_url.lower():
                 return EpisodeScraping(
                     'Episodio {}'.format(e[0]),
-                    '/ver/{}/{}-{}'.format(e[1], slug, e[0]),
+                    ep_url,
                     'https://cdn.animeflv.net/screenshots/{}/{}/th_3.jpg'.format(aid, e[0])
                 )
     
     @staticmethod
     def check_recents():
-        response  = request(AnimeFactory.url)
+        response  = make_request(AnimeFactory.url)
         if response.status_code != 200 or response == None:
             return []
         soup = BeautifulSoup(response.content, 'html.parser')
-        lis = soup.find('ul', {'class': 'ListEpisodios'}).find_all('li')
-
+        lis = (soup.find('ul', {'class': 'ListEpisodios'}) or soup.find('ul', {'class': 'List-Episodes'})).find_all('li')
         episodes = []
         for element in lis:
             episode_url = element.a['href']
-            episode_text = element.find('span', {'class': 'Capi'}).text
+            episode_text = (element.find('span', {'class': 'Capi'}) or element.find('h2', {'class': 'Title'})).text
             eid = episode_url.split('/')[2]
             episodes.append({
                 'url': episode_url,
@@ -154,7 +153,7 @@ class AnimeFactory:
 
     @staticmethod
     def get_animeUrl_by_ep(ep_url):
-        response  = request(AnimeFactory.url + ep_url)
+        response  = make_request(AnimeFactory.url + ep_url)
         soup = BeautifulSoup(response.content, 'html.parser')
         return soup.find('a', {'class': 'CapNvLs'})['href']
 

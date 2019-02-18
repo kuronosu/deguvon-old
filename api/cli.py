@@ -1,6 +1,6 @@
 from db.actions import DataBase
 from scraping.utils import generate_tokens
-import sys
+import sys, time
 
 class Menus:
     """Clase que contiene todos los menus de la app"""
@@ -23,7 +23,9 @@ class Menus:
                 salida = True
                 e = e.replace("s", "")
             if e == "1":
+                t = time.time()
                 DataBase.update_database()
+                print(time.time() - t)
                 if salida:
                     sys.exit(0)
             elif e == "2":

@@ -64,3 +64,5 @@ __pycache__/
 animes.txt
 scaracter.txt
 tokens.csv
+
+.vscode/.ropeproject

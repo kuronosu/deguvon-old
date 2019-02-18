@@ -1,9 +1,9 @@
 import requests, json, os, io
 from peewee import DoesNotExist
-from flask import Flask, jsonify, Response, make_response
+from flask import Flask, jsonify, Response, make_response, request
 from bs4 import BeautifulSoup
 from db.actions import DataBase
-from scraping.utils import generate_tokens, request
+from scraping.utils import generate_tokens, load_tokens, make_request as rq
 
 PORT = 3000
 DEBUG = True
@@ -27,12 +27,10 @@ def json_response(data):
 
 @app.route('/api/v1/recent')
 def recent():
-    return json_response(DataBase.update_recents(
-        # [
-        #     {'id': "51177", "episodeText": "Episodio 86", "url": "/ver/51177/yugioh-vrains-86"},
-        #     {'id': "51175", "episodeText": "Episodio 3", "url": "/ver/51175/kakegurui-xx-3"}
-        # ]
-    ))
+    try:
+        return json_response(DataBase.update_recents())
+    except:
+        return json_response([])
 
 @app.route('/api/v1/search/<name>')
 def search(name):
@@ -69,11 +67,12 @@ def anime(aid):
     }
     return json_response(response)
 
-@app.route('/uploads/animes/thumbs/<image>.<ext>')
+@app.route('/uploads/animes/covers/<image>.<ext>')
 def uploads(image, ext):
-    r = request(f'https://animeflv.net/uploads/animes/thumbs/{image}.{ext}')
+    r = rq(f'https://animeflv.net/uploads/animes/covers/{image}.{ext}')
     response = make_response(r.content)
     response.headers.set('Content-Type', f'image/{ext}')
+    print(request.cookies, request.headers, sep="\n")
     return response
 
 # @app.route('/screenshots/<image>.<ext>')

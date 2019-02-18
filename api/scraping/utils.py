@@ -1,7 +1,9 @@
 import cfscrape, requests, re, csv
 
+USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.109 Safari/537.36"
+
 def generate_tokens():
-    tokens = cfscrape.get_tokens("https://www.animeflv.net")
+    tokens = cfscrape.get_tokens("https://www.animeflv.net", user_agent=USER_AGENT)
     save_tokens(tokens)
     return tokens
 
@@ -27,7 +29,7 @@ def load_tokens():
     except Exception:
         return generate_tokens()
 
-def request(url):
+def make_request(url):
         cookies, userAgent = load_tokens()
         response = None
         try:

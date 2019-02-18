@@ -239,6 +239,7 @@ class DataBase:
         eList = (Episode.select()
             .join(Anime)
             .where(Episode.anime == anime)
+            .order_by(Episode.url)
         )
         episode_list = [EpisodeScraping(j.name, j.url, j.image) for j in eList ]
         
@@ -280,6 +281,8 @@ class DataBase:
         except Exception as e:
                 print(e, r['url'], "279")
         finally:
+            if recent == None:
+                print(r['url'])
             return recent
 
     @staticmethod
