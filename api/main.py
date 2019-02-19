@@ -5,7 +5,7 @@ from bs4 import BeautifulSoup
 from db.actions import DataBase
 from scraping.utils import generate_tokens, load_tokens, make_request as rq
 
-PORT = 3000
+PORT = 8001
 DEBUG = True
 PATH = os.path.dirname(os.path.abspath(__file__))
 
