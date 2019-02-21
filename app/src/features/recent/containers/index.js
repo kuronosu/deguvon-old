@@ -7,8 +7,6 @@ import Empty from "../components/empty";
 import VerticalSeparator from "../components/separator";
 import Storage from '../../../utils/storage';
 
-const listPadding = Dimensions.get('window').width * 0.034
-
 export default class Recent extends Component{
   state = {
     recentList: [],
@@ -18,13 +16,11 @@ export default class Recent extends Component{
     this.setState({refreshing: true});
     Api.getRecent()
         .then(recent => {
-        console.log(recent)
         this.setState({refreshing: false, recentList: recent});
         Storage.storeData('recentList', recent);
       })
       .catch(e => {
         this.setState({refreshing: false})
-        console.error(e)
       });
   }
   _onRefresh = () => {
@@ -37,8 +33,8 @@ export default class Recent extends Component{
     this.props.onShowAnimeDetail(anime.aid)
   }
   renderEmtpy = () => <Empty text='Sin animes recientes'/>
-  itemSeparator = () => <VerticalSeparator />
-  renderItem = ({item, index}) =>  <RecentCard onLongPress={this._onLongPressRecentCard} onPress={this._onPressRecentCard} index={index} {...item} />
+  itemSeparator = () => <VerticalSeparator mode={this.props.mode} />
+  renderItem = ({item, index}) =>  <RecentCard onLongPress={this._onLongPressRecentCard} onPress={this._onPressRecentCard} index={index} mode={this.props.mode} {...item} />
   keyExtractor = item => item.id.toString()
 
   componentWillMount (){
@@ -58,10 +54,11 @@ export default class Recent extends Component{
           data={this.state.recentList}
           ListEmptyComponent={this.renderEmtpy}
           ItemSeparatorComponent={this.itemSeparator}
-          numColumns={2}
+          numColumns={this.props.mode ? 2: 4}
+          key={this.props.mode ? 'v' : 'h'}
           renderItem={this.renderItem}
           keyExtractor={this.keyExtractor}
-          contentContainerStyle={{ padding: listPadding }}
+          contentContainerStyle={{ padding: this.props.mode? Dimensions.get('window').width * 1/30:  Dimensions.get('window').width * 1/50  }}
           onRefresh={this._onRefresh}
           refreshing={this.state.refreshing}
         />

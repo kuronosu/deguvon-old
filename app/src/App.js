@@ -1,7 +1,7 @@
 // @flow
 
 import React, { Component } from "react";
-import { View, Text } from "react-native";
+import { View, Text, Dimensions } from "react-native";
 import Layout from "./components/layout/index";
 import Settings from "./features/settings/containers";
 import Home from "./screens/containers/home";
@@ -19,7 +19,6 @@ class AnimeDetail extends Component {
 
   fetchData = () => {
     Api.getAnimeDetails(this.props.aid).then(data => {
-      console.log(data)
       this.setState({anime: data.anime, relations: data.relations, loadded: true});
     }).catch(e => this.setState({loadded: false}));
   }
@@ -51,7 +50,8 @@ class AnimeDetail extends Component {
 export default class MyApp extends Component {
   state = {
     active: 'HOME',
-    data: null
+    data: null,
+    mode: Dimensions.get('window').width < Dimensions.get('window').height
   }
   onPressNavbarButton = active => {
     this.setState({
@@ -60,14 +60,13 @@ export default class MyApp extends Component {
   }
   rederActive = () => {
     if (this.state.active == 'HOME'){
-      return <Recent onShowAnimeDetail={this.showAnimeDetail} />
+      return <Recent onShowAnimeDetail={this.showAnimeDetail} mode={this.state.mode}/>
     } else if (this.state.active == 'SETTINGS'){
       return <Settings/>
     } else if (this.state.active == 'ANIME_DETAIL'){
       return <AnimeDetail aid={this.state.data}/>
     }
-
-    return <Recent/>
+    return <Recent onShowAnimeDetail={this.showAnimeDetail} mode={this.state.mode}/>
   }
   showAnimeDetail = aid => {
     this.setState({
@@ -75,9 +74,17 @@ export default class MyApp extends Component {
       data: aid
     })
   }
+  onLayout = e => {
+    const {width, height} = Dimensions.get('window')
+    if (width > height){
+      this.setState({mode: false, screenWidth: width})
+    } else {
+      this.setState({mode: true, screenWidth: width})
+    }
+  }
   render() {
     return (
-      <Layout>
+      <Layout onLayout={this.onLayout}>
         <Header/>
         {this.rederActive()}
         <Navbar

@@ -2,7 +2,7 @@ import { AsyncStorage } from "react-native";
 import Storage from "./storage";
 
 const DEFAULTS = {
-  API_SERVER: 'http://192.168.0.36:3000'
+  API_SERVER: 'http://deguvon.kuronosu.space'
 }
 
 const VALID_TYPES = {
@@ -34,7 +34,7 @@ class SettingsManager{
   async getOrCreateBaseSettings(){
     let exits = await this.verifyExistingConfiguration()
     if (!exits){
-      this.setSetting('API_SERVER', 'http://192.168.0.36:3000')
+      this.setSetting('API_SERVER', 'http://deguvon.kuronosu.space')
     }
   }
 }

@@ -1,29 +1,84 @@
 import React from 'react';
 import { Text, View, StyleSheet, Image, Dimensions, TouchableOpacity } from 'react-native'
 
-const sizePorcent = 0.45
-const screenWidth = Dimensions.get('window').width
+const sizePercentPortrait = 0.45
+const sizePercentLandscape = 0.225
 const imageSizeRel = 238 / 339
 
 const RecentCard = props => {
+  const screenWidth = Dimensions.get('window').width 
+  const separatorSize = props.mode ? 1/30/2: 1/50/2
+  const styleSize = StyleSheet.create({
+    marginRight: {
+      marginRight: screenWidth * separatorSize
+    },
+    marginHorizontal:{
+      marginHorizontal: screenWidth * separatorSize
+    },
+    marginLeft: {
+      marginLeft: screenWidth * separatorSize
+    },
+    widthPortrait: {
+      width: screenWidth * sizePercentPortrait,
+    },
+    widthLandscape: {
+      width: screenWidth * sizePercentLandscape,
+    },
+    portrait: {
+      width: screenWidth * sizePercentPortrait,
+      height: (screenWidth / imageSizeRel) * sizePercentPortrait,
+    },
+    landscape: {
+      width: screenWidth * sizePercentLandscape,
+      height: (screenWidth / imageSizeRel) * sizePercentLandscape,
+    },
+  })
+  let marginStyle
+  if (props.mode){
+    marginStyle = props.index % 2==0 ? styleSize.marginRight: styleSize.marginLeft
+  } else {
+    switch (props.index % 4) {
+      case 0:
+        marginStyle = styleSize.marginRight
+        break;
+      case 1:
+      marginStyle = styleSize.marginHorizontal
+        break;
+      case 2:
+        marginStyle = styleSize.marginHorizontal
+          break;
+      case 3:
+      marginStyle = styleSize.marginLeft
+        break;
+      default:
+        marginStyle = styleSize.marginHorizontal
+        break;
+    }
+  }
   return (
     <TouchableOpacity
       onPress={()=>props.onPress({...props})}
       onLongPress={()=>props.onLongPress({...props})}
       activeOpacity={0.6}
-    >
-      <View style={[styles.container, props.index % 2==0 ? { marginRight: screenWidth * 0.017 } : { marginLeft: screenWidth * 0.017 }]}>
+      >
+      <View style={marginStyle}>
         <Image
-          style={styles.cover}
+          style={[
+            styles.cover,
+            !props.mode ? styleSize.landscape: styleSize.portrait
+          ]}
           source={{
-            uri: `http://animeflv.net${props.anime.image}`
+            uri: `http://deguvon.kuronosu.space${props.anime.image}`
           }}
         />
         <View style={styles.episode}>
           <Text style={styles.episodeText}>{props.name}</Text>
         </View>
-        <View style={styles.name}>
-          <Text  numberOfLines={1} style={styles.nameText}>{props.anime.name}</Text>
+        <View style={[
+            styles.name,
+            !props.mode ? styleSize.widthLandscape: styleSize.widthPortrait
+          ]}>
+          <Text numberOfLines={1} style={styles.nameText}>{props.anime.name}</Text>
         </View>
       </View>
     </TouchableOpacity>
@@ -33,10 +88,7 @@ const RecentCard = props => {
 export default RecentCard;
 
 const styles = StyleSheet.create({
-  container: {
-  },
   name: {
-    width: screenWidth * sizePorcent,
     backgroundColor: '#484848',
     position: 'absolute',
     bottom: -1,
@@ -51,8 +103,6 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   cover: {
-    width: screenWidth * sizePorcent,
-    height: (screenWidth / imageSizeRel) * sizePorcent,
     resizeMode: 'contain',
     borderRadius: 5
   },

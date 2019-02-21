@@ -3,7 +3,7 @@ import React from "react";
 
 const Layout = props => {
   return (
-    <View style={styles.container}>
+    <View style={styles.container} {...props}>
       {props.children}
     </View>
   );
