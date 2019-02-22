@@ -1,14 +1,113 @@
 import React from 'react';
-import { Text, View, StyleSheet, Image, Dimensions, TouchableOpacity } from 'react-native'
+import {
+  Text,
+  View,
+  StyleSheet,
+  Image,
+  TouchableOpacity,
+  TouchableHighlight,
+  TouchableNativeFeedback
+} from 'react-native'
 
 const sizePercentPortrait = 0.45
 const sizePercentLandscape = 0.225
 const imageSizeRel = 238 / 339
 
 const RecentCard = props => {
-  const screenWidth = Dimensions.get('window').width 
-  const separatorSize = props.mode ? 1/30/2: 1/50/2
-  const styleSize = StyleSheet.create({
+  const styles = createStyles(
+    props.screenWidth,
+    props.mode ? 1/30/2: 1/50/2
+  )
+  let marginStyle
+  if (props.mode){
+    marginStyle = props.index % 2==0 ? styles.marginRight: styles.marginLeft
+  } else {
+    switch (props.index % 4) {
+      case 0:
+        marginStyle = styles.marginRight
+        break;
+      case 1:
+      marginStyle = styles.marginHorizontal
+        break;
+      case 2:
+        marginStyle = styles.marginHorizontal
+          break;
+      case 3:
+      marginStyle = styles.marginLeft
+        break;
+      default:
+        marginStyle = styles.marginHorizontal
+        break;
+    }
+  }
+  return (
+    <TouchableNativeFeedback
+      onPress={()=>props.onPress({...props})}
+      onLongPress={()=>props.onLongPress({...props})}
+      // activeOpacity={0.3}
+      background={TouchableNativeFeedback.Ripple("#000")}
+      useForeground={true}
+      >
+      <View style={marginStyle}>
+        <Image
+          style={[
+            styles.cover,
+            !props.mode ? styles.landscape: styles.portrait
+          ]}
+          source={{
+            uri: `http://deguvon.kuronosu.space${props.anime.image}`
+          }}
+        />
+        <View style={styles.episode}>
+          <Text style={styles.episodeText}>{props.name}</Text>
+        </View>
+        <View style={[
+            styles.name,
+            !props.mode ? styles.widthLandscape: styles.widthPortrait
+          ]}>
+          <Text numberOfLines={1} style={styles.nameText}>{props.anime.name}</Text>
+        </View>
+      </View>
+    </TouchableNativeFeedback>
+  );
+};
+
+export default RecentCard;
+
+const createStyles = (screenWidth, separatorSize) => (
+  StyleSheet.create({
+    name: {
+      backgroundColor: '#484848',
+      position: 'absolute',
+      bottom: -1,
+      margin: 0,
+      padding: 5,
+      borderBottomRightRadius: 5,
+      borderBottomLeftRadius: 5,
+    },
+    nameText: {
+      color: '#fafafa',
+      fontSize: 17,
+      flex: 1,
+    },
+    cover: {
+      resizeMode: 'contain',
+      borderRadius: 5
+    },
+    episode: {
+      position:'absolute',
+      left: 0,
+      top: 0,
+      backgroundColor: '#FF9800',//'#ff7e00',
+      borderBottomEndRadius: 15,
+      borderTopStartRadius: 5
+    },
+    episodeText: {
+      color: 'white',
+      fontSize: 15,
+      paddingVertical: 5,
+      paddingHorizontal: 7
+    },
     marginRight: {
       marginRight: screenWidth * separatorSize
     },
@@ -31,95 +130,6 @@ const RecentCard = props => {
     landscape: {
       width: screenWidth * sizePercentLandscape,
       height: (screenWidth / imageSizeRel) * sizePercentLandscape,
-    },
-  })
-  let marginStyle
-  if (props.mode){
-    marginStyle = props.index % 2==0 ? styleSize.marginRight: styleSize.marginLeft
-  } else {
-    switch (props.index % 4) {
-      case 0:
-        marginStyle = styleSize.marginRight
-        break;
-      case 1:
-      marginStyle = styleSize.marginHorizontal
-        break;
-      case 2:
-        marginStyle = styleSize.marginHorizontal
-          break;
-      case 3:
-      marginStyle = styleSize.marginLeft
-        break;
-      default:
-        marginStyle = styleSize.marginHorizontal
-        break;
     }
-  }
-  return (
-    <TouchableOpacity
-      onPress={()=>props.onPress({...props})}
-      onLongPress={()=>props.onLongPress({...props})}
-      activeOpacity={0.6}
-      >
-      <View style={marginStyle}>
-        <Image
-          style={[
-            styles.cover,
-            !props.mode ? styleSize.landscape: styleSize.portrait
-          ]}
-          source={{
-            uri: `http://deguvon.kuronosu.space${props.anime.image}`
-          }}
-        />
-        <View style={styles.episode}>
-          <Text style={styles.episodeText}>{props.name}</Text>
-        </View>
-        <View style={[
-            styles.name,
-            !props.mode ? styleSize.widthLandscape: styleSize.widthPortrait
-          ]}>
-          <Text numberOfLines={1} style={styles.nameText}>{props.anime.name}</Text>
-        </View>
-      </View>
-    </TouchableOpacity>
-  );
-};
-
-export default RecentCard;
-
-const styles = StyleSheet.create({
-  name: {
-    backgroundColor: '#484848',
-    position: 'absolute',
-    bottom: -1,
-    margin: 0,
-    padding: 5,
-    borderBottomRightRadius: 5,
-    borderBottomLeftRadius: 5,
-  },
-  nameText: {
-    color: '#fafafa',
-    fontSize: 17,
-    flex: 1,
-  },
-  cover: {
-    resizeMode: 'contain',
-    borderRadius: 5
-  },
-  episode: {
-    position:'absolute',
-    left: 0,
-    top: 0,
-    backgroundColor: '#FF9800',//'#ff7e00',
-    borderBottomEndRadius: 15,
-    borderTopStartRadius: 5
-  },
-  episodeText: {
-    color: 'white',
-    fontSize: 15,
-    paddingVertical: 5,
-    paddingHorizontal: 7
-  },
-  title: {
-  }
-})
+  })
+)

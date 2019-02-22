@@ -1,64 +1,66 @@
 import React, { Component } from "react";
-import { Text, FlatList, AsyncStorage, Dimensions, Alert } from "react-native";
+import { FlatList } from "react-native";
+import { connect } from 'react-redux';
 import Layout from "../components/recent-layout";
 import RecentCard from "../components/recent-card";
 import Api from '../../../api/index'
 import Empty from "../components/empty";
 import VerticalSeparator from "../components/separator";
-import Storage from '../../../utils/storage';
 
-export default class Recent extends Component{
+class Recent extends Component{
   state = {
-    recentList: [],
-    refreshing: false,
+    refreshing: false
   }
-  fetchData(){
-    this.setState({refreshing: true});
-    Api.getRecent()
-        .then(recent => {
-        this.setState({refreshing: false, recentList: recent});
-        Storage.storeData('recentList', recent);
+  componentDidMount(){
+    this._fetchData()
+  }
+  async _fetchData(){
+    try {
+      this.setState({refreshing: true})
+      let recentList = await Api.getRecent();
+      this.props.dispatch({
+        type: 'SET_RECENT_DATA',
+        payload: {
+          recentList
+        }
       })
-      .catch(e => {
-        this.setState({refreshing: false})
-      });
+      this.setState({refreshing: false})
+    } catch (error) {
+      this.setState({refreshing: false})
+    }
   }
   _onRefresh = () => {
-    console.log("Recargando")
-    this.fetchData()
+    this._fetchData()
   }
   _onPressRecentCard = () => {
   }
   _onLongPressRecentCard = ({anime}) => {
     this.props.onShowAnimeDetail(anime.aid)
   }
-  renderEmtpy = () => <Empty text='Sin animes recientes'/>
-  itemSeparator = () => <VerticalSeparator mode={this.props.mode} />
-  renderItem = ({item, index}) =>  <RecentCard onLongPress={this._onLongPressRecentCard} onPress={this._onPressRecentCard} index={index} mode={this.props.mode} {...item} />
-  keyExtractor = item => item.id.toString()
+  _renderEmtpy = () => <Empty text='Sin animes recientes'/>
+  _itemSeparator = () => <VerticalSeparator mode={this.props.mode} />
+  _renderItem = ({item, index}) =>  <RecentCard
+    onLongPress={this._onLongPressRecentCard}
+    onPress={this._onPressRecentCard}
+    index={index}
+    mode={this.props.mode}
+    screenWidth={this.props.screenWidth}
+    {...item}
+  />
+  _keyExtractor = item => item.id.toString()
 
-  componentWillMount (){
-    Storage.retrieveData('recentList', []).then( recent => {
-      this.setState({
-        recentList: recent,
-      })
-    })
-  }
-  componentDidMount(){
-    this.fetchData()
-  }
   render(){
     return(
       <Layout>
         <FlatList
-          data={this.state.recentList}
-          ListEmptyComponent={this.renderEmtpy}
-          ItemSeparatorComponent={this.itemSeparator}
+          data={this.props.list}
+          ListEmptyComponent={this._renderEmtpy}
+          ItemSeparatorComponent={this._itemSeparator}
           numColumns={this.props.mode ? 2: 4}
           key={this.props.mode ? 'v' : 'h'}
-          renderItem={this.renderItem}
-          keyExtractor={this.keyExtractor}
-          contentContainerStyle={{ padding: this.props.mode? Dimensions.get('window').width * 1/30:  Dimensions.get('window').width * 1/50  }}
+          renderItem={this._renderItem}
+          keyExtractor={this._keyExtractor}
+          contentContainerStyle={{ padding: this.props.mode? this.props.screenWidth * 1/30:  this.props.screenWidth * 1/50  }}
           onRefresh={this._onRefresh}
           refreshing={this.state.refreshing}
         />
@@ -66,3 +68,13 @@ export default class Recent extends Component{
     )
   }
 }
+
+function mapStateToProps(state) {
+  return {
+    list: state.recent.recentList,
+    mode: state.device.screenMode,
+    screenWidth: state.device.screenSize.width
+  }
+}
+
+export default connect(mapStateToProps)(Recent);

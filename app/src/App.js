@@ -1,14 +1,16 @@
-// @flow
-
 import React, { Component } from "react";
 import { View, Text, Dimensions } from "react-native";
-import Layout from "./components/layout/index";
+import { Provider } from 'react-redux';
+import { PersistGate } from "redux-persist/integration/react";
+
 import Settings from "./features/settings/containers";
 import Home from "./screens/containers/home";
 import Header from "./features/header/components";
 import Recent from "./features/recent/containers";
 import Navbar from "./navigation/containers/navbar";
-import Api from './api/index'
+import Api from './api/index';
+import Loading from './screens/components/loading'
+import { store, persistor } from './store';
 
 class AnimeDetail extends Component {
 
@@ -60,13 +62,13 @@ export default class MyApp extends Component {
   }
   rederActive = () => {
     if (this.state.active == 'HOME'){
-      return <Recent onShowAnimeDetail={this.showAnimeDetail} mode={this.state.mode}/>
+      return <Recent onShowAnimeDetail={this.showAnimeDetail}/>
     } else if (this.state.active == 'SETTINGS'){
       return <Settings/>
     } else if (this.state.active == 'ANIME_DETAIL'){
       return <AnimeDetail aid={this.state.data}/>
     }
-    return <Recent onShowAnimeDetail={this.showAnimeDetail} mode={this.state.mode}/>
+    return <Recent onShowAnimeDetail={this.showAnimeDetail}/>
   }
   showAnimeDetail = aid => {
     this.setState({
@@ -75,22 +77,36 @@ export default class MyApp extends Component {
     })
   }
   onLayout = e => {
-    const {width, height} = Dimensions.get('window')
-    if (width > height){
-      this.setState({mode: false, screenWidth: width})
-    } else {
-      this.setState({mode: true, screenWidth: width})
-    }
+    this.updateScreenInfo()
+  }
+  updateScreenInfo(){
+    const d = Dimensions.get('window')
+    store.dispatch({
+      type: 'SET_DEVICE_DATA',
+      payload: {
+        screenMode: d.width < d.height,
+        screenSize: d
+      }
+    })
+  }
+  componentWillMount(){
+    this.updateScreenInfo()
   }
   render() {
     return (
-      <Layout onLayout={this.onLayout}>
-        <Header/>
-        {this.rederActive()}
-        <Navbar
-          onPressButton={this.onPressNavbarButton}
-        />
-      </Layout>
+      <Provider
+        store={store}
+      >
+        <PersistGate loading={<Loading/>} persistor={persistor}>
+          <Home onLayout={this.onLayout}>
+            <Header/>
+            {this.rederActive()}
+            <Navbar
+              onPressButton={this.onPressNavbarButton}
+            />
+          </Home>
+        </PersistGate>
+      </Provider>
     );
   }
 }
