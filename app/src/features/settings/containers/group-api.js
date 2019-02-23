@@ -1,45 +1,75 @@
 import React, { Component } from 'react';
 import { View, Text } from 'react-native';
+import { connect } from "react-redux";
+
+import SettingLayout from '../components/setting-layout';
+
 import ApiSetting from '../components/api-setting';
-import settingsManager from '../../../utils/settings-manager';
 
 class Api extends Component {
   state = {
-    text: '',
     saveState: 'Cambios Guardados'
   }
-  componentWillMount(){
-    settingsManager.getSetting('API_SERVER').then(val => {
-      this.setState({
-        text: val
-      })
+  onChangeHostText = text => {
+    this.setState({
+      saveState: 'Guardando cambios...'
+    })
+    this.props.dispatch({
+      type: 'SET_CONFIG',
+      payload: {
+        api: {
+          host: text,
+          route: this.props.route
+        }
+      }
+    })
+    this.setState({
+      saveState: 'Cambios Guardados'
     })
   }
-  onChangeText = text => {
+  onChangeRouteText = text => {
     this.setState({
-      text: text,
-      saveState: 'Guardando cambios'
+      saveState: 'Guardando cambios...'
     })
-    settingsManager.setSetting('API_SERVER', text)
-      .then(val => {
-        state = {
-          saveState: 'Cambios Guardados'
+    this.props.dispatch({
+      type: 'SET_CONFIG',
+      payload: {
+        api: {
+          host: this.props.host,
+          route: text
         }
-      }).catch( e => {
-        console.error(e)
-      })
+      }
+    })
+    this.setState({
+      saveState: 'Cambios Guardados'
+    })
   }
   render() {
     return (
-      <View>
+      <SettingLayout title='Api'>
         <ApiSetting
-          text={this.state.text}
-          onChangeText={this.onChangeText}
+          title='Api host'
+          value={this.props.host || ''}
+          onChangeText={this.onChangeHostText}
+          warningText='Modificar esta configuracion prodria hacer la que aplicacion deje de funcionar'
+        />
+        <ApiSetting
+          title='Api route'
+          value={this.props.route || ''}
+          onChangeText={this.onChangeRouteText}
+          warningText='Modificar esta configuracion prodria hacer la que aplicacion deje de funcionar'
         />
         <Text>{this.state.saveState}</Text>
-      </View>
+      </SettingLayout>
     );
   }
 }
 
-export default Api;
+const mapStateToProps = state => {
+  return {
+    host: state.config.api.host,
+    route: state.config.api.route
+  }
+}
+
+export default connect(mapStateToProps)(Api);

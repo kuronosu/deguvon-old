@@ -1,18 +1,25 @@
 import React from 'react';
-import { TextInput, Text, StyleSheet } from 'react-native';
+import { TextInput, Text, StyleSheet, View } from 'react-native';
 import SettingLayout from './setting-layout';
 
-const ApiSetting = ({text, onChangeText}) => {
+const ApiSetting = props => {
   return (
-    <SettingLayout title='Api'>
-    <Text style={[styles.label]}>Api host</Text>
+    <View>
+      <Text style={[styles.label]}>{props.title}</Text>
       <TextInput
         style={styles.input}
-        onChangeText={onChangeText}
-        value={text}
+        onChangeText={props.onChangeText}
+        value={props.value}
       />
-      <Text style={[styles.info, styles.warning]}>Modificar esta configuracion prodria hacer la que aplicacion deje de funcionar</Text>
-    </SettingLayout>
+      {
+        props.helpText &&
+        <Text style={styles.info}>{props.helpText}</Text>
+      }
+      {
+        props.warningText &&
+        <Text style={[styles.info, styles.warning]}>{props.warningText}</Text>
+      }
+    </View>
   );
 };
 
@@ -20,7 +27,7 @@ export default ApiSetting;
 
 const styles = StyleSheet.create({
   info: {
-    fontSize: 10,
+    fontSize: 12,
     color: 'black',
     margin: 15,
     marginTop: 0

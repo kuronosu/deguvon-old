@@ -15,7 +15,8 @@ const persistConfig = {
 
 const defaultStore = {
   recent: {recentList: [], refreshing: false},
-  deviceInfo: {screenMode: true, screenSize: {}}
+  device: {screenMode: true, screenSize: {}},
+  config: {api: {host: 'deguvon.kuronosu.space', route: '/api/v1'}}
 }
 
 const persistedReducer = persistReducer(persistConfig, reducer)
