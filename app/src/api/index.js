@@ -1,17 +1,18 @@
-import SettingsManager from "../utils/settings-manager";
+import { store } from '../store';
 
 class Api {
-  async getBaseApi(){
-    return 'http://deguvon.kuronosu.space/api/v1'
+  getBaseApi(){
+    const { host, route} = store.getState().config.api
+    return `http://${host}${route}`
   }
   async getRecent() {
-    let base = await this.getBaseApi() + '/recent'
+    let base = `${this.getBaseApi()}/recent`
     const query = await fetch(base)
     const recent = await query.json()
     return recent
   }
   async getAnimeDetails(aid) {
-    let base = await this.getBaseApi() + `/anime/${aid}`
+    let base = `${this.getBaseApi()}/anime/${aid}`
     const query = await fetch(base)
     const recent = await query.json()
     return recent

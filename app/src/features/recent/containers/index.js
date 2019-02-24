@@ -1,5 +1,5 @@
-import React, { Component } from "react";
-import { FlatList } from "react-native";
+import React, { PureComponent } from "react";
+import { FlatList, Alert } from "react-native";
 import { connect } from 'react-redux';
 import Layout from "../components/recent-layout";
 import RecentCard from "../components/recent-card";
@@ -7,7 +7,7 @@ import Api from '../../../api/index'
 import Empty from "../components/empty";
 import VerticalSeparator from "../components/separator";
 
-class Recent extends Component{
+class Recent extends PureComponent{
   state = {
     refreshing: false
   }
@@ -27,6 +27,14 @@ class Recent extends Component{
       this.setState({refreshing: false})
     } catch (error) {
       this.setState({refreshing: false})
+      Alert.alert(
+        "Error",
+        "Error al obtener los ultimos episodios, revise la configuracion del api",
+        [
+          {text: 'OK', onPress: () => {}},
+        ],
+        {cancelable: false}
+      )
     }
   }
   _onRefresh = () => {
