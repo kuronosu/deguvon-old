@@ -6,7 +6,7 @@ while __name__ == '__main__':
     rs = 0
     try:
         rs = len(DataBase.update_recents())
-    except:
-        pass
+    except Exception as e:
+        print(datetime.datetime.now(), "ERROR: ", e)
     print(datetime.datetime.now(), 'Recientes actualizados', rs)
-    time.sleep(2)
+    time.sleep(2*60)

@@ -8,7 +8,7 @@ def generate_tokens():
     return tokens
 
 def save_tokens(tokens):
-    with open('tokens.csv', 'a', newline='') as f:
+    with open('tokens.csv', 'w', newline='') as f:
         writer = csv.writer(f, delimiter=',', quotechar='"')
         cookies = "; ".join([str(x)+"="+str(y) for x,y in tokens[0].items()])
         agent = tokens[1]
@@ -29,20 +29,20 @@ def load_tokens():
     except Exception:
         return generate_tokens()
 
-def make_request(url):
+def make_request(url, stream=False):
         cookies, userAgent = load_tokens()
         response = None
         try:
-            response = requests.get(url, headers={'user-agent': userAgent}, cookies=cookies)
+            response = requests.get(url, headers={'user-agent': userAgent}, cookies=cookies, stream=stream)
             if response.status_code == 404:
                 return response
             if response.status_code != 200:
                 cookies, userAgent = generate_tokens()
-                response = requests.get(url, headers={'user-agent': userAgent}, cookies=cookies)
+                response = requests.get(url, headers={'user-agent': userAgent}, cookies=cookies, stream=stream)
         except Exception as e:
             print(e, "utils")
             cookies, userAgent = generate_tokens()
-            response = requests.get(url, headers={'user-agent': userAgent}, cookies=cookies)
+            response = requests.get(url, headers={'user-agent': userAgent}, cookies=cookies, stream=stream)
         finally:
             return response
 

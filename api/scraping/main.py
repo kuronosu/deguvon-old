@@ -128,7 +128,7 @@ class AnimeFactory:
                 return EpisodeScraping(
                     'Episodio {}'.format(e[0]),
                     ep_url,
-                    'https://cdn.animeflv.net/screenshots/{}/{}/th_3.jpg'.format(aid, e[0])
+                    'http://deguvon.kuronosu.space/screenshots/{}/{}/th_3.jpg'.format(aid, e[0])
                 )
     
     @staticmethod
