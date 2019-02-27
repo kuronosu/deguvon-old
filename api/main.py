@@ -83,11 +83,11 @@ def serve_image(source, image=None, aid=None, episode=None, th=None, ext=None):
         url = f'https://cdn.animeflv.net/screenshots/{aid}/{episode}/th_{th}.{ext}'
     else:
         abort(404)
-    os.makedirs(path, exist_ok=True)
     if not os.path.exists(file_path):
         r = rq(url, stream=True)
         if r is None or r.status_code != 200:
             abort(404)
+        os.makedirs(path, exist_ok=True)
         with open(file_path, 'wb') as f:
             r.raw.decode_content = True
             shutil.copyfileobj(r.raw, f)
@@ -99,7 +99,7 @@ def uploads(image, ext):
 
 @app.route('/screenshots/<aid>/<episode>/th_<th>.<ext>')
 def screenshots(aid, episode, th, ext):
-    return serve_image(ImageSource.UPLOADS, aid=aid, episode=episode, th=th, ext=ext)
+    return serve_image(ImageSource.SCREENSHOTS, aid=aid, episode=episode, th=th, ext=ext)
 
 if __name__ == '__main__':
     app.run(port = PORT, debug = DEBUG, host= '0.0.0.0')
