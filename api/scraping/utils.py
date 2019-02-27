@@ -1,48 +1,45 @@
-import cfscrape, requests, re, csv
+import cfscrape, requests, re
 
 USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.109 Safari/537.36"
 
-def generate_tokens():
-    tokens = cfscrape.get_tokens("https://www.animeflv.net", user_agent=USER_AGENT)
-    save_tokens(tokens)
-    return tokens
+def generate_cookies():
+    cookies = cfscrape.get_cookie_string("https://www.animeflv.net", user_agent=USER_AGENT)[0]
+    save_cookies(cookies)
+    return cookies
 
-def save_tokens(tokens):
-    with open('tokens.csv', 'w', newline='') as f:
-        writer = csv.writer(f, delimiter=',', quotechar='"')
-        cookies = "; ".join([str(x)+"="+str(y) for x,y in tokens[0].items()])
-        agent = tokens[1]
-        writer.writerow([cookies, agent])
+def cookies_to_dict(string_cookies):
+    cookies = {}
+    for c in string_cookies.split("; "):
+        n, v = c.split("=")
+        cookies[n] = v
+    return cookies
 
-def load_tokens():
-    last = None
+def save_cookies(cookies):
+    with open('cookies', 'w') as f:
+        f.write(cookies)
+
+def load_cookies():
     try:
-        with open('tokens.csv', newline='') as f:
-            reader = csv.reader(f, delimiter=',')
-            for row in reader:
-                last = row
-        cookies = {}
-        for c in last[0].split("; "):
-            n, v = c.split("=")
-            cookies[n] = v
-        return (cookies, last[1])
+        with open('cookies', 'r') as f:
+            return cookies_to_dict(f.read())
     except Exception:
-        return generate_tokens()
+        return cookies_to_dict(generate_cookies())
 
 def make_request(url, stream=False):
-        cookies, userAgent = load_tokens()
-        response = None
+        cookies =  load_cookies()
+        response = requests.Response()
+        response.status_code = 404
         try:
-            response = requests.get(url, headers={'user-agent': userAgent}, cookies=cookies, stream=stream)
+            response = requests.get(url, headers={'user-agent': USER_AGENT}, cookies=cookies, stream=stream)
             if response.status_code == 404:
                 return response
             if response.status_code != 200:
-                cookies, userAgent = generate_tokens()
-                response = requests.get(url, headers={'user-agent': userAgent}, cookies=cookies, stream=stream)
+                cookies =  cookies_to_dict(generate_cookies())
+                response = requests.get(url, headers={'user-agent': USER_AGENT}, cookies=cookies, stream=stream)
         except Exception as e:
             print(e, "utils")
-            cookies, userAgent = generate_tokens()
-            response = requests.get(url, headers={'user-agent': userAgent}, cookies=cookies, stream=stream)
+            cookies =  cookies_to_dict(generate_cookies())
+            response = requests.get(url, headers={'user-agent': USER_AGENT}, cookies=cookies, stream=stream)
         finally:
             return response
 

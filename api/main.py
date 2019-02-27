@@ -4,7 +4,7 @@ from peewee import DoesNotExist
 from flask import Flask, jsonify, Response, make_response, request, send_file, abort
 from bs4 import BeautifulSoup
 from db.actions import DataBase
-from scraping.utils import generate_tokens, load_tokens, make_request as rq
+from scraping.utils import make_request as rq
 
 class ImageSource(Enum):
     UPLOADS = 0
@@ -73,11 +73,11 @@ def anime(aid):
     return json_response(response)
 
 def serve_image(source, image=None, aid=None, episode=None, th=None, ext=None):
-    if source == ImageSource.UPLOADS and not (image is None or ext is None) :
+    if source is ImageSource.UPLOADS and not (image is None or ext is None) :
         path = os.path.join(PATH, 'images', 'covers')
         file_path = os.path.join(path, f'{image}.{ext}')
         url = f'https://animeflv.net/uploads/animes/covers/{image}.{ext}'
-    elif source == ImageSource.SCREENSHOTS and not (aid is None or episode is None or th is None or ext is None):
+    elif source is ImageSource.SCREENSHOTS and not (aid is None or episode is None or th is None or ext is None):
         path = os.path.join(PATH, 'images', 'screenshots', aid, episode)
         file_path = os.path.join(path, f'th_{th}.{ext}')
         url = f'https://cdn.animeflv.net/screenshots/{aid}/{episode}/th_{th}.{ext}'

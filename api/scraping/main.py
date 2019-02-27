@@ -1,6 +1,4 @@
-import re, sys, json, cfscrape
-import requests
-from requests import Session
+import re, json
 from bs4 import BeautifulSoup
 
 from .utils import make_request, replace_html_entities, get_script_gata
@@ -12,7 +10,7 @@ class AnimeFactory:
     @staticmethod
     def start_page_scraping(page=1):
         list_anime_links = []
-        rute = '/browse?order=title&page={}'.format(page)
+        rute = f'/browse?order=title&page={page}'
         response = make_request(AnimeFactory.url + rute)
         soup = BeautifulSoup(response.content, 'html.parser')
         listAnimes = soup.find_all('article', {'class':'Anime'})
@@ -38,7 +36,7 @@ class AnimeFactory:
         a = AnimeFactory.get_total_pages()
         list_anime_links = []
         for i in range(1, a+1):
-            print("Analizando pagina: {}".format(i))
+            print(f"Analizando pagina: {i}")
             tmpl = AnimeFactory.start_page_scraping(i)
             list_anime_links += tmpl
         return list_anime_links
@@ -87,9 +85,9 @@ class AnimeFactory:
         episode_list = []
         for e in episodes:
             episode_list.append(EpisodeScraping(
-                'Episodio {}'.format(e[0]),
-                '/ver/{}/{}-{}'.format(e[1], slug, e[0]).lower(),
-                'https://cdn.animeflv.net/screenshots/{}/{}/th_3.jpg'.format(aid, e[0])
+                f'Episodio {e[0]}',
+                f'/ver/{e[1]}/{slug}-{e[0]}'.lower(),
+                f'http://deguvon.kuronosu.space/screenshots/{aid}/{e[0]}/th_3.jpg'
             ))
 
         listAnmRel = containers[2].find('ul', {'class': 'ListAnmRel'})
@@ -113,7 +111,7 @@ class AnimeFactory:
         if response.status_code != 200:
             return None
         soup = BeautifulSoup(response.content, 'html.parser')
-        containers = soup.find_all('div', {'class': 'Container'})
+        # containers = soup.find_all('div', {'class': 'Container'})
 
         scripts = soup.find_all('script')
         scripts.reverse()
@@ -124,11 +122,11 @@ class AnimeFactory:
         episodes = [s[1:-1].split(',') for s in episodes]
 
         for e in episodes:
-            if '/ver/{}/{}-{}'.format(e[1], slug, e[0]).lower() == ep_url.lower():
+            if f'/ver/{e[1]}/{slug}-{e[0]}'.lower() == ep_url.lower():
                 return EpisodeScraping(
-                    'Episodio {}'.format(e[0]),
+                    f'Episodio {e[0]}',
                     ep_url,
-                    'http://deguvon.kuronosu.space/screenshots/{}/{}/th_3.jpg'.format(aid, e[0])
+                    f'http://deguvon.kuronosu.space/screenshots/{aid}/{e[0]}/th_3.jpg'
                 )
     
     @staticmethod
@@ -196,31 +194,19 @@ class AnimeScraping:
         self.listAnmRel = listAnmRel
     
     def __str__(self):
-        string = """
-aid: {}
-url: {}
-slug: {}
-name: {}
-image = {}
-typea: {}
-state: {}
-synopsis: {}
-genres: {}
-episode_list: {}
-listAnmRel: {}
-        """.format(
-                self.aid,
-                self.url,
-                self.slug,
-                self.name,
-                self.image,
-                self.typea,
-                self.state,
-                self.synopsis,
-                self.genres,
-                str([str(i) for i in self.episode_list]),
-                str([str(i) for i in self.listAnmRel])
-            )
+        string = f"""
+aid: {self.aid}
+url: {self.url}
+slug: {self.slug}
+name: {self.name}
+image: {self.image}
+typea: {self.typea}
+state: {self.state}
+synopsis: {self.synopsis}
+genres: {self.genres}
+episode_list: {str([str(i) for i in self.episode_list])}
+listAnmRel: {str([str(i) for i in self.listAnmRel])}
+        """
         return string
 
         
