@@ -1,8 +1,8 @@
 from peewee import DoesNotExist
 import time
-from scraping.main import AnimeScraping, EpisodeScraping, AnimeReltionScraping
-from scraping.main import AnimeFactory as fla
-from db.settings import DATABASE 
+from scrape.main import AnimeScraping, EpisodeScraping, AnimeReltionScraping
+from scrape.main import AnimeFactory as fla
+from .settings import DATABASE 
 from .models import Genre, Anime, AnimeGenre, AnimeRelation, Episode, State
 
 

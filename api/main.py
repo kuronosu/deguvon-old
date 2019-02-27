@@ -4,7 +4,7 @@ from peewee import DoesNotExist
 from flask import Flask, jsonify, Response, make_response, request, send_file, abort
 from bs4 import BeautifulSoup
 from db.actions import DataBase
-from scraping.utils import make_request as rq
+from scrape.utils import make_request as rq
 
 class ImageSource(Enum):
     UPLOADS = 0
