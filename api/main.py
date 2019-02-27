@@ -74,11 +74,11 @@ def anime(aid):
 
 def serve_image(source, image=None, aid=None, episode=None, th=None, ext=None):
     if source == ImageSource.UPLOADS and not (image is None or ext is None) :
-        path = os.path.join(PATH, 'image', 'covers')
+        path = os.path.join(PATH, 'images', 'covers')
         file_path = os.path.join(path, f'{image}.{ext}')
         url = f'https://animeflv.net/uploads/animes/covers/{image}.{ext}'
     elif source == ImageSource.SCREENSHOTS and not (aid is None or episode is None or th is None or ext is None):
-        path = os.path.join(PATH, 'image', 'screenshots', aid, episode)
+        path = os.path.join(PATH, 'images', 'screenshots', aid, episode)
         file_path = os.path.join(path, f'th_{th}.{ext}')
         url = f'https://cdn.animeflv.net/screenshots/{aid}/{episode}/th_{th}.{ext}'
     else:
