@@ -1,5 +1,5 @@
 from gevent.pywsgi import WSGIServer
-from main import app, PORT
+from server import app, PORT
 
 if __name__ == '__main__':
     app.debug = False

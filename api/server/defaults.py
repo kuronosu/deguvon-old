@@ -1,0 +1,5 @@
+
+BASE_DIR = None
+JSON_AS_ASCII = False
+PORT = 8001
+DEBUG = False

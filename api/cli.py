@@ -1,5 +1,5 @@
 from db.actions import DataBase
-from scraping.utils import generate_cookies
+from scrape.utils import generate_cookies
 import sys, time
 
 class Menus:
