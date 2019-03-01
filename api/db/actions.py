@@ -306,3 +306,15 @@ class DataBase:
                 recent.update(aditional_data)
                 recents_l.append(recent)
         return recents_l
+    
+    @staticmethod
+    def all():
+        directory = {}
+        with DATABASE.atomic():
+            anime_list = Anime.select().order_by(Anime.aid)
+            for anime in anime_list:
+                try:
+                    directory[anime.aid] = DataBase.get_by_url(anime.url).to_json()
+                except:
+                    pass
+        return directory

@@ -1,9 +1,9 @@
 import json
 from flask.wrappers import Response
 
-def json_response(data):
+def json_response(data, indent=1):
     return Response(
-        response=json.dumps(data, indent=1)
+        response=json.dumps(data, indent=indent)
             .replace("\\\\\"", "\\\"")
             .replace("\\\\", "\\")
             ,
