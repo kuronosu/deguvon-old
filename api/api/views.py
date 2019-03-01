@@ -83,5 +83,6 @@ def uploads(image, ext):
 def screenshots(aid, episode, th, ext):
     return serve_image(ImageSource.SCREENSHOTS, aid=aid, episode=episode, th=th, ext=ext)
 
+
 def directory():
     return json_response(DataBase.all(), None)

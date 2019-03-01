@@ -87,7 +87,7 @@ class AnimeFactory:
             episode_list.append(EpisodeScraping(
                 f'Episodio {e[0]}',
                 f'/ver/{e[1]}/{slug}-{e[0]}'.lower(),
-                f'http://deguvon.kuronosu.space/screenshots/{aid}/{e[0]}/th_3.jpg'
+                f'/screenshots/{aid}/{e[0]}/th_3.jpg'
             ))
 
         listAnmRel = containers[2].find('ul', {'class': 'ListAnmRel'})
@@ -126,7 +126,7 @@ class AnimeFactory:
                 return EpisodeScraping(
                     f'Episodio {e[0]}',
                     ep_url,
-                    f'http://deguvon.kuronosu.space/screenshots/{aid}/{e[0]}/th_3.jpg'
+                    f'/screenshots/{aid}/{e[0]}/th_3.jpg'
                 )
     
     @staticmethod
