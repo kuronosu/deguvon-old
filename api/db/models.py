@@ -48,7 +48,7 @@ class AnimeRelation(BaseModel):
         db_table = 'AnimeRelations'
 
 class Episode(BaseModel):
-    number = pw.IntegerField(unique=False)
+    number = pw.FloatField(unique=False)
     url = pw.CharField(unique=True)
     image = pw.CharField()
     anime = pw.ForeignKeyField(Anime, related_name='anime')

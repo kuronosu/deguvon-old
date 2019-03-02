@@ -85,7 +85,7 @@ class AnimeFactory:
         episode_list = []
         for e in episodes:
             episode_list.append(EpisodeScraping(
-                int(e[0]),
+                float(e[0]),
                 f'/ver/{e[1]}/{slug}-{e[0]}'.lower(),
                 f'/screenshots/{aid}/{e[0]}/th_3.jpg'
             ))
@@ -124,7 +124,7 @@ class AnimeFactory:
         for e in episodes:
             if f'/ver/{e[1]}/{slug}-{e[0]}'.lower() == ep_url.lower():
                 return EpisodeScraping(
-                    int(e[0]),
+                    float(e[0]),
                     ep_url,
                     f'/screenshots/{aid}/{e[0]}/th_3.jpg'
                 )
