@@ -131,7 +131,7 @@ class DataBase:
         else:
             for i in range(len(query)):
                 if (
-                    query[i].name != anime_data.episode_list[i].name or
+                    query[i].number != anime_data.episode_list[i].number or
                     query[i].url != anime_data.episode_list[i].url or
                     query[i].image != anime_data.episode_list[i].image
                     ):
@@ -185,7 +185,7 @@ class DataBase:
                 .join(Anime)
                 .where(Episode.anime == i)
             )
-            episode_list = [EpisodeScraping(j.name, j.url, j.image) for j in eList ]
+            episode_list = [EpisodeScraping(j.number, j.url, j.image) for j in eList ]
             
             anime = AnimeScraping(
                     i.aid,
@@ -239,9 +239,9 @@ class DataBase:
         eList = (Episode.select()
             .join(Anime)
             .where(Episode.anime == anime)
-            .order_by(Episode.url)
+            .order_by(Episode.number)
         )
-        episode_list = [EpisodeScraping(j.name, j.url, j.image) for j in eList ]
+        episode_list = [EpisodeScraping(j.number, j.url, j.image) for j in eList ]
         
         return AnimeScraping(
             anime.aid,
@@ -267,7 +267,7 @@ class DataBase:
             try:
                 ep = fla.get_episode_data(r['url'])
                 ep = Episode.create(**{
-                    'name': ep.name,
+                    'number': ep.number,
                     'url': ep.url,
                     'image': ep.image,
                     'anime': Anime.get(Anime.url == fla.get_animeUrl_by_ep(r['url']))
@@ -293,7 +293,7 @@ class DataBase:
         with DATABASE.atomic():
             for r in recents:
                 dr = DataBase.create_recent(r)
-                recent = vars(EpisodeScraping(dr.name, dr.url, dr.image))
+                recent = vars(EpisodeScraping(dr.number, dr.url, dr.image))
                 aditional_data = {
                     'anime': {
                         'url': dr.anime.url,

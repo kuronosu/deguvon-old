@@ -85,7 +85,7 @@ class AnimeFactory:
         episode_list = []
         for e in episodes:
             episode_list.append(EpisodeScraping(
-                f'Episodio {e[0]}',
+                int(e[0]),
                 f'/ver/{e[1]}/{slug}-{e[0]}'.lower(),
                 f'/screenshots/{aid}/{e[0]}/th_3.jpg'
             ))
@@ -124,7 +124,7 @@ class AnimeFactory:
         for e in episodes:
             if f'/ver/{e[1]}/{slug}-{e[0]}'.lower() == ep_url.lower():
                 return EpisodeScraping(
-                    f'Episodio {e[0]}',
+                    int(e[0]),
                     ep_url,
                     f'/screenshots/{aid}/{e[0]}/th_3.jpg'
                 )
@@ -157,13 +157,13 @@ class AnimeFactory:
 
 
 class EpisodeScraping:
-    def __init__(self, name, url, image, *las, **kwargs):
-        self.name = name
+    def __init__(self, number, url, image, *las, **kwargs):
+        self.number = number
         self.url = url
         self.image = image
     
     def __str__(self):
-        return str(self.name)
+        return str(self.number)
     
 class AnimeReltionScraping:
     def __init__(self, url, rel, *args, **kwargs):
@@ -227,7 +227,6 @@ listAnmRel: {str([str(i) for i in self.listAnmRel])}
         anime['genres'] = self.genres
         anime.update({'listAnmRel': self.animeRel_to_json()})
         anime.update({'episodeList': self.episode_list_to_db()})
-        anime.update({'episodeList': self.episode_list_to_db()})
         return anime
     
     def animeRel_to_json(self):
@@ -254,7 +253,7 @@ listAnmRel: {str([str(i) for i in self.listAnmRel])}
         query_list = []
         for i in self.episode_list:
             query = {
-                'name': i.name,
+                'number': i.number,
                 'url': i.url,
                 'image': i.image,
             }
