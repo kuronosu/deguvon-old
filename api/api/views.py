@@ -9,7 +9,8 @@ from scrape.utils import make_request as rq
 
 from .utils import ImageSource
 
-BASE_DIR = os.environ.get('BASE_DIR', os.path.dirname(__file__))
+BASE_DIR = os.environ.get('BASE_DIR', os.path.dirname(os.path.dirname(__file__)))
+DRIRECTORY_PATH = os.path.join(BASE_DIR, 'directory.json')
 
 
 def recent():
@@ -85,4 +86,6 @@ def screenshots(aid, episode, th, ext):
 
 
 def directory():
-    return json_response(DataBase.all(), None)
+    if os.path.exists(DRIRECTORY_PATH):
+        return send_file(os.path.join(BASE_DIR, 'directory.json'), 'application/json')
+    return json_response(DataBase.all())
