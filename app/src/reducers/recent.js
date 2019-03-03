@@ -8,23 +8,6 @@ function recent(state = {}, action) {
         }
       }
     }
-    case 'SET_DEVICE_DATA': {
-      return {
-        ...state,
-        device: {
-          ...action.payload
-        }
-      }
-    }
-    case 'SET_CONFIG': {
-      return {
-        ...state,
-        config: {
-          ...state.config,
-          ...action.payload
-        }
-      }
-    }
     default:
       return state
   }
