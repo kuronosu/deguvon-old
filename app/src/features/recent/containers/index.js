@@ -1,6 +1,7 @@
 import React, { PureComponent } from "react";
 import { FlatList, Alert } from "react-native";
 import { connect } from 'react-redux';
+import { NavigationActions } from 'react-navigation'
 import Layout from "../components/recent-layout";
 import RecentCard from "../components/recent-card";
 import Api from '../../../api/index'
@@ -27,6 +28,7 @@ class Recent extends PureComponent{
       this.setState({refreshing: false})
     } catch (error) {
       this.setState({refreshing: false})
+      console.log(error)
       Alert.alert(
         "Error",
         "Error al obtener los ultimos episodios, revise la configuracion del api",
@@ -43,13 +45,20 @@ class Recent extends PureComponent{
   _onPressRecentCard = () => {
   }
   _onLongPressRecentCard = ({anime}) => {
-    this.props.onShowAnimeDetail(anime.aid)
+    this.props.dispatch({
+      type: 'SET_ANIME_DATA',
+      payload: anime
+    })
+    this.props.dispatch(NavigationActions.navigate({
+      routeName: 'Anime',
+      params: {anime}
+    }))
   }
   _renderEmtpy = () => <Empty text='Sin animes recientes'/>
   _itemSeparator = () => <VerticalSeparator mode={this.props.mode} />
   _renderItem = ({item, index}) =>  <RecentCard
-    onLongPress={this._onLongPressRecentCard}
-    onPress={this._onPressRecentCard}
+    onLongPressRecentCard={this._onLongPressRecentCard}
+    onPressRecentCard={this._onPressRecentCard}
     index={index}
     mode={this.props.mode}
     screenWidth={this.props.screenWidth}
@@ -80,8 +89,8 @@ class Recent extends PureComponent{
 function mapStateToProps(state) {
   return {
     list: state.recent.recentList,
-    mode: state.device.screenMode,
-    screenWidth: state.device.screenSize.width
+    mode: state.app.device.screenMode,
+    screenWidth: state.app.device.screenSize.width
   }
 }
 

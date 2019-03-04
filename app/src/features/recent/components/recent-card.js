@@ -42,8 +42,8 @@ const RecentCard = props => {
   }
   return (
     <TouchableNativeFeedback
-      onPress={()=>props.onPress({...props})}
-      onLongPress={()=>props.onLongPress({...props})}
+      onLongPress={()=>props.onLongPressRecentCard({...props})}
+      onPress={()=>props.onPressRecentCard({...props})}
       // activeOpacity={0.3}
       background={TouchableNativeFeedback.Ripple("#000")}
       useForeground={true}
@@ -59,7 +59,7 @@ const RecentCard = props => {
           }}
         />
         <View style={styles.episode}>
-          <Text style={styles.episodeText}>{props.name}</Text>
+          <Text style={styles.episodeText}>Episodio {props.number}</Text>
         </View>
         <View style={[
             styles.name,

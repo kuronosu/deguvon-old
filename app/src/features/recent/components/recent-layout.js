@@ -14,7 +14,6 @@ export default Layout;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#333',
-    marginBottom: 55,
+    backgroundColor: '#333'
   }
 })
