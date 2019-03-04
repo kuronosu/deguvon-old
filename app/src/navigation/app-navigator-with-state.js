@@ -1,13 +1,12 @@
-// import { connect } from 'react-redux';
-// import { reduxifyNavigator } from 'react-navigation-redux-helpers';
+import { connect } from 'react-redux';
+import { createReduxContainer } from 'react-navigation-redux-helpers';
 
 
-// import AppNavigator from './app-navigator';
+import AppNavigator from './app-navigator';
 
-// const AppNavigatorWithState = reduxifyNavigator(AppNavigator, 'root');
+const App = createReduxContainer(AppNavigator);
+const mapStateToProps = (state) => ({
+  state: state.nav,
+});
 
-// const mapStateToProps = state => ({
-//     state: state.navigation
-// })
-
-// export default connect(mapStateToProps)(AppNavigatorWithState);
+export default connect(mapStateToProps)(App);

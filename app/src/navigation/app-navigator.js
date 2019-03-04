@@ -1,21 +1,13 @@
 import { createStackNavigator, createAppContainer } from 'react-navigation'
-import React, { Component } from 'react'
-import { Text, View } from 'react-native'
-
-class TmpComp extends Component{
-  render(){
-    return(
-      <View>
-        <Text>Hola</Text>
-      </View>
-    )
-  }
-}
+import RecentScreen from '../screens/containers/recent'
+import AnimeScreen from '../screens/containers/anime'
 
 const Main = createStackNavigator(
   {
-    Home: TmpComp
-  }
+    Home: RecentScreen,
+    Anime: AnimeScreen
+  },
+  
 )
 
 export default createAppContainer(Main)

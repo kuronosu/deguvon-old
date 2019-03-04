@@ -1,9 +1,9 @@
 function recent(state = {}, action) {
   switch (action.type) {
-    case 'SET_RECENT_DATA': {
+    case 'SET_ANIME_DATA': {
       return {
         ...state,
-        recentList: action.payload.recentList
+        ...action.payload
       }
     }
     default:

@@ -2,7 +2,8 @@ import { store } from '../store';
 
 class Api {
   getBaseApi(){
-    const { host, route} = store.getState().config.api
+    const { host, route} = store.getState().app.config.api
+    console.log(host, route)
     return `http://${host}${route}`
   }
   async getRecent() {

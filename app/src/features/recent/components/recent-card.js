@@ -42,8 +42,8 @@ const RecentCard = props => {
   }
   return (
     <TouchableNativeFeedback
-      onPress={()=>props.onPress({...props})}
-      onLongPress={()=>props.onLongPress({...props})}
+      onLongPress={()=>props.onLongPressRecentCard({...props})}
+      onPress={()=>props.onPressRecentCard({...props})}
       // activeOpacity={0.3}
       background={TouchableNativeFeedback.Ripple("#000")}
       useForeground={true}

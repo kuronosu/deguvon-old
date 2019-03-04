@@ -4,10 +4,10 @@ import {
   Text,
   ScrollView
 } from 'react-native'
-
+import { connect } from 'react-redux'
 import Api from '../../../api/index'
 
-export default class AnimeDetail extends Component {
+class AnimeDetail extends Component {
 
   state = {
     loadded: false,
@@ -15,7 +15,8 @@ export default class AnimeDetail extends Component {
   }
 
   fetchData = () => {
-    Api.getAnimeDetails(this.props.aid).then(data => {
+    Api.getAnimeDetails(this.props.aid)
+    .then(data => {
       this.setState({anime: data.anime, relations: data.relations, loadded: true});
     }).catch(e => this.setState({loadded: false}));
   }
@@ -48,3 +49,12 @@ export default class AnimeDetail extends Component {
     return <View><Text>Cargando</Text></View>
   }
 }
+
+const mapStateToProps = state => {
+  console.log(state, "ANIME")
+  return {
+    aid: state.anime.aid
+  }
+}
+
+export default connect(mapStateToProps)(AnimeDetail)

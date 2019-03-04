@@ -1,13 +1,15 @@
 import { combineReducers } from 'redux'
 
 import recent from './recent'
-import navigation from './navigation'
+import nav from './navigation'
 import app from './app'
+import anime from './anime'
 
 const reducer = combineReducers({
-  recent,
+  nav,
   app,
-  navigation
+  recent,
+  anime
 })
 
 export default reducer
