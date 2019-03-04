@@ -4,7 +4,6 @@ import { PersistGate } from "redux-persist/integration/react";
 
 import Loading from './screens/components/loading'
 import { store, persistor } from './store';
-import AppLayout from "./screens/containers/app-layout";
 import AppNavigatorWithState from './navigation/app-navigator-with-state'
 
 export default class Deguvon extends Component {
@@ -18,6 +17,5 @@ export default class Deguvon extends Component {
         </PersistGate>
       </Provider>
     );
-        //   {/* <AppLayout /> */}
   }
 }

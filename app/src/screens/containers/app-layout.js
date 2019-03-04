@@ -1,8 +1,11 @@
-import { Component } from "react";
-import { Dimensions } from "react-native";
+import React, { Component } from "react";
+import { Dimensions, BackHandler } from "react-native";
+import { NavigationActions } from 'react-navigation';
 import { connect } from 'react-redux'
+import Base from "../components/base";
 
 class AppLayout extends Component {
+
   _updateScreenInfo(){
     const d = Dimensions.get('window')
     this.props.dispatch({
@@ -13,14 +16,38 @@ class AppLayout extends Component {
       }
     })
   }
-  onLayout = e => {
+
+  _onLayout = e => {
     this._updateScreenInfo()
   }
+
+  _onBackButtonPressAndroid = () => {
+    if (this.props.nav.index === 0) {
+      return false;
+    }
+
+    this.props.dispatch(NavigationActions.back());
+    return true;
+  };
+
+  componentDidMount() {
+    BackHandler.addEventListener("hardwareBackPress", this._onBackButtonPressAndroid);
+  }
+
   componentWillMount(){
     this._updateScreenInfo()
   }
+
+  componentWillUnmount() {
+    BackHandler.removeEventListener("hardwareBackPress", this._onBackButtonPressAndroid);
+  }
+
   render() {
-    return this.props.children
+    return (
+      <Base onLayout={this._onLayout}>
+        {this.props.children}
+      </Base>
+    )
   }
 }
 

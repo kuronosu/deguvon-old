@@ -21,7 +21,6 @@ const defaultStore = {
     device: {screenMode: true, screenSize: {}},
     config: {api: {host: 'deguvon.kuronosu.space', route: '/api/v1'}}
   },
-  anime: {}
 }
 
 const persistedReducer = persistReducer(persistConfig, reducer)

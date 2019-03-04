@@ -4,6 +4,7 @@ function general(state = {}, action) {
       return {
         ...state,
         device: {
+          ...state.device,
           ...action.payload
         }
       }

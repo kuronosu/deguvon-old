@@ -1,13 +1,13 @@
 import { View, StyleSheet } from "react-native";
 import React from "react";
 
-const Home = props => {
+const Base = props => {
   return <View style={styles.wrapper} {...props}>
     {props.children}
   </View>;
 };
 
-export default Home;
+export default Base;
 
 const styles = StyleSheet.create({
   wrapper: {

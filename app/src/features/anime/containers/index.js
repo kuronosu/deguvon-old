@@ -50,11 +50,4 @@ class AnimeDetail extends Component {
   }
 }
 
-const mapStateToProps = state => {
-  console.log(state, "ANIME")
-  return {
-    aid: state.anime.aid
-  }
-}
-
-export default connect(mapStateToProps)(AnimeDetail)
+export default connect(null)(AnimeDetail)

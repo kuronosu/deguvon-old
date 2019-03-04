@@ -6,7 +6,7 @@ import AppLayout from './app-layout';
 class RecentScreen extends Component {
   render(){
     return (
-    <AppLayout>
+    <AppLayout nav={this.props.navigation}>
       <Recent/>
     </AppLayout>
     )

@@ -28,6 +28,7 @@ class Recent extends PureComponent{
       this.setState({refreshing: false})
     } catch (error) {
       this.setState({refreshing: false})
+      console.log(error)
       Alert.alert(
         "Error",
         "Error al obtener los ultimos episodios, revise la configuracion del api",
@@ -50,6 +51,7 @@ class Recent extends PureComponent{
     })
     this.props.dispatch(NavigationActions.navigate({
       routeName: 'Anime',
+      params: {anime}
     }))
   }
   _renderEmtpy = () => <Empty text='Sin animes recientes'/>

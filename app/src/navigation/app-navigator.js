@@ -7,7 +7,7 @@ const Main = createStackNavigator(
     Home: RecentScreen,
     Anime: AnimeScreen
   },
-  
+  {defaultNavigationOptions: {title: "Deguvon"}}
 )
 
 export default createAppContainer(Main)
