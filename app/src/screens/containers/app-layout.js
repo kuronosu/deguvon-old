@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Dimensions, BackHandler } from "react-native";
-import { NavigationActions } from 'react-navigation';
+import { NavigationActions, withNavigation } from 'react-navigation';
 import { connect } from 'react-redux'
 import Base from "../components/base";
 
@@ -22,7 +22,7 @@ class AppLayout extends Component {
   }
 
   _onBackButtonPressAndroid = () => {
-    if (this.props.nav.index === 0) {
+    if (this.props.navigation.index === 0) {
       return false;
     }
 
@@ -51,4 +51,4 @@ class AppLayout extends Component {
   }
 }
 
-export default connect(null)(AppLayout)
+export default withNavigation(connect(null)(AppLayout))

@@ -1,15 +1,15 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import Recent from '../../features/recent/containers'
 import AppLayout from './app-layout';
+import Settings from '../../features/settings/containers'
 
-class RecentScreen extends Component {
+class SettingsScreen extends Component {
   render(){
     return (
     <AppLayout>
-      <Recent/>
+      <Settings/>
     </AppLayout>
     )
   }
 }
-export default connect()(RecentScreen)
+export default connect()(SettingsScreen)

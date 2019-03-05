@@ -9,13 +9,11 @@ class RecentScreen extends Component {
       title: navigation.getParam('anime', {name: 'Anime'}).name
     }
   }
-  state = {
-    aid: this.props.navigation.state.params.anime.aid
-  }
+
   render(){
     return (
-    <AppLayout nav={this.props.navigation}>
-      <AnimeDetails aid={this.state.aid}/>
+    <AppLayout>
+      <AnimeDetails/>
     </AppLayout>
     )
   }

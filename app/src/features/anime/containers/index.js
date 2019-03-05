@@ -5,6 +5,7 @@ import {
   ScrollView
 } from 'react-native'
 import { connect } from 'react-redux'
+import { withNavigation } from 'react-navigation'
 import Api from '../../../api/index'
 
 class AnimeDetail extends Component {
@@ -15,7 +16,7 @@ class AnimeDetail extends Component {
   }
 
   fetchData = () => {
-    Api.getAnimeDetails(this.props.aid)
+    Api.getAnimeDetails(this.props.navigation.getParam('anime', {aid: -1}).aid)
     .then(data => {
       this.setState({anime: data.anime, relations: data.relations, loadded: true});
     }).catch(e => this.setState({loadded: false}));
@@ -50,4 +51,4 @@ class AnimeDetail extends Component {
   }
 }
 
-export default connect(null)(AnimeDetail)
+export default withNavigation(connect(null)(AnimeDetail))

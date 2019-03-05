@@ -67,8 +67,8 @@ class Api extends Component {
 
 const mapStateToProps = state => {
   return {
-    host: state.config.api.host,
-    route: state.config.api.route
+    host: state.app.config.api.host,
+    route: state.app.config.api.route
   }
 }
 
