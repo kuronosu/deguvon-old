@@ -32,7 +32,7 @@ const HomeNavigator = createMaterialBottomTabNavigator(
   {
     activeColor: '#fff',
     inactiveColor: '#3e2465',
-    barStyle: { backgroundColor: '#102027' },
+    barStyle: { backgroundColor: '#37474f' },
     labeled: false,
   }
 )

@@ -21,7 +21,7 @@ const AppNavigator = createStackNavigator(
     defaultNavigationOptions: {
       title: "Deguvon",
       headerStyle: {
-        backgroundColor: '#102027'
+        backgroundColor: '#37474f'
       },
       headerTitleStyle: {
         color: 'white',

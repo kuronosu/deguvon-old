@@ -69,3 +69,4 @@ directory.json
 api/images/
 
 .vscode/.ropeproject
+app/android/gradle.properties
