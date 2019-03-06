@@ -1,12 +1,12 @@
 import React, { Component } from 'react'
+import { View, Text } from 'react-native'
 import AppLayout from './app-layout';
-import Settings from '../../features/settings/containers'
 
-export default class SettingsScreen extends Component {
+export default class DirectoryScreen extends Component {
   render(){
     return (
     <AppLayout>
-      <Settings/>
+      <View><Text>DirectoryScreen</Text></View>
     </AppLayout>
     )
   }

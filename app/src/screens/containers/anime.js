@@ -1,9 +1,8 @@
 import React, { Component } from 'react'
-import { connect } from 'react-redux'
 import AnimeDetails from '../../features/anime/containers/index'
 import AppLayout from './app-layout';
 
-class RecentScreen extends Component {
+export default class RecentScreen extends Component {
   static navigationOptions = ({ navigation }) => {
     return {
       title: navigation.getParam('anime', {name: 'Anime'}).name
@@ -18,4 +17,3 @@ class RecentScreen extends Component {
     )
   }
 }
-export default connect(null)(RecentScreen)

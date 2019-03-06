@@ -1,9 +1,8 @@
 import React, { Component } from 'react'
-import { connect } from 'react-redux'
 import Recent from '../../features/recent/containers'
 import AppLayout from './app-layout';
 
-class RecentScreen extends Component {
+export default class RecentScreen extends Component {
   render(){
     return (
     <AppLayout>
@@ -12,4 +11,3 @@ class RecentScreen extends Component {
     )
   }
 }
-export default connect()(RecentScreen)

@@ -1,36 +1,34 @@
 import {
   createStackNavigator,
-  createAppContainer,
-  createBottomTabNavigator
+  createAppContainer
 } from 'react-navigation'
-import RecentScreen from '../screens/containers/recent'
+import HomeNavigator from './home-navigator'
 import AnimeScreen from '../screens/containers/anime'
-import SettingsScreen from '../screens/containers/settings'
 
-const HomeNavigator = createBottomTabNavigator(
+const AppNavigator = createStackNavigator(
   {
-    Recent: {
-      screen: RecentScreen,
-      navigationOptions: {
-        title: 'Recientes'
+    Home: {
+      screen: HomeNavigator,
+      navigationOptions: ({ navigation }) => {
+        if (navigation.state.routes[navigation.state.index].key == 'Directory')
+          return {title: 'Directorio'}
+        return {}
       }
     },
-    Config: {
-      screen: SettingsScreen,
-      navigationOptions: {
-        title: 'Configuracion'
-      }
-    }
-  },
-  {}
-  )
-
-const Main = createStackNavigator(
-  {
-    Home: HomeNavigator,
     Anime: AnimeScreen
   },
-  {defaultNavigationOptions: {title: "Deguvon"}}
+  {
+    defaultNavigationOptions: {
+      title: "Deguvon",
+      headerStyle: {
+        backgroundColor: '#102027'
+      },
+      headerTitleStyle: {
+        color: 'white',
+        fontWeight: 'normal'
+      }
+    },
+  }
 )
 
-export default createAppContainer(Main)
+export default createAppContainer(AppNavigator)

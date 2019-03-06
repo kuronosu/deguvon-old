@@ -6,6 +6,8 @@ import Loading from './screens/components/loading'
 import { store, persistor } from './store';
 import AppNavigatorWithState from './navigation/app-navigator-with-state'
 
+console.disableYellowBox = true;
+
 export default class Deguvon extends Component {
   render() {
     return (
