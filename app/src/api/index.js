@@ -3,7 +3,7 @@ import { store } from '../store';
 class Api {
   getBaseApi(){
     const { host, route} = store.getState().app.config.api
-    return `http://${host}${route}`
+    return `https://${host}${route}`
   }
   async getRecent() {
     let base = `${this.getBaseApi()}/recent`

@@ -19,7 +19,7 @@ const defaultStore = {
   recent: {recentList: [], refreshing: false}, // valores por defecto para el Reducer recent
   app: { // valores por defecto para el Reducer general
     device: {screenMode: true, screenSize: {}},
-    config: {api: {host: 'deguvon.kuronosu.space', route: '/api/v1'}}
+    config: {api: {host: 'kuronosu.dev', route: '/api/v1'}}
   },
 }
 
