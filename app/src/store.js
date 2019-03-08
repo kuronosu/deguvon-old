@@ -1,6 +1,6 @@
 import { createStore, applyMiddleware } from 'redux';
 import { persistStore, persistReducer } from 'redux-persist';
-import { createReactNavigationReduxMiddleware, createReduxContainer } from 'react-navigation-redux-helpers';
+import { createReactNavigationReduxMiddleware } from 'react-navigation-redux-helpers';
 import storage from 'redux-persist/lib/storage';
 import reducer from './reducers';
 

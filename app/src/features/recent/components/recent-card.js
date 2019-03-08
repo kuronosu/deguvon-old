@@ -55,7 +55,7 @@ const RecentCard = props => {
             !props.mode ? styles.landscape: styles.portrait
           ]}
           source={{
-            uri: `http://deguvon.kuronosu.space${props.anime.image}`
+            uri: `https://kuronosu.dev${props.anime.image}`
           }}
         />
         <View style={styles.episode}>

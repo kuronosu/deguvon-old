@@ -14,7 +14,6 @@ DRIRECTORY_PATH = os.path.join(BASE_DIR, 'directory.json')
 
 
 def recent():
-    print(BASE_DIR)
     try:
         return json_response(DataBase.update_recents())
     except:
