@@ -12,6 +12,8 @@ const AppNavigator = createStackNavigator(
       navigationOptions: ({ navigation }) => {
         if (navigation.state.routes[navigation.state.index].key == 'Directory')
           return {title: 'Directorio'}
+        else if (navigation.state.routes[navigation.state.index].key == 'Config')
+          return {title: 'Configuracion'}
         return {}
       }
     },

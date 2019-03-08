@@ -3,6 +3,8 @@ package com.deguvon;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.facebook.react.modules.storage.ReactDatabaseSupplier;
+import com.RNFetchBlob.RNFetchBlobPackage;
 import com.swmansion.gesturehandler.react.RNGestureHandlerPackage;
 import com.brentvatne.react.ReactVideoPackage;
 import com.facebook.react.ReactNativeHost;
@@ -25,6 +27,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+          new RNFetchBlobPackage(),
           new RNGestureHandlerPackage(),
           new ReactVideoPackage()
       );
@@ -45,5 +48,8 @@ public class MainApplication extends Application implements ReactApplication {
   public void onCreate() {
     super.onCreate();
     SoLoader.init(this, /* native exopackage */ false);
+    // Increase the maximum size of AsyncStorage
+    long size = 50L * 1024L * 1024L; // 50 MB
+    ReactDatabaseSupplier.getInstance(getApplicationContext()).setMaximumSize(size);
   }
 }

@@ -38,7 +38,7 @@ class AnimeDetail extends Component {
             }
             {
               this.state.anime.episodeList.map(e => (
-                <Text key={`episode_${e.number}`}>{e.number}</Text>
+                <Text key={`episode_${e.number}_${e.url}`}>{e.number}</Text>
               ))
             }
           </View>

@@ -3,7 +3,7 @@ import { createMaterialBottomTabNavigator } from 'react-navigation-material-bott
 import RecentScreen from '../screens/containers/recent'
 import SettingsScreen from '../screens/containers/settings'
 import Icon from '../utils/components/icon';
-import DirectoryNavigator from './directory-navigator';
+import DirectoryScreen from '../screens/containers/directory';
 
 const HomeNavigator = createMaterialBottomTabNavigator(
   {
@@ -15,7 +15,7 @@ const HomeNavigator = createMaterialBottomTabNavigator(
       }
     },
     Directory: {
-      screen: DirectoryNavigator,
+      screen: DirectoryScreen,
       navigationOptions: {
         tabBarIcon: <Icon iconSet='Entypo' name='grid' size={25} color='white'/>,
         title: 'Directorio'

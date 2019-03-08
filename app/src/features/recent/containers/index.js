@@ -19,6 +19,14 @@ class Recent extends PureComponent{
     try {
       this.setState({refreshing: true})
       let recentList = await Api.getRecent();
+      if (this.props.last.id != recentList[0].id){
+        this.props.dispatch({
+          type: 'SET_DIRECTORY_DATA',
+          payload: {
+            updated: false
+          }
+        })
+      }
       this.props.dispatch({
         type: 'SET_RECENT_DATA',
         payload: {
@@ -89,6 +97,7 @@ class Recent extends PureComponent{
 function mapStateToProps(state) {
   return {
     list: state.recent.recentList,
+    last: state.recent.last,
     mode: state.app.device.screenMode,
     screenWidth: state.app.device.screenSize.width
   }
