@@ -2,6 +2,7 @@ import { createStore, applyMiddleware } from 'redux';
 import { persistStore, persistReducer } from 'redux-persist';
 import { createReactNavigationReduxMiddleware } from 'react-navigation-redux-helpers';
 import storage from 'redux-persist/lib/storage';
+import FilesystemStorage from 'redux-persist-filesystem-storage'
 import reducer from './reducers';
 
 // const store = createStore(reducer, {
@@ -11,8 +12,8 @@ import reducer from './reducers';
 
 const persistConfig = {
   key: 'root',
-  storage,
-  blacklist: ['nav', 'anime', 'directory']
+  storage: FilesystemStorage,
+  blacklist: ['nav', 'anime']
 }
 
 const defaultStore = {
@@ -21,7 +22,7 @@ const defaultStore = {
     device: {screenMode: true, screenSize: {}},
     config: {api: {host: 'kuronosu.dev', route: '/api/v1'}}
   },
-  directory: {updated: false, data: {}},
+  directory: {updated: false, data: [], updating: false},
 }
 
 const persistedReducer = persistReducer(persistConfig, reducer)

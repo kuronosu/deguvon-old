@@ -49,7 +49,7 @@ public class MainApplication extends Application implements ReactApplication {
     super.onCreate();
     SoLoader.init(this, /* native exopackage */ false);
     // Increase the maximum size of AsyncStorage
-    long size = 50L * 1024L * 1024L; // 50 MB
-    ReactDatabaseSupplier.getInstance(getApplicationContext()).setMaximumSize(size);
+    // long size = 50L * 1024L * 1024L; // 50 MB
+    // ReactDatabaseSupplier.getInstance(getApplicationContext()).setMaximumSize(size);
   }
 }

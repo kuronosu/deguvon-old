@@ -18,12 +18,11 @@ class Directory extends Component{
     try {
       this.setState({refreshing: true})
       let directory = await Api.getDirectory();
-      console.log(directory)
       this.props.dispatch({
         type: 'SET_DIRECTORY_DATA',
         payload: {
           updated: true,
-          data: directory
+          data: Object.values(directory)
         }
       })
       this.setState({refreshing: false})
@@ -40,7 +39,7 @@ class Directory extends Component{
     }))
   }
 
-  _renderEmtpy = () => <Empty text='Sin directorio'/>
+  _renderEmtpy = () => <Empty text='Directorio vacio'/>
   _itemSeparator = () => <VerticalSeparator mode={this.props.mode} />
   _keyExtractor = item => `anime_${item.aid.toString()}`
   _renderItem = ({item, index}) =>  <AnimeCard
@@ -53,7 +52,6 @@ class Directory extends Component{
   />
 
   componentDidMount(){
-    console.log(!this.props.updated)
     if (!this.props.updated){
       this._fetchData()
     }
@@ -61,9 +59,9 @@ class Directory extends Component{
 
   render(){
     return (
-      <View>
+      <View style={{backgroundColor: '#333', flex: 1}}>
         <FlatList
-          data={Object.values(this.props.data? this.props.data: {})}
+          data={this.props.data}
           ListEmptyComponent={this._renderEmtpy}
           ItemSeparatorComponent={this._itemSeparator}
           numColumns={this.props.mode ? 3: 4}
@@ -79,7 +77,6 @@ class Directory extends Component{
 }
 
 const mapStateToProps = state => {
-  console.log(state)
   return {
     data: state.directory.data,
     updated: state.directory.updated,

@@ -1,8 +1,9 @@
 import React, { Component } from "react";
-import { Dimensions, BackHandler } from "react-native";
+import { Dimensions, BackHandler, Alert } from "react-native";
 import { NavigationActions, withNavigation } from 'react-navigation';
 import { connect } from 'react-redux'
 import Base from "../components/base";
+import Api from "../../api";
 
 class AppLayout extends Component {
 
@@ -15,6 +16,54 @@ class AppLayout extends Component {
         screenSize: d
       }
     })
+  }
+
+  async _updateDirectory(){
+    Alert.alert(
+      "Actualizando directorio",
+      "",
+      [{text: 'OK', onPress: () => {}},]
+    )
+    try {
+      this.props.dispatch({
+        type: 'SET_DIRECTORY_DATA',
+        payload: {
+          updating: true
+        }
+      })
+      let directory = await Api.getDirectory();
+      this.props.dispatch({
+        type: 'SET_DIRECTORY_DATA',
+        payload: {
+          updated: true,
+          data: Object.values(directory)
+        }
+      })
+      Alert.alert(
+        "Directorio actualizado",
+        "",
+        [{text: 'OK', onPress: () => {}},]
+      )
+      this.props.dispatch({
+        type: 'SET_DIRECTORY_DATA',
+        payload: {
+          updating: false
+        }
+      })
+    } catch (error) {
+      Alert.alert(
+        "Error al actualizar el directorio",
+        "",
+        [{text: 'OK', onPress: () => {}},]
+      )
+      this.props.dispatch({
+        type: 'SET_DIRECTORY_DATA',
+        payload: {
+          updating: false
+        }
+      })
+      console.log(error)
+    }
   }
 
   _onLayout = e => {
@@ -32,6 +81,9 @@ class AppLayout extends Component {
 
   componentDidMount() {
     BackHandler.addEventListener("hardwareBackPress", this._onBackButtonPressAndroid);
+    if (!this.props.directoryUpdated){
+      this._updateDirectory()
+    }
   }
 
   componentWillMount(){
@@ -45,10 +97,16 @@ class AppLayout extends Component {
   render() {
     return (
       <Base onLayout={this._onLayout}>
-        {this.props.children}
+        {React.cloneElement(this.props.children, { _updateDirectory: this._updateDirectory })}
       </Base>
     )
   }
 }
 
-export default withNavigation(connect(null)(AppLayout))
+const mapStateToProps = state => {
+  return {
+    directoryUpdated: state.directory.updated
+  }
+}
+
+export default withNavigation(connect(mapStateToProps)(AppLayout))
