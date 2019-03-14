@@ -7,6 +7,7 @@ import RecentCard from "../components/recent-card";
 import Api from '../../../api/index'
 import Empty from "../components/empty";
 import VerticalSeparator from "../components/separator";
+import DropDownHolder from "../../../utils/dropdownholder";
 
 class Recent extends PureComponent{
   state = {
@@ -31,15 +32,7 @@ class Recent extends PureComponent{
       this.setState({refreshing: false})
     } catch (error) {
       this.setState({refreshing: false})
-      console.log(error)
-      Alert.alert(
-        "Error",
-        "Error al obtener los ultimos episodios, revise la configuracion del api",
-        [
-          {text: 'OK', onPress: () => {}},
-        ],
-        {cancelable: false}
-      )
+      DropDownHolder.alert('error', 'Error', 'Error obtener los ultimos episodios')
     }
   }
   _onRefresh = () => {

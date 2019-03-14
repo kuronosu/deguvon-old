@@ -1,9 +1,10 @@
 import React, { Component } from "react";
-import { Dimensions, BackHandler, Alert } from "react-native";
+import { Dimensions, BackHandler } from "react-native";
 import { NavigationActions, withNavigation } from 'react-navigation';
 import { connect } from 'react-redux'
 import Base from "../components/base";
 import Api from "../../api";
+import DropDownHolder from "../../utils/dropdownholder";
 
 class AppLayout extends Component {
 
@@ -19,11 +20,7 @@ class AppLayout extends Component {
   }
 
   async _updateDirectory(){
-    Alert.alert(
-      "Actualizando directorio",
-      "",
-      [{text: 'OK', onPress: () => {}},]
-    )
+    DropDownHolder.alert('info', 'Actualizando directorio','')
     try {
       this.props.dispatch({
         type: 'SET_DIRECTORY_DATA',
@@ -39,11 +36,7 @@ class AppLayout extends Component {
           data: Object.values(directory)
         }
       })
-      Alert.alert(
-        "Directorio actualizado",
-        "",
-        [{text: 'OK', onPress: () => {}},]
-      )
+      DropDownHolder.alert('success', 'Directorio actualizado', 'Directorio actualizado con exito')
       this.props.dispatch({
         type: 'SET_DIRECTORY_DATA',
         payload: {
@@ -51,11 +44,7 @@ class AppLayout extends Component {
         }
       })
     } catch (error) {
-      Alert.alert(
-        "Error al actualizar el directorio",
-        "",
-        [{text: 'OK', onPress: () => {}},]
-      )
+      DropDownHolder.alert('error', 'Error', 'Error al actualizar el directorio')
       this.props.dispatch({
         type: 'SET_DIRECTORY_DATA',
         payload: {

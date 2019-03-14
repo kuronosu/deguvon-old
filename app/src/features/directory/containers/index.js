@@ -9,6 +9,7 @@ import Empty from '../../recent/components/empty'
 import VerticalSeparator from '../../recent/components/separator';
 import AnimeCard from '../components/anime-card';
 import Api from '../../../api'
+import DropDownHolder from '../../../utils/dropdownholder';
 
 class Directory extends Component{
   state = {
@@ -28,6 +29,7 @@ class Directory extends Component{
       this.setState({refreshing: false})
     } catch (error) {
       this.setState({refreshing: false})
+      DropDownHolder.alert('error', 'Error', 'Error al actualizar el directorio')
       console.log(error)
     }
   }
@@ -52,7 +54,7 @@ class Directory extends Component{
   />
 
   componentDidMount(){
-    if (!this.props.updated){
+    if (!this.props.updated && !this.props.updating){
       this._fetchData()
     }
   }
@@ -81,7 +83,8 @@ const mapStateToProps = state => {
     data: state.directory.data,
     updated: state.directory.updated,
     mode: state.app.device.screenMode,
-    screenWidth: state.app.device.screenSize.width
+    screenWidth: state.app.device.screenSize.width,
+    updating: state.directory.updating
   }
 }
 
