@@ -19,7 +19,7 @@ const AnimeCard = props => {
     props.mode ? 1/40/2: 1/50/2
   )
   let marginStyle
-  switch (props.index % props.mode ? 3: 4) {
+  switch (props.index % (props.mode ? 3: 4)) {
     case 0:
       marginStyle = styles.marginRight
       break;
@@ -80,7 +80,8 @@ const createStyles = (screenWidth, separatorSize) => (
     },
     cover: {
       resizeMode: 'contain',
-      borderRadius: 5
+      borderTopLeftRadius: 5,
+      borderTopRightRadius: 5
     },
     episode: {
       position:'absolute',
