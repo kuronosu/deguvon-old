@@ -10,10 +10,44 @@ import VerticalSeparator from '../../recent/components/separator';
 import AnimeCard from '../components/anime-card';
 import Api from '../../../api'
 import DropDownHolder from '../../../utils/dropdownholder';
+import FloatActionButton from '../components/float-action-button';
+
+class FilterMaganer{
+  state = 0
+  text = ['Todos', 'Anime', 'Película', 'OVA', 'Especial']
+  data = []
+  filteredData = []
+
+  getText = () => (this.text[this.state])
+
+  setData = data => {
+    this.data = data
+    this.filteredData = data
+  }
+
+  next = () => {
+    if (this.state == this.text.length - 1){
+      this.state = 0
+    } else {
+      this.state += 1
+    }
+    this.filter()
+  }
+
+  filter = (typea=null) => {
+    if (this.state == 0 ){
+      this.filteredData = this.data
+    } else {
+      this.filteredData = this.data.filter(anime => anime.typea.toUpperCase() == (typea ? typea: this.getText().toUpperCase()))
+    }
+  }
+}
 
 class Directory extends Component{
   state = {
-    refreshing: false
+    refreshing: false,
+    filter: new FilterMaganer(),
+    data: []
   }
   async _fetchData(){
     try {
@@ -53,7 +87,14 @@ class Directory extends Component{
     {...item}
   />
 
+  _filter = () => {
+    this.state.filter.next()
+    this.setState(pState => ({data: pState.filter.filteredData}))
+  }
+
   componentDidMount(){
+    this.setState({data: this.props.data})
+    this.state.filter.setData(this.props.data)
     if (!this.props.updated && !this.props.updating){
       this._fetchData()
     }
@@ -63,7 +104,7 @@ class Directory extends Component{
     return (
       <View style={{backgroundColor: '#333', flex: 1}}>
         <FlatList
-          data={this.props.data}
+          data={this.state.data}
           ListEmptyComponent={this._renderEmtpy}
           ItemSeparatorComponent={this._itemSeparator}
           numColumns={this.props.mode ? 3: 4}
@@ -73,6 +114,7 @@ class Directory extends Component{
           contentContainerStyle={{ padding: this.props.mode? this.props.screenWidth * 1/40:  this.props.screenWidth * 1/50  }}
           refreshing={this.state.refreshing}
         />
+        <FloatActionButton filter={this.state.filter} onPressFilter={this._filter}/>
       </View>
     )
   }
