@@ -1,12 +1,12 @@
 import React, { Component } from "react";
 import { Dimensions, BackHandler } from "react-native";
-import { NavigationActions, withNavigation } from 'react-navigation';
+// import { NavigationActions, withNavigation } from 'react-navigation';
 import { connect } from 'react-redux'
 import Base from "../components/base";
 import Api from "../../api";
 import DropDownHolder from "../../utils/dropdownholder";
 
-class AppLayout extends Component {
+class AppContainer extends Component {
 
   _updateScreenInfo(){
     const d = Dimensions.get('window')
@@ -60,12 +60,13 @@ class AppLayout extends Component {
   }
 
   _onBackButtonPressAndroid = () => {
-    if (this.props.navigation.index === 0) {
-      return false;
-    }
+    // if (this.props.navigation.index === 0) {
+    //   return false;
+    // }
 
-    this.props.dispatch(NavigationActions.back());
-    return true;
+    // this.props.dispatch(NavigationActions.back());
+    // return true;
+    return false
   };
 
   componentDidMount() {
@@ -86,7 +87,8 @@ class AppLayout extends Component {
   render() {
     return (
       <Base onLayout={this._onLayout}>
-        {React.cloneElement(this.props.children, { _updateDirectory: this._updateDirectory })}
+        { this.props.children }
+        {/* {React.cloneElement(this.props.children, { _updateDirectory: this._updateDirectory })} */}
       </Base>
     )
   }
@@ -98,4 +100,4 @@ const mapStateToProps = state => {
   }
 }
 
-export default withNavigation(connect(mapStateToProps)(AppLayout))
+export default connect(mapStateToProps)(AppContainer)

@@ -11,44 +11,16 @@ import AnimeCard from '../components/anime-card';
 import Api from '../../../api'
 import DropDownHolder from '../../../utils/dropdownholder';
 import FloatActionButton from '../components/float-action-button';
-
-class FilterMaganer{
-  state = 0
-  text = ['Todos', 'Anime', 'Película', 'OVA', 'Especial']
-  data = []
-  filteredData = []
-
-  getText = () => (this.text[this.state])
-
-  setData = data => {
-    this.data = data
-    this.filteredData = data
-  }
-
-  next = () => {
-    if (this.state == this.text.length - 1){
-      this.state = 0
-    } else {
-      this.state += 1
-    }
-    this.filter()
-  }
-
-  filter = (typea=null) => {
-    if (this.state == 0 ){
-      this.filteredData = this.data
-    } else {
-      this.filteredData = this.data.filter(anime => anime.typea.toUpperCase() == (typea ? typea: this.getText().toUpperCase()))
-    }
-  }
-}
+import FilterMaganer from '../../../utils/filter-maganer';
 
 class Directory extends Component{
+
   state = {
     refreshing: false,
-    filter: new FilterMaganer(),
+    filterIndex: 0,
     data: []
   }
+
   async _fetchData(){
     try {
       this.setState({refreshing: true})
@@ -87,17 +59,22 @@ class Directory extends Component{
     {...item}
   />
 
-  _filter = () => {
-    this.state.filter.next()
-    this.setState(pState => ({data: pState.filter.filteredData}))
+  _filter = async () => {
+    this.setState(pState => {
+      const filterState = FilterMaganer.next(this.props.data, pState.filterIndex)
+      return {data: filterState.data, filterIndex: filterState.index}
+    })
   }
+
+  // Para futuros usos
+  // _getItemLayout = (data, index) => {
+  //   const ITEM_HEIGHT = (this.props.screenWidth / (238 / 339)) * ( this.props.mode ? 0.3: 0.225 )
+  //   console.log(ITEM_HEIGHT, ITEM_HEIGHT + 43.5)
+  //   return {length: ITEM_HEIGHT + 43.5, offset: ITEM_HEIGHT * index, index}
+  // }
 
   componentDidMount(){
     this.setState({data: this.props.data})
-    this.state.filter.setData(this.props.data)
-    if (!this.props.updated && !this.props.updating){
-      this._fetchData()
-    }
   }
 
   render(){
@@ -113,8 +90,11 @@ class Directory extends Component{
           keyExtractor={this._keyExtractor}
           contentContainerStyle={{ padding: this.props.mode? this.props.screenWidth * 1/40:  this.props.screenWidth * 1/50  }}
           refreshing={this.state.refreshing}
+          // getItemLayout={this._getItemLayout} // Posible optimizacion
+          initialNumToRender={12}
+          removeClippedSubviews
         />
-        <FloatActionButton filter={this.state.filter} onPressFilter={this._filter}/>
+        <FloatActionButton filterType={FilterMaganer.getText(this.state.filterIndex)} onPressFilter={this._filter}/>
       </View>
     )
   }

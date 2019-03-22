@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import AnimeDetails from '../../features/anime/containers/index'
-import AppLayout from './app-layout';
 
 export default class RecentScreen extends Component {
   static navigationOptions = ({ navigation }) => {
@@ -10,10 +9,6 @@ export default class RecentScreen extends Component {
   }
 
   render(){
-    return (
-    <AppLayout>
-      <AnimeDetails/>
-    </AppLayout>
-    )
+    return <AnimeDetails/>
   }
 }
