@@ -2,15 +2,16 @@ package com.deguvon;
 
 import android.app.Application;
 
-import com.facebook.react.ReactApplication;
-import com.facebook.react.modules.storage.ReactDatabaseSupplier;
-import com.RNFetchBlob.RNFetchBlobPackage;
-import com.swmansion.gesturehandler.react.RNGestureHandlerPackage;
-import com.brentvatne.react.ReactVideoPackage;
-import com.facebook.react.ReactNativeHost;
-import com.facebook.react.ReactPackage;
-import com.facebook.react.shell.MainReactPackage;
 import com.facebook.soloader.SoLoader;
+import com.facebook.react.ReactPackage;
+import com.facebook.react.ReactNativeHost;
+import com.facebook.react.ReactApplication;
+import com.facebook.react.shell.MainReactPackage;
+
+import com.RNFetchBlob.RNFetchBlobPackage;
+import com.brentvatne.react.ReactVideoPackage;
+import com.oblador.vectoricons.VectorIconsPackage;
+import com.swmansion.gesturehandler.react.RNGestureHandlerPackage;
 
 import java.util.Arrays;
 import java.util.List;
@@ -27,9 +28,10 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+          new ReactVideoPackage(),
+          new VectorIconsPackage(),
           new RNFetchBlobPackage(),
-          new RNGestureHandlerPackage(),
-          new ReactVideoPackage()
+          new RNGestureHandlerPackage()
       );
     }
 
@@ -48,8 +50,5 @@ public class MainApplication extends Application implements ReactApplication {
   public void onCreate() {
     super.onCreate();
     SoLoader.init(this, /* native exopackage */ false);
-    // Increase the maximum size of AsyncStorage
-    // long size = 50L * 1024L * 1024L; // 50 MB
-    // ReactDatabaseSupplier.getInstance(getApplicationContext()).setMaximumSize(size);
   }
 }
