@@ -5,6 +5,7 @@ import nav from './navigation'
 import app from './app'
 import anime from './anime'
 import directory from './directory'
+import search from './search'
 
 const reducer = combineReducers({
   nav,
@@ -12,6 +13,7 @@ const reducer = combineReducers({
   recent,
   anime,
   directory,
+  search
 })
 
 export default reducer

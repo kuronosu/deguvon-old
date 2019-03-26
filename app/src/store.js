@@ -13,7 +13,7 @@ import reducer from './reducers';
 const persistConfig = {
   key: 'root',
   storage: FilesystemStorage,
-  blacklist: ['nav', 'anime']
+  blacklist: ['nav', 'anime', 'search']
 }
 
 const defaultStore = {
@@ -23,6 +23,7 @@ const defaultStore = {
     config: {api: {host: 'kuronosu.dev', route: '/api/v1'}}
   },
   directory: {updated: false, data: [], updating: false},
+  search: {text: ''},
 }
 
 const persistedReducer = persistReducer(persistConfig, reducer)

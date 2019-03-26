@@ -4,7 +4,7 @@ import { View, Text, StyleSheet } from "react-native";
 const Empty = props => {
   return (
     <View style={styles.container} >
-      <Text style={styles.text} >{props.text}</Text>
+      <Text style={[styles.text, {color: props.color}]} >{props.text}</Text>
     </View>
   );
 };

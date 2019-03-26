@@ -1,9 +1,13 @@
+import React from 'react'
 import {
   createStackNavigator,
   createAppContainer
 } from 'react-navigation'
 import HomeNavigator from './home-navigator'
+import SearchButton from './containers/search-button';
 import AnimeScreen from '../screens/containers/anime'
+import SearchScreen from '../screens/containers/search';
+import NavbarSearch from './containers/navbar-search';
 
 const AppNavigator = createStackNavigator(
   {
@@ -17,17 +21,30 @@ const AppNavigator = createStackNavigator(
         return {}
       }
     },
-    Anime: AnimeScreen
+    Anime: AnimeScreen,
+    Search: {
+      screen: SearchScreen,
+      navigationOptions: ({ navigation }) => {
+        return {
+          header: props => <NavbarSearch {...props} onChangeText={navigation.state.params? navigation.state.params.handleChangeText: ()=>{}}/>
+        }
+      }
+    }
   },
   {
     defaultNavigationOptions: {
       title: "Deguvon",
+      headerTintColor: 'white',
       headerStyle: {
         backgroundColor: '#37474f'
       },
       headerTitleStyle: {
         color: 'white',
         fontWeight: 'normal'
+      },
+      headerRight: <SearchButton/>,
+      headerRightContainerStyle: {
+        marginRight: 20
       }
     },
   }
