@@ -8,36 +8,14 @@ import { NavigationActions } from 'react-navigation'
 import Empty from '../../recent/components/empty'
 import VerticalSeparator from '../../recent/components/separator';
 import AnimeCard from '../components/anime-card';
-import Api from '../../../api'
-import DropDownHolder from '../../../utils/dropdownholder';
 import FloatActionButton from '../components/float-action-button';
 import FilterMaganer from '../../../utils/filter-maganer';
 
 class Directory extends Component{
 
   state = {
-    refreshing: false,
     filterIndex: 0,
     data: []
-  }
-
-  async _fetchData(){
-    try {
-      this.setState({refreshing: true})
-      let directory = await Api.getDirectory();
-      this.props.dispatch({
-        type: 'SET_DIRECTORY_DATA',
-        payload: {
-          updated: true,
-          data: Object.values(directory)
-        }
-      })
-      this.setState({refreshing: false})
-    } catch (error) {
-      this.setState({refreshing: false})
-      DropDownHolder.alert('error', 'Error', 'Error al actualizar el directorio')
-      console.log(error)
-    }
   }
 
   _onPressRecentCard = anime => {
@@ -89,7 +67,6 @@ class Directory extends Component{
           renderItem={this._renderItem}
           keyExtractor={this._keyExtractor}
           contentContainerStyle={{ padding: this.props.mode? this.props.screenWidth * 1/40:  this.props.screenWidth * 1/50  }}
-          refreshing={this.state.refreshing}
           // getItemLayout={this._getItemLayout} // Posible optimizacion
           initialNumToRender={12}
           removeClippedSubviews

@@ -3,8 +3,7 @@ import { Dimensions, BackHandler } from "react-native";
 // import { NavigationActions, withNavigation } from 'react-navigation';
 import { connect } from 'react-redux'
 import Base from "../components/base";
-import Api from "../../api";
-import DropDownHolder from "../../utils/dropdownholder";
+import updateDirectory from "../../utils/update-directory";
 
 class AppContainer extends Component {
 
@@ -17,42 +16,6 @@ class AppContainer extends Component {
         screenSize: d
       }
     })
-  }
-
-  async _updateDirectory(){
-    DropDownHolder.alert('info', 'Actualizando directorio','')
-    try {
-      this.props.dispatch({
-        type: 'SET_DIRECTORY_DATA',
-        payload: {
-          updating: true
-        }
-      })
-      let directory = await Api.getDirectory();
-      this.props.dispatch({
-        type: 'SET_DIRECTORY_DATA',
-        payload: {
-          updated: true,
-          data: Object.values(directory)
-        }
-      })
-      DropDownHolder.alert('success', 'Directorio actualizado', 'Directorio actualizado con exito')
-      this.props.dispatch({
-        type: 'SET_DIRECTORY_DATA',
-        payload: {
-          updating: false
-        }
-      })
-    } catch (error) {
-      DropDownHolder.alert('error', 'Error', 'Error al actualizar el directorio')
-      this.props.dispatch({
-        type: 'SET_DIRECTORY_DATA',
-        payload: {
-          updating: false
-        }
-      })
-      console.log(error)
-    }
   }
 
   _onLayout = e => {
@@ -72,7 +35,7 @@ class AppContainer extends Component {
   componentDidMount() {
     BackHandler.addEventListener("hardwareBackPress", this._onBackButtonPressAndroid);
     if (!this.props.directoryUpdated){
-      this._updateDirectory()
+      updateDirectory()
     }
   }
 

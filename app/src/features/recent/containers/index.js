@@ -8,6 +8,7 @@ import Api from '../../../api/index'
 import Empty from "../components/empty";
 import VerticalSeparator from "../components/separator";
 import DropDownHolder from "../../../utils/dropdownholder";
+import updateDirectory from "../../../utils/update-directory";
 
 class Recent extends PureComponent{
   state = {
@@ -21,7 +22,7 @@ class Recent extends PureComponent{
       this.setState({refreshing: true})
       let recentList = await Api.getRecent();
       if (this.props.last.id != recentList[0].id && !this.props.directoryUpdating){
-        this.props._updateDirectory()
+        updateDirectory()
       }
       this.props.dispatch({
         type: 'SET_RECENT_DATA',
