@@ -5,7 +5,7 @@ import {
 import ActionButton from 'react-native-action-button';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
-const FloatActionButton = props => (
+const DirectoryFloatActionButton = props => (
   <ActionButton buttonColor="#439889">
     <ActionButton.Item buttonColor='#62727b' title={`Tipo: ${props.filterType}`} onPress={props.onPressFilter}>
       <Icon name="filter-list" style={styles.actionButtonIcon} />
@@ -13,7 +13,7 @@ const FloatActionButton = props => (
   </ActionButton>
 )
 
-export default FloatActionButton
+export default DirectoryFloatActionButton
 
 const styles = StyleSheet.create({
   actionButtonIcon: {

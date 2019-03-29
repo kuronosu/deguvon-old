@@ -7,9 +7,9 @@ import { connect } from 'react-redux'
 import { NavigationActions } from 'react-navigation'
 import Empty from '../../recent/components/empty'
 import VerticalSeparator from '../../recent/components/separator';
-import AnimeCard from '../components/anime-card';
-import FloatActionButton from '../components/float-action-button';
+import DirectoryFloatActionButton from '../components/float-action-button';
 import FilterMaganer from '../../../utils/filter-maganer';
+import Card from '../../../utils/components/card';
 
 class Directory extends Component{
 
@@ -18,7 +18,7 @@ class Directory extends Component{
     data: []
   }
 
-  _onPressRecentCard = anime => {
+  _onPressAnimeCard = anime => {
     this.props.dispatch(NavigationActions.navigate({
       routeName: 'Anime',
       params: {anime}
@@ -26,15 +26,22 @@ class Directory extends Component{
   }
 
   _renderEmtpy = () => <Empty text='Directorio vacio'/>
+
   _itemSeparator = () => <VerticalSeparator mode={this.props.mode} />
+
   _keyExtractor = item => `anime_${item.aid.toString()}`
-  _renderItem = ({item, index}) =>  <AnimeCard
-    onLongPressRecentCard={()=>{}}
-    onPressRecentCard={this._onPressRecentCard}
-    index={index}
+
+  _renderItem = ({item, index}) =>  <Card
+    id={item}
     mode={this.props.mode}
     screenWidth={this.props.screenWidth}
-    {...item}
+    index={index}
+    onPressCard={this._onPressAnimeCard}
+    image={item.image}
+    primaryText={item.name}
+    secondaryText={item.typea}
+    cardsPerRowPortrait={3}
+    cardsPerRowLandscape={4}
   />
 
   _filter = async () => {
@@ -71,7 +78,7 @@ class Directory extends Component{
           initialNumToRender={12}
           removeClippedSubviews
         />
-        <FloatActionButton filterType={FilterMaganer.getText(this.state.filterIndex)} onPressFilter={this._filter}/>
+        <DirectoryFloatActionButton filterType={FilterMaganer.getText(this.state.filterIndex)} onPressFilter={this._filter}/>
       </View>
     )
   }

@@ -1,19 +1,14 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { withNavigation, NavigationActions } from 'react-navigation'
+import { FlatList } from 'react-native';
 import Empty from '../../recent/components/empty';
 import VerticalSeparator from '../../recent/components/separator';
-import AnimeCard from '../../directory/components/anime-card';
-import { FlatList } from 'react-native-gesture-handler';
+import Card from '../../../utils/components/card';
 
 class Search extends Component {
-  state = {
-    refreshing: false,
-    filterIndex: 0,
-    data: []
-  }
 
-  _onPressCard = anime => {
+  _onPressAnimeCard = anime => {
     this.props.dispatch(NavigationActions.navigate({
       routeName: 'Anime',
       params: {anime}
@@ -21,15 +16,22 @@ class Search extends Component {
   }
 
   _renderEmtpy = () => <Empty text='Sin resultados' color='black'/>
+
   _itemSeparator = () => <VerticalSeparator mode={this.props.mode} />
+
   _keyExtractor = item => `anime_${item.aid.toString()}`
-  _renderItem = ({item, index}) =>  <AnimeCard
-    onLongPressRecentCard={()=>{}}
-    onPressRecentCard={this._onPressCard}
-    index={index}
+
+  _renderItem = ({item, index}) =>  <Card
+    id={item}
     mode={this.props.mode}
     screenWidth={this.props.screenWidth}
-    {...item}
+    index={index}
+    onPressCard={this._onPressAnimeCard}
+    image={item.image}
+    primaryText={item.name}
+    secondaryText={item.typea}
+    cardsPerRowPortrait={3}
+    cardsPerRowLandscape={4}
   />
 
   render(){
@@ -43,7 +45,6 @@ class Search extends Component {
         renderItem={this._renderItem}
         keyExtractor={this._keyExtractor}
         contentContainerStyle={{ padding: this.props.mode? this.props.screenWidth * 1/40:  this.props.screenWidth * 1/50  }}
-        refreshing={this.state.refreshing}
         // getItemLayout={this._getItemLayout} // Posible optimizacion
         initialNumToRender={12}
         removeClippedSubviews

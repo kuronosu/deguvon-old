@@ -1,22 +1,25 @@
 import React, { PureComponent } from "react";
-import { FlatList, Alert } from "react-native";
+import { FlatList } from "react-native";
 import { connect } from 'react-redux';
 import { NavigationActions } from 'react-navigation'
 import Layout from "../components/recent-layout";
-import RecentCard from "../components/recent-card";
 import Api from '../../../api/index'
 import Empty from "../components/empty";
 import VerticalSeparator from "../components/separator";
 import DropDownHolder from "../../../utils/dropdownholder";
 import updateDirectory from "../../../utils/update-directory";
+import Card from "../../../utils/components/card";
 
 class Recent extends PureComponent{
+
   state = {
     refreshing: false
   }
+
   componentDidMount(){
     this._fetchData()
   }
+
   async _fetchData(){
     try {
       this.setState({refreshing: true})
@@ -36,12 +39,13 @@ class Recent extends PureComponent{
       DropDownHolder.alert('error', 'Error', 'Error obtener los ultimos episodios')
     }
   }
-  _onRefresh = () => {
-    this._fetchData()
-  }
-  _onPressRecentCard = () => {
-  }
-  _onLongPressRecentCard = ({anime}) => {
+
+  _onRefresh = () => {this._fetchData()}
+
+  _onPressRecentCard = aid => {}
+
+  _onLongPressRecentCard = aid => {
+    const anime = this.props.directoryData.find(anime => anime.aid == aid)
     this.props.dispatch({
       type: 'SET_ANIME_DATA',
       payload: anime
@@ -51,16 +55,26 @@ class Recent extends PureComponent{
       params: {anime}
     }))
   }
-  _renderEmtpy = () => <Empty text='Sin animes recientes'/>
+
+  _renderEmtpy = () => <Empty text='Sin animes recientes' color='white'/>
+
   _itemSeparator = () => <VerticalSeparator mode={this.props.mode} />
-  _renderItem = ({item, index}) =>  <RecentCard
-    onLongPressRecentCard={this._onLongPressRecentCard}
-    onPressRecentCard={this._onPressRecentCard}
-    index={index}
+
+  _renderItem = ({item, index}) =>  <Card
+    id={item.anime.aid}
     mode={this.props.mode}
     screenWidth={this.props.screenWidth}
-    {...item}
+    index={index}
+    onPressCard={this._onPressRecentCard}
+    onLongPressCard={this._onLongPressRecentCard}
+    image={item.anime.image}
+    primaryText={item.anime.name}
+    secondaryText={`Episodio ${item.number}`}
+    cardsPerRowPortrait={2}
+    cardsPerRowLandscape={4}
+    primaryOverlay={true}
   />
+
   _keyExtractor = item => item.id.toString()
 
   render(){
@@ -89,7 +103,8 @@ function mapStateToProps(state) {
     last: state.recent.last,
     mode: state.app.device.screenMode,
     screenWidth: state.app.device.screenSize.width,
-    directoryUpdating: state.directory.updating
+    directoryUpdating: state.directory.updating,
+    directoryData: state.directory.data
   }
 }
 
