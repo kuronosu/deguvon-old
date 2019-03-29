@@ -2,13 +2,13 @@ import React, { PureComponent } from "react";
 import { FlatList } from "react-native";
 import { connect } from 'react-redux';
 import { NavigationActions } from 'react-navigation'
-import Layout from "../components/recent-layout";
 import Api from '../../../api/index'
 import Empty from "../components/empty";
 import VerticalSeparator from "../components/separator";
 import DropDownHolder from "../../../utils/dropdownholder";
 import updateDirectory from "../../../utils/update-directory";
 import Card from "../../../utils/components/card";
+import GeneralLayout from "../../../utils/components/general-layout";
 
 class Recent extends PureComponent{
 
@@ -79,7 +79,7 @@ class Recent extends PureComponent{
 
   render(){
     return(
-      <Layout>
+      <GeneralLayout>
         <FlatList
           data={this.props.list}
           ListEmptyComponent={this._renderEmtpy}
@@ -92,7 +92,7 @@ class Recent extends PureComponent{
           onRefresh={this._onRefresh}
           refreshing={this.state.refreshing}
         />
-      </Layout>
+      </GeneralLayout>
     )
   }
 }

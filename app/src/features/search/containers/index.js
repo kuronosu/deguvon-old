@@ -5,6 +5,7 @@ import { FlatList } from 'react-native';
 import Empty from '../../recent/components/empty';
 import VerticalSeparator from '../../recent/components/separator';
 import Card from '../../../utils/components/card';
+import GeneralLayout from '../../../utils/components/general-layout';
 
 class Search extends Component {
 
@@ -15,7 +16,7 @@ class Search extends Component {
     }))
   }
 
-  _renderEmtpy = () => <Empty text='Sin resultados' color='black'/>
+  _renderEmtpy = () => <Empty text='Sin resultados' color='white'/>
 
   _itemSeparator = () => <VerticalSeparator mode={this.props.mode} />
 
@@ -36,19 +37,21 @@ class Search extends Component {
 
   render(){
     return(
-      <FlatList
-        data={this.props.data}
-        ListEmptyComponent={this._renderEmtpy}
-        ItemSeparatorComponent={this._itemSeparator}
-        numColumns={this.props.mode ? 3: 4}
-        key={this.props.mode ? 'v' : 'h'}
-        renderItem={this._renderItem}
-        keyExtractor={this._keyExtractor}
-        contentContainerStyle={{ padding: this.props.mode? this.props.screenWidth * 1/40:  this.props.screenWidth * 1/50  }}
-        // getItemLayout={this._getItemLayout} // Posible optimizacion
-        initialNumToRender={12}
-        removeClippedSubviews
-      />
+      <GeneralLayout>
+        <FlatList
+          data={this.props.data}
+          ListEmptyComponent={this._renderEmtpy}
+          ItemSeparatorComponent={this._itemSeparator}
+          numColumns={this.props.mode ? 3: 4}
+          key={this.props.mode ? 'v' : 'h'}
+          renderItem={this._renderItem}
+          keyExtractor={this._keyExtractor}
+          contentContainerStyle={{ padding: this.props.mode? this.props.screenWidth * 1/40:  this.props.screenWidth * 1/50  }}
+          // getItemLayout={this._getItemLayout} // Posible optimizacion
+          initialNumToRender={12}
+          removeClippedSubviews
+        />
+      </GeneralLayout>
     )
   }
 }

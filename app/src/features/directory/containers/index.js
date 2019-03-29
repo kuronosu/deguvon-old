@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import {
-  View,
   FlatList
 } from 'react-native'
 import { connect } from 'react-redux'
@@ -10,6 +9,7 @@ import VerticalSeparator from '../../recent/components/separator';
 import DirectoryFloatActionButton from '../components/float-action-button';
 import FilterMaganer from '../../../utils/filter-maganer';
 import Card from '../../../utils/components/card';
+import GeneralLayout from '../../../utils/components/general-layout';
 
 class Directory extends Component{
 
@@ -64,7 +64,7 @@ class Directory extends Component{
 
   render(){
     return (
-      <View style={{backgroundColor: '#333', flex: 1}}>
+      <GeneralLayout>
         <FlatList
           data={this.state.data}
           ListEmptyComponent={this._renderEmtpy}
@@ -79,7 +79,7 @@ class Directory extends Component{
           removeClippedSubviews
         />
         <DirectoryFloatActionButton filterType={FilterMaganer.getText(this.state.filterIndex)} onPressFilter={this._filter}/>
-      </View>
+      </GeneralLayout>
     )
   }
 }
