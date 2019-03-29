@@ -21,13 +21,13 @@ const HomeNavigator = createMaterialBottomTabNavigator(
         title: 'Directorio'
       },
     },
-    Config: {
-      screen: SettingsScreen,
-      navigationOptions: {
-        title: 'Configuracion',
-        tabBarIcon: <Icon iconSet='Octicons' name="settings" size={25} color='white'/>
-      }
-    }
+    // Config: {
+    //   screen: SettingsScreen,
+    //   navigationOptions: {
+    //     title: 'Configuracion',
+    //     tabBarIcon: <Icon iconSet='Octicons' name="settings" size={25} color='white'/>
+    //   }
+    // }
   },
   {
     activeColor: '#fff',

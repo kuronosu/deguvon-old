@@ -1,13 +1,11 @@
 import { View, StyleSheet } from "react-native";
 import React from "react";
 
-const GeneralLayout = props => {
-  return (
-    <View style={[styles.container, props.styles && [...props.styles]]} {...props}>
-      {props.children}
-    </View>
-  );
-}
+const GeneralLayout = props => (
+  <View style={[styles.container, props.styles && [...props.styles]]} {...props}>
+    {props.children}
+  </View>
+)
 
 export default GeneralLayout;
 

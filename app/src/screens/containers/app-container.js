@@ -2,8 +2,8 @@ import React, { Component } from "react";
 import { Dimensions, BackHandler } from "react-native";
 // import { NavigationActions, withNavigation } from 'react-navigation';
 import { connect } from 'react-redux'
-import Base from "../components/base";
 import updateDirectory from "../../utils/update-directory";
+import GeneralLayout from "../../utils/components/general-layout";
 
 class AppContainer extends Component {
 
@@ -49,10 +49,9 @@ class AppContainer extends Component {
 
   render() {
     return (
-      <Base onLayout={this._onLayout}>
+      <GeneralLayout onLayout={this._onLayout}>
         { this.props.children }
-        {/* {React.cloneElement(this.props.children, { _updateDirectory: this._updateDirectory })} */}
-      </Base>
+      </GeneralLayout>
     )
   }
 }
