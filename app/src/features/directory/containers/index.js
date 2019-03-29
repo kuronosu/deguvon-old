@@ -4,8 +4,8 @@ import {
 } from 'react-native'
 import { connect } from 'react-redux'
 import { NavigationActions } from 'react-navigation'
-import Empty from '../../recent/components/empty'
-import VerticalSeparator from '../../recent/components/separator';
+import Empty from '../../../utils/components/empty'
+import VerticalSeparator from '../../../utils/components/separator';
 import DirectoryFloatActionButton from '../components/float-action-button';
 import FilterMaganer from '../../../utils/filter-maganer';
 import Card from '../../../utils/components/card';
@@ -27,7 +27,7 @@ class Directory extends Component{
 
   _renderEmtpy = () => <Empty text='Directorio vacio'/>
 
-  _itemSeparator = () => <VerticalSeparator mode={this.props.mode} />
+  _itemSeparator = () => <VerticalSeparator numCards={this.props.mode? 3: 4} />
 
   _keyExtractor = item => `anime_${item.aid.toString()}`
 

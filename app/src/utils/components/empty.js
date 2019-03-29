@@ -1,15 +1,15 @@
-import React from 'react';
-import { View, Text, StyleSheet } from "react-native";
+import React from 'react'
+import { View, Text, StyleSheet } from "react-native"
 
 const Empty = props => {
   return (
     <View style={styles.container} >
-      <Text style={[styles.text, {color: props.color}]} >{props.text}</Text>
+      <Text style={[styles.text, (props.color&& {color: props.color})]} >{props.text}</Text>
     </View>
-  );
-};
+  )
+}
 
-export default Empty;
+export default Empty
 
 const styles = StyleSheet.create({
   container: {

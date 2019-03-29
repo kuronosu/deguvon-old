@@ -2,8 +2,8 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { withNavigation, NavigationActions } from 'react-navigation'
 import { FlatList } from 'react-native';
-import Empty from '../../recent/components/empty';
-import VerticalSeparator from '../../recent/components/separator';
+import Empty from '../../../utils/components/empty';
+import VerticalSeparator from '../../../utils/components/separator';
 import Card from '../../../utils/components/card';
 import GeneralLayout from '../../../utils/components/general-layout';
 
@@ -18,7 +18,7 @@ class Search extends Component {
 
   _renderEmtpy = () => <Empty text='Sin resultados' color='white'/>
 
-  _itemSeparator = () => <VerticalSeparator mode={this.props.mode} />
+  _itemSeparator = () => <VerticalSeparator numCards={this.props.mode? 3: 4} />
 
   _keyExtractor = item => `anime_${item.aid.toString()}`
 

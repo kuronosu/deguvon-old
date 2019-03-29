@@ -3,8 +3,8 @@ import { FlatList } from "react-native";
 import { connect } from 'react-redux';
 import { NavigationActions } from 'react-navigation'
 import Api from '../../../api/index'
-import Empty from "../components/empty";
-import VerticalSeparator from "../components/separator";
+import Empty from "../../../utils/components/empty";
+import VerticalSeparator from "../../../utils/components/separator";
 import DropDownHolder from "../../../utils/dropdownholder";
 import updateDirectory from "../../../utils/update-directory";
 import Card from "../../../utils/components/card";
@@ -56,9 +56,9 @@ class Recent extends PureComponent{
     }))
   }
 
-  _renderEmtpy = () => <Empty text='Sin animes recientes' color='white'/>
+  _renderEmtpy = () => <Empty text='Sin animes recientes'/>
 
-  _itemSeparator = () => <VerticalSeparator mode={this.props.mode} />
+  _itemSeparator = () => <VerticalSeparator numCards={this.props.mode? 2: 4} />
 
   _renderItem = ({item, index}) =>  <Card
     id={item.anime.aid}
