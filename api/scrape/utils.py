@@ -1,4 +1,14 @@
-import cfscrape, requests, re
+import cfscrape, requests
+from http.cookies import SimpleCookie
+
+from .patterns import (
+    ANIME_SCRIPT_PATTERN,
+    AID_PATTERN,
+    SLUG_PATTERN,
+    NEXT_EPISODE_DATE_PATTERN,
+    NAME_PATTERN,
+    HTML_ENTITIES_PATTERN
+)
 
 USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.109 Safari/537.36"
 
@@ -8,11 +18,9 @@ def generate_cookies():
     return cookies
 
 def cookies_to_dict(string_cookies):
-    cookies = {}
-    for c in string_cookies.split("; "):
-        n, v = c.split("=")
-        cookies[n] = v
-    return cookies
+    cookie = SimpleCookie()
+    cookie.load(string_cookies)
+    return {k: morsel.value for k, morsel in cookie.items()}
 
 def save_cookies(cookies):
     with open('cookies', 'w') as f:
@@ -44,8 +52,7 @@ def make_request(url, stream=False):
             return response
 
 def replace_html_entities(text):
-    path = re.compile(r'&[#0-9a-zA-Z]+;')
-    scaracter = path.search(text)
+    scaracter = HTML_ENTITIES_PATTERN.search(text)
     if scaracter:
         with open('scaracter.txt', 'a') as file:
             file.write(f'{text}\n')
@@ -59,19 +66,19 @@ def get_script_gata(scripts):
                 break
 
     anime_info = (
-        re.compile(r'var anime_info = \[[0-9"]+,.*\];')
+        ANIME_SCRIPT_PATTERN
             .search(script)
             .group(0)
             .replace('var anime_info = [', '')[:-2]
         )
-    aid = re.compile(r'"[0-9]+"').search(anime_info).group(0)
+    aid = AID_PATTERN.search(anime_info).group(0)
     anime_info = anime_info.replace(aid, '')
-    slug = re.compile(r'"[a-zA-Z0-9_-]+"').search(anime_info).group(0)
+    slug = SLUG_PATTERN.search(anime_info).group(0)
     anime_info = anime_info.replace(slug, '')
-    next_episode_date = re.compile(r'"[0-9-]+"').search(anime_info)
+    next_episode_date = NEXT_EPISODE_DATE_PATTERN.search(anime_info)
     next_episode_date = next_episode_date.group(0) if next_episode_date else ""
     anime_info = anime_info.replace(next_episode_date, '')
-    name = re.compile(r'".*"').search(anime_info)
+    name = NAME_PATTERN.search(anime_info)
     name = (name.group(0) if name else slug)
     anime_info = anime_info.replace(name, '')
 

@@ -59,6 +59,7 @@ buck-out/
 venv/*
 test.py
 ddbb.sqlite3
+ddbb.sqlite3-journal
 *.pyc
 __pycache__/
 animes.txt

@@ -1,5 +1,6 @@
 import re, json
 from bs4 import BeautifulSoup
+from .patterns import SERVERS_SCRIPT_PATTERN, EPISODE_SCRIPT_PATTERN, EPISODE_LIST_PATTERN, RELATION_TEXT_PATTERN, ANIME_LINK_PATTERN
 
 from .utils import make_request, replace_html_entities, get_script_gata
 
@@ -60,8 +61,8 @@ class AnimeFactory:
         image = containers[2].find('div', {'class': 'AnimeCover'}).find('img')['src']
         state = containers[2].find('p', {'class': 'AnmStts'}).find('span').string
 
-        episodes = re.compile(r"var episodes = \[.*\];").search(script).group(0)
-        episodes = re.compile(r'\[[0-9,.]+\]').findall(episodes)
+        episodes = EPISODE_SCRIPT_PATTERN.search(script).group(0)
+        episodes = EPISODE_LIST_PATTERN.findall(episodes)
         episodes = [s[1:-1].split(',') for s in episodes]
 
         # Synopsis
@@ -96,8 +97,8 @@ class AnimeFactory:
             listAnmRel = []
             for i in cont_listAnmRel:
                 link = i.find('a')['href']
-                rel = re.compile(r'\([A-Za-z,\- ]+\)').search(i.get_text()).group(0)[1:-1]
-                if re.compile(r'/[0-9]+/[0-9a-zA-z\-]+').search(link):
+                rel = RELATION_TEXT_PATTERN.search(i.get_text()).group(0)[1:-1]
+                if ANIME_LINK_PATTERN.search(link):
                     listAnmRel.append(AnimeReltionScraping(link, rel))
             del cont_listAnmRel
         else:
@@ -117,8 +118,8 @@ class AnimeFactory:
         scripts.reverse()
         aid, name, slug, nexte_date, script = get_script_gata(scripts)
 
-        episodes = re.compile(r"var episodes = \[.*\];").search(script).group(0)
-        episodes = re.compile(r'\[[0-9,.]+\]').findall(episodes)
+        episodes = EPISODE_SCRIPT_PATTERN.search(script).group(0)
+        episodes = EPISODE_LIST_PATTERN.findall(episodes)
         episodes = [s[1:-1].split(',') for s in episodes]
 
         for e in episodes:
