@@ -99,7 +99,9 @@ def episode_videos_data(eid):
     episode = episode_querry[0] if episode_querry.count() == 1 else None
     if episode is None:
         abort(404)
-    return json_response(scrape_episode(episode.url))
+    data = scrape_episode(episode.url)
+    data.update({'available_servers': [s['server'].lower() for s in AVAILABLE_SERVERS] })
+    return json_response(data)
 
 def episode_video_server(eid, server, lang):
     try:
