@@ -28,4 +28,12 @@ class Api {
   }
 }
 
+export const getServers = async eid => {
+  const servers = await fetch(`${new Api().getBaseApi()}/episode/${eid}/videos`)
+  if (!servers.ok){
+    return servers
+  }
+  return await servers.json()
+}
+
 export default new Api();
