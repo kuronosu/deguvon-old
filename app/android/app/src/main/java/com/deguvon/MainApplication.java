@@ -6,6 +6,7 @@ import com.facebook.soloader.SoLoader;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactApplication;
+import com.github.yamill.orientation.OrientationPackage;
 import com.facebook.react.shell.MainReactPackage;
 
 import com.RNFetchBlob.RNFetchBlobPackage;
@@ -29,6 +30,7 @@ public class MainApplication extends Application implements ReactApplication {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
           new ReactVideoPackage(),
+          new OrientationPackage(),
           new VectorIconsPackage(),
           new RNFetchBlobPackage(),
           new RNGestureHandlerPackage()

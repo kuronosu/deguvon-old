@@ -36,7 +36,6 @@ export const getNatsukiVideo = async (eid, servers, lang) => {
   */
   servers = servers? servers: await getServers(eid)
   const requestInit = {method:'POST', body: JSON.stringify(servers)}
-  console.log(lang)
   const request = await fetch(`https://kuronosu.dev/api/v1/episode/${eid}/natsuki${lang? `/${lang}`: ''}`, requestInit)
   const natsuki_server = request.ok ? await request.json(): []
   return natsuki_server
