@@ -39,7 +39,7 @@ def get_natsuki_video(servers, lang):
         r = make_request(natsuki_dict['code'].replace('embed', 'check'))
         if r.status_code == 200:
             video = r.json()
-            video.update({"lang": natsuki_dict['lang'], 'servar_name': 'Natsuki'})
+            video.update({"lang": natsuki_dict['lang'], 'server_name': 'Natsuki'})
             video_url_list.append(video)
 
     return video_url_list
