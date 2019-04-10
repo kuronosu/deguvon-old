@@ -77,7 +77,7 @@ class Recent extends PureComponent{
   _itemSeparator = () => <VerticalSeparator numCards={this.props.mode? 2: 4} />
 
   _renderItem = ({item, index}) =>  <Card
-    id={item}
+    pressData={item}
     mode={this.props.mode}
     screenWidth={this.props.screenWidth}
     index={index}

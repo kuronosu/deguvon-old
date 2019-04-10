@@ -23,7 +23,7 @@ class Search extends Component {
   _keyExtractor = item => `anime_${item.aid.toString()}`
 
   _renderItem = ({item, index}) =>  <Card
-    id={item}
+    pressData={item}
     mode={this.props.mode}
     screenWidth={this.props.screenWidth}
     index={index}

@@ -12,7 +12,7 @@ import {
 const defaultImgAspectRatioSize = 238 / 339
 
 interface CardProps {
-  id?: any
+  pressData?: any
   mode: boolean
   screenWidth: number
   index: number
@@ -55,8 +55,8 @@ const Card = (props: CardProps) => {
 
   return (
     <TouchableNativeFeedback
-      onPress={() => {props.onPressCard && props.onPressCard(props.id)}}
-      onLongPress={() => {props.onLongPressCard && props.onLongPressCard(props.id)}}
+      onPress={() => {props.onPressCard && props.onPressCard(props.pressData)}}
+      onLongPress={() => {props.onLongPressCard && props.onLongPressCard(props.pressData)}}
       background={TouchableNativeFeedback.Ripple('white')}
       useForeground={true}
       >
