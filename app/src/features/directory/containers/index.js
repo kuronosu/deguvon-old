@@ -46,8 +46,8 @@ class Directory extends Component{
 
   _filter = async () => {
     this.setState(pState => {
-      const filterState = FilterMaganer.next(this.props.data, pState.filterIndex)
-      return {data: filterState.data, filterIndex: filterState.index}
+      const {data, index} = FilterMaganer.next(this.props.data, pState.filterIndex)
+      return {data, filterIndex: index}
     })
   }
 
