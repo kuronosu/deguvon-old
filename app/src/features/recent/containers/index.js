@@ -1,14 +1,17 @@
-import React, { PureComponent } from "react";
-import { FlatList } from "react-native";
-import { connect } from 'react-redux';
+import React, { PureComponent } from "react"
+import { FlatList } from "react-native"
+import { connect } from 'react-redux'
 import { NavigationActions } from 'react-navigation'
-import Api from '../../../api/index'
-import Empty from "../../../utils/components/empty";
-import VerticalSeparator from "../../../utils/components/separator";
-import DropDownHolder from "../../../utils/dropdownholder";
-import updateDirectory from "../../../utils/update-directory";
-import Card from "../../../utils/components/card";
-import GeneralLayout from "../../../utils/components/general-layout";
+import Api, { getServers } from '../../../api/index'
+import Empty from "../../../utils/components/empty"
+import { getAvailableServers, getNatsukiVideo } from '../../../utils/video-servers'
+import VerticalSeparator from "../../../utils/components/separator"
+import DropDownHolder from "../../../utils/dropdownholder"
+import updateDirectory from "../../../utils/update-directory"
+import Card from "../../../utils/components/card"
+import GeneralLayout from "../../../utils/components/general-layout"
+
+
 
 class Recent extends PureComponent{
 
@@ -23,7 +26,7 @@ class Recent extends PureComponent{
   async _fetchData(){
     try {
       this.setState({refreshing: true})
-      let recentList = await Api.getRecent();
+      let recentList = await Api.getRecent()
       if (this.props.last.id != recentList[0].id && !this.props.directoryUpdating){
         updateDirectory()
       }
@@ -42,7 +45,20 @@ class Recent extends PureComponent{
 
   _onRefresh = () => {this._fetchData()}
 
-  _onPressRecentCard = aid => {}
+  _onPressRecentCard = ({id, number, anime}) => {
+    (async () => {
+      const server = await getServers(id)
+      const availableServers = getAvailableServers(server)
+      const natsukiVideoList = await getNatsukiVideo(id, availableServers)
+      this.props.dispatch(NavigationActions.navigate({
+        routeName: 'Player',
+        params: {
+          video: natsukiVideoList.length > 0 ? natsukiVideoList[0].file: '',
+          title: `${anime.name} ${number}`
+        }
+      }))
+    })()
+  }
 
   _onLongPressRecentCard = aid => {
     const anime = this.props.directoryData.find(anime => anime.aid == aid)
@@ -61,7 +77,7 @@ class Recent extends PureComponent{
   _itemSeparator = () => <VerticalSeparator numCards={this.props.mode? 2: 4} />
 
   _renderItem = ({item, index}) =>  <Card
-    id={item.anime.aid}
+    id={item}
     mode={this.props.mode}
     screenWidth={this.props.screenWidth}
     index={index}
@@ -108,4 +124,4 @@ function mapStateToProps(state) {
   }
 }
 
-export default connect(mapStateToProps)(Recent);
+export default connect(mapStateToProps)(Recent)

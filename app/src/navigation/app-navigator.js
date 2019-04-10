@@ -8,6 +8,7 @@ import SearchButton from './containers/search-button';
 import AnimeScreen from '../screens/containers/anime'
 import SearchScreen from '../screens/containers/search';
 import NavbarSearch from './containers/navbar-search';
+import PlayerScreen from '../screens/containers/player';
 
 const AppNavigator = createStackNavigator(
   {
@@ -28,6 +29,14 @@ const AppNavigator = createStackNavigator(
         return {
           header: props => <NavbarSearch {...props} onChangeText={navigation.state.params? navigation.state.params.handleChangeText: ()=>{}}/>
         }
+      }
+    },
+    Player: {
+      screen: PlayerScreen,
+      navigationOptions: {
+        headerVisible: false,
+        headerMode: 'none',
+        header: null
       }
     }
   },

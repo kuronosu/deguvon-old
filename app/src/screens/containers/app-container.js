@@ -1,9 +1,9 @@
-import React, { Component } from "react";
-import { Dimensions, BackHandler } from "react-native";
-// import { NavigationActions, withNavigation } from 'react-navigation';
+import React, { Component } from "react"
+import { Dimensions, BackHandler } from "react-native"
+// import { NavigationActions, withNavigation } from 'react-navigation'
 import { connect } from 'react-redux'
-import updateDirectory from "../../utils/update-directory";
-import GeneralLayout from "../../utils/components/general-layout";
+import updateDirectory from "../../utils/update-directory"
+import GeneralLayout from "../../utils/components/general-layout"
 
 class AppContainer extends Component {
 
@@ -24,16 +24,16 @@ class AppContainer extends Component {
 
   _onBackButtonPressAndroid = () => {
     // if (this.props.navigation.index === 0) {
-    //   return false;
+    //   return false
     // }
 
-    // this.props.dispatch(NavigationActions.back());
-    // return true;
+    // this.props.dispatch(NavigationActions.back())
+    // return true
     return false
-  };
+  }
 
   componentDidMount() {
-    BackHandler.addEventListener("hardwareBackPress", this._onBackButtonPressAndroid);
+    BackHandler.addEventListener("hardwareBackPress", this._onBackButtonPressAndroid)
     if (!this.props.directoryUpdated){
       updateDirectory()
     }
@@ -44,7 +44,7 @@ class AppContainer extends Component {
   }
 
   componentWillUnmount() {
-    BackHandler.removeEventListener("hardwareBackPress", this._onBackButtonPressAndroid);
+    BackHandler.removeEventListener("hardwareBackPress", this._onBackButtonPressAndroid)
   }
 
   render() {
