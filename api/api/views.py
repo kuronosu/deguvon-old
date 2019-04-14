@@ -7,14 +7,15 @@ from utils import json_response
 from db.actions import DataBase
 from db.models import Episode
 from scrape.utils import make_request as rq
-from scrape.episode_videos import scrape_episode, get_natsuki_video
+from scrape.episode_videos import scrape_episode, get_natsuki_video, get_fembed_video
 
 from .utils import ImageSource
 
 BASE_DIR = os.environ.get('BASE_DIR', os.path.dirname(os.path.dirname(__file__)))
 DRIRECTORY_PATH = os.path.join(BASE_DIR, 'directory.json')
 AVAILABLE_SERVERS = [
-    {'server': 'natsuki', 'controller': get_natsuki_video}
+    {'server': 'natsuki', 'controller': get_natsuki_video},
+    {'server': 'fembed', 'controller': get_fembed_video}
 ]
 
 

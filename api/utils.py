@@ -14,3 +14,8 @@ def json_response(data, indent=1):
 
 def path(rule, **kwargs):
     return (rule, kwargs)
+
+def remove_key(dict_obj, key):
+    if key in dict_obj:
+        del dict_obj[key]
+    return dict_obj
