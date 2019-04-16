@@ -4,10 +4,26 @@ import Video from 'react-native-video'
 import Orientation from 'react-native-orientation'
 import { withNavigation } from 'react-navigation'
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler'
-import Icon from 'react-native-vector-icons/AntDesign'
 
 import BackButton from '../../../navigation/containers/back-button'
 import PlayPause from '../components/play-pause'
+import IconController from '../components/icon-cotroller';
+
+const timeFormater = (time, format, negative) => {
+  const start = format? 14: 11
+  const length = format? 5: 8
+  const timeObj = new Date(null);
+  timeObj.setSeconds(time); // specify value for SECONDS here
+  let leftFormat
+  if (negative == true) {
+    leftFormat = '- '
+  } else if (negative == false){
+    leftFormat = '  '
+  } else {
+    leftFormat = ''
+  }
+  return leftFormat + timeObj.toISOString().substr(start, length)
+}
 
 class Player extends Component {
 
@@ -18,10 +34,14 @@ class Player extends Component {
     loading: true,
     video: '',
     showContols: false,
-    currentTime: '00:00',
-    duration: '00:00'
+    currentTimeFormated: '00:00',
+    durationFormated: '00:00',
+    timeLeftFormated: '00:00',
+    currentTime: 0,
+    duration: 0,
   }
-  sb = [14, 5]
+
+  timeFormat = true // true = '00:00' (14, 5) false = '00:00:00' (11, 8)
 
   onVideoBuffer = e => {
     console.log(e, this.props.navigation.getParam('video', ''))
@@ -32,14 +52,12 @@ class Player extends Component {
 
   onVideoLoaded = ({ duration }) => {
     // this.player.seek(1)
-    if (duration > 3600){
-      this.sb = [11, 8]
+    if (duration >= 3600){
+      this.timeFormat = false
     }
-    const date = new Date(null);
-    date.setSeconds(duration); // specify value for SECONDS here
-    duration = date.toISOString().substr(this.sb[0], this.sb[1])
     this.setState({
       loading: false,
+      durationFormated: timeFormater(duration, this.timeFormat, false),
       duration
     })
   }
@@ -49,9 +67,15 @@ class Player extends Component {
   }
 
   onVideoProgress = ({ currentTime }) => {
-    const date = new Date(null);
-    date.setSeconds(currentTime); // specify value for SECONDS here
-    this.setState({ currentTime: date.toISOString().substr(this.sb[0], this.sb[1]) })
+    this.setState({
+      currentTimeFormated: timeFormater(currentTime, this.timeFormat),
+      currentTime,
+      timeLeftFormated: timeFormater(this.state.duration - currentTime, this.timeFormat, true)
+    })
+  }
+
+  onExitFullScreen = () => {
+    this.player.presentFullscreenPlayer()
   }
 
   componentWillMount() {
@@ -100,13 +124,14 @@ class Player extends Component {
             resizeMode='contain'
             source={{ uri: this.props.navigation.getParam('video', '') }}
             style={styles.videoStyle}
+            fullscreen={true}
+            controls={false}
+            volume={1}
             onLoad={this.onVideoLoaded}
             onBuffer={this.onVideoBuffer}
             onError={this.onVideoError}
             onProgress={this.onVideoProgress}
-            fullscreen={true}
-            controls={false}
-            volume={1}
+            onFullscreenPlayerWillDismiss={this.onExitFullScreen}
           />
           {
             this.state.showContols &&
@@ -125,25 +150,20 @@ class Player extends Component {
               <Text style={styles.title}>{this.props.navigation.getParam('title', '')}</Text>
             </View>
             <View style={[styles.bar, styles.controls]}>
-              <Text style={styles.controlTime}>{this.state.currentTime}</Text>
+              <Text style={styles.controlTime}>{this.state.currentTimeFormated}</Text>
               <View style={[styles.controls, styles.controlButtons]}>
-                <View style={styles.iconContainer}>
-                  <Icon name='doubleleft' color='white' size={30} />
-                </View>
-                <View style={styles.iconContainer}>
-                  <Icon name='left' color='white' size={30} />
-                </View>
-                <View style={styles.iconContainer}>
-                  <PlayPause onPress={this.togglePlay} paused={this.state.paused} />
-                </View>
-                <View style={styles.iconContainer}>
-                  <Icon name='right' color='white' size={30} />
-                </View>
-                <View style={styles.iconContainer}>
-                  <Icon name='doubleright' color='white' size={30} />
-                </View>
+                <IconController name=''/>
+                <IconController name='doubleleft'/>
+                <IconController name='left'/>
+                <PlayPause onPress={this.togglePlay} paused={this.state.paused} />
+                <IconController name='right'/>
+                <IconController name='doubleright'/>
+                <IconController name='rotate-right' set='MaterialIcons'/>
               </View>
-              <Text style={styles.controlTime}>{this.state.duration}</Text>
+              <View>
+                <Text style={styles.controlTime}>{this.state.durationFormated}</Text>
+                <Text style={[styles.controlTime, {marginTop: 0  }]}>{this.state.timeLeftFormated}</Text>
+              </View>
             </View>
           </View>
         }
@@ -204,18 +224,10 @@ const createStyles = (width, height) => StyleSheet.create({
   controlTime: {
     color: 'white',
     marginHorizontal: 10,
-    marginTop: 10,
+    marginTop: 5,
     alignSelf: 'flex-start'
   },
   controlButtons: {
-    flexDirection: 'row'
+    flexDirection: 'row',
   },
-  iconContainer: {
-    height: 45,
-    width: 45,
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: 0,
-    margin: 0
-  }
 })
