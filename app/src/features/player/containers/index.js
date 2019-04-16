@@ -4,6 +4,7 @@ import Video from 'react-native-video'
 import Orientation from 'react-native-orientation'
 import { withNavigation } from 'react-navigation'
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler'
+import Icon from 'react-native-vector-icons/AntDesign'
 
 import BackButton from '../../../navigation/containers/back-button'
 import PlayPause from '../components/play-pause'
@@ -16,8 +17,11 @@ class Player extends Component {
     width: 0,
     loading: true,
     video: '',
-    showContols: false
+    showContols: false,
+    currentTime: '00:00',
+    duration: '00:00'
   }
+  sb = [14, 5]
 
   onVideoBuffer = e => {
     console.log(e, this.props.navigation.getParam('video', ''))
@@ -26,15 +30,28 @@ class Player extends Component {
     })
   }
 
-  onVideoLoaded = () => {
+  onVideoLoaded = ({ duration }) => {
     // this.player.seek(1)
+    if (duration > 3600){
+      this.sb = [11, 8]
+    }
+    const date = new Date(null);
+    date.setSeconds(duration); // specify value for SECONDS here
+    duration = date.toISOString().substr(this.sb[0], this.sb[1])
     this.setState({
-      loading: false
+      loading: false,
+      duration
     })
   }
 
   onVideoError = e => {
     console.error("Error", e)
+  }
+
+  onVideoProgress = ({ currentTime }) => {
+    const date = new Date(null);
+    date.setSeconds(currentTime); // specify value for SECONDS here
+    this.setState({ currentTime: date.toISOString().substr(this.sb[0], this.sb[1]) })
   }
 
   componentWillMount() {
@@ -86,28 +103,48 @@ class Player extends Component {
             onLoad={this.onVideoLoaded}
             onBuffer={this.onVideoBuffer}
             onError={this.onVideoError}
+            onProgress={this.onVideoProgress}
             fullscreen={true}
             controls={false}
             volume={1}
           />
           {
             this.state.showContols &&
-            <View style={[styles.overlay, styles.overlayColor]}/>
+            <View style={[styles.overlay, styles.overlayColor]} />
           }
         </TouchableWithoutFeedback>
         {
           this.state.loading &&
-          <ActivityIndicator style={styles.overlay} color="red" size='large'/>
+          <ActivityIndicator style={styles.overlay} color="red" size='large' />
         }
         {
           this.state.showContols &&
           <View style={styles.overlay}>
             <View style={[styles.bar, styles.header]}>
-              <BackButton/>
+              <BackButton />
               <Text style={styles.title}>{this.props.navigation.getParam('title', '')}</Text>
             </View>
-            <View style={styles.bar}></View>
-            <PlayPause onPress={this.togglePlay} paused={this.state.paused} />
+            <View style={[styles.bar, styles.controls]}>
+              <Text style={styles.controlTime}>{this.state.currentTime}</Text>
+              <View style={[styles.controls, styles.controlButtons]}>
+                <View style={styles.iconContainer}>
+                  <Icon name='doubleleft' color='white' size={30} />
+                </View>
+                <View style={styles.iconContainer}>
+                  <Icon name='left' color='white' size={30} />
+                </View>
+                <View style={styles.iconContainer}>
+                  <PlayPause onPress={this.togglePlay} paused={this.state.paused} />
+                </View>
+                <View style={styles.iconContainer}>
+                  <Icon name='right' color='white' size={30} />
+                </View>
+                <View style={styles.iconContainer}>
+                  <Icon name='doubleright' color='white' size={30} />
+                </View>
+              </View>
+              <Text style={styles.controlTime}>{this.state.duration}</Text>
+            </View>
           </View>
         }
       </View>
@@ -153,11 +190,32 @@ const createStyles = (width, height) => StyleSheet.create({
   },
   header: {
     transform: [
-      {translateY: -height+50}
+      { translateY: -height + 50 }
     ]
   },
   title: {
     fontSize: 20,
     color: 'white',
+  },
+  controls: {
+    justifyContent: 'space-between',
+    alignItems: 'center'
+  },
+  controlTime: {
+    color: 'white',
+    marginHorizontal: 10,
+    marginTop: 10,
+    alignSelf: 'flex-start'
+  },
+  controlButtons: {
+    flexDirection: 'row'
+  },
+  iconContainer: {
+    height: 45,
+    width: 45,
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 0,
+    margin: 0
   }
 })

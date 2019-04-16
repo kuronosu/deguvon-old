@@ -1,27 +1,27 @@
 import React from 'react'
 import { StyleSheet, View } from 'react-native'
-import Icon from 'react-native-vector-icons/MaterialIcons'
+import IconFoundation from 'react-native-vector-icons/Foundation'
+import IconMaterial from 'react-native-vector-icons/MaterialIcons'
 
-const PlayPause = props => (
-  <View style={styles.container}>
+const PlayPause = props => {
+  const Icon = props.paused? IconMaterial: IconFoundation
+  return (
     <Icon
+      style={props.paused? styles.iconPlay: styles.iconPause}
       name={props.paused? 'play-arrow': 'pause'}
-      size={80}
+      size={35}
       color='white'
       onPress={props.onPress}
+      {...props}
     />
-  </View>
-)
+)}
 
 const styles = StyleSheet.create({
-  container: {
-    position: 'absolute',
-    left: 0,
-    top: 0,
-    bottom: 0,
-    right: 0,
-    justifyContent: 'center',
-    alignItems: 'center',
+  iconPause: {
+    marginHorizontal: 10
+  },
+  iconPlay: {
+    marginHorizontal: 1
   }
 })
 
