@@ -109,6 +109,10 @@ class Player extends Component {
     }))
   }
 
+  relativeSeek = offset => {
+    this.player.seek(this.state.currentTime + offset)
+  }
+
   render() {
     const styles = createStyles(this.state.width, this.state.height)
     return (
@@ -152,13 +156,13 @@ class Player extends Component {
             <View style={[styles.bar, styles.controls]}>
               <Text style={styles.controlTime}>{this.state.currentTimeFormated}</Text>
               <View style={[styles.controls, styles.controlButtons]}>
-                <IconController name=''/>
-                <IconController name='doubleleft'/>
-                <IconController name='left'/>
+                <IconController name='' disable/>
+                <IconController name='doubleleft' disable/>
+                <IconController name='left' onPress={() => {this.relativeSeek(-5)}}/>
                 <PlayPause onPress={this.togglePlay} paused={this.state.paused} />
-                <IconController name='right'/>
-                <IconController name='doubleright'/>
-                <IconController name='rotate-right' set='MaterialIcons'/>
+                <IconController name='right' onPress={() => {this.relativeSeek(15)}}/>
+                <IconController name='doubleright' disable/>
+                <IconController name='rotate-right' set='MaterialIcons' onPress={() => {this.relativeSeek(85)}}/>
               </View>
               <View>
                 <Text style={styles.controlTime}>{this.state.durationFormated}</Text>

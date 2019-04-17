@@ -13,7 +13,8 @@ const IconController = props => {
       <Icon
         onPress={props.onPress}
         name={props.name}
-        color={props.color? props.color: 'white'}size={25}
+        color={props.disable? 'rgba(255, 255, 255, 0.3)': (props.color? props.color: 'white')}
+        size={25}
       />
     </IconContainer>
   )
