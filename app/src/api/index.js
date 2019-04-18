@@ -1,9 +1,7 @@
-import { store } from '../store';
 
 class Api {
   getBaseApi(){
-    const { host, route} = store.getState().app.config.api
-    return `https://${host}${route}`
+    return `https://kuronosu.dev/api/v1`
   }
 
   async getRecent() {

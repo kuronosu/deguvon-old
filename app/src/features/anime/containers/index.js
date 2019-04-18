@@ -12,18 +12,24 @@ class AnimeDetail extends Component {
 
   state = {
     loadded: false,
-    anime: null
+    anime: null,
+    relations: []
   }
 
-  fetchData = () => {
-    Api.getAnimeDetails(this.props.navigation.getParam('anime', {aid: -1}).aid)
-    .then(data => {
-      this.setState({anime: data.anime, relations: data.relations, loadded: true});
-    }).catch(e => this.setState({loadded: false}));
+  getData = () => {
+    const anime = this.props.navigation.getParam('anime', {aid: -1})
+    if (anime.aid == -1){
+      Api.getAnimeDetails(anime.aid)
+      .then(data => {
+        this.setState({anime: data.anime, relations: data.relations, loadded: true});
+      }).catch(e => this.setState({loadded: false}));
+    } else {
+      this.setState({anime, loadded: true})
+    }
   }
 
   componentWillMount(){
-    this.fetchData()
+    this.getData()
   }
   render(){
     if (this.state.loadded){

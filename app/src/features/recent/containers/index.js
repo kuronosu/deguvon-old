@@ -62,10 +62,6 @@ class Recent extends PureComponent{
 
   _onLongPressRecentCard = episode => {
     const anime = this.props.directoryData.find(anime => anime.aid == episode.anime.aid)
-    this.props.dispatch({
-      type: 'SET_ANIME_DATA',
-      payload: anime
-    })
     this.props.dispatch(NavigationActions.navigate({
       routeName: 'Anime',
       params: {anime}
