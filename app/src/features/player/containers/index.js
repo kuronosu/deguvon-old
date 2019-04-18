@@ -35,8 +35,8 @@ class Player extends Component {
     video: '',
     showContols: false,
     currentTimeFormated: '00:00',
-    durationFormated: '00:00',
-    timeLeftFormated: '00:00',
+    durationFormated: '  00:00',
+    timeLeftFormated: '  00:00',
     currentTime: 0,
     duration: 0,
   }
