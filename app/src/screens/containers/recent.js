@@ -1,8 +1,4 @@
-import React, { Component } from 'react'
 import Recent from '../../features/recent/containers'
+import withHandleAndroidBackButton from '../../navigation/handle-android-back-button'
 
-export default class RecentScreen extends Component {
-  render(){
-    return <Recent/>
-  }
-}
+export default RecentScreen = withHandleAndroidBackButton(Recent)

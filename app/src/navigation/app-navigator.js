@@ -22,7 +22,14 @@ const AppNavigator = createStackNavigator(
         return {}
       }
     },
-    Anime: AnimeScreen,
+    Anime: {
+      screen: AnimeScreen,
+      navigationOptions: ({ navigation }) => {
+        return {
+          title: navigation.getParam('anime', {name: 'Anime'}).name
+        }
+      }
+    },
     Search: {
       screen: SearchScreen,
       navigationOptions: ({ navigation }) => {

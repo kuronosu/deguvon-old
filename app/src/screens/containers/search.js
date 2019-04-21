@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
-import { connect } from 'react-redux'
 import Search from '../../features/search/containers'
+import withHandleAndroidBackButton from '../../navigation/handle-android-back-button'
 
 class SearchScreen extends Component {
 
@@ -27,4 +27,4 @@ const mapStateToProps = state => ({
   data: state.directory.data
 })
 
-export default connect(mapStateToProps)(SearchScreen)
+export default withHandleAndroidBackButton(SearchScreen, mapStateToProps)

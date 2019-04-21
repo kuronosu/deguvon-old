@@ -1,14 +1,4 @@
-import React, { Component } from 'react'
 import AnimeDetails from '../../features/anime/containers/index'
+import withHandleAndroidBackButton from '../../navigation/handle-android-back-button'
 
-export default class RecentScreen extends Component {
-  static navigationOptions = ({ navigation }) => {
-    return {
-      title: navigation.getParam('anime', {name: 'Anime'}).name
-    }
-  }
-
-  render(){
-    return <AnimeDetails/>
-  }
-}
+export default AnimeScreen = withHandleAndroidBackButton(AnimeDetails)

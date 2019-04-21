@@ -1,8 +1,4 @@
-import React, { Component } from 'react'
 import Settings from '../../features/settings/containers'
+import withHandleAndroidBackButton from '../../navigation/handle-android-back-button'
 
-export default class SettingsScreen extends Component {
-  render(){
-    return <Settings/>
-  }
-}
+export default SettingsScreen = withHandleAndroidBackButton(Settings)

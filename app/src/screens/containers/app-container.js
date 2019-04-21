@@ -1,6 +1,5 @@
 import React, { Component } from "react"
-import { Dimensions, BackHandler } from "react-native"
-// import { NavigationActions, withNavigation } from 'react-navigation'
+import { Dimensions } from "react-native"
 import { connect } from 'react-redux'
 import updateDirectory from "../../utils/update-directory"
 import GeneralLayout from "../../utils/components/general-layout"
@@ -22,18 +21,7 @@ class AppContainer extends Component {
     this._updateScreenInfo()
   }
 
-  _onBackButtonPressAndroid = () => {
-    // if (this.props.navigation.index === 0) {
-    //   return false
-    // }
-
-    // this.props.dispatch(NavigationActions.back())
-    // return true
-    return false
-  }
-
   componentDidMount() {
-    BackHandler.addEventListener("hardwareBackPress", this._onBackButtonPressAndroid)
     if (!this.props.directoryUpdated){
       updateDirectory()
     }
@@ -41,10 +29,6 @@ class AppContainer extends Component {
 
   componentWillMount(){
     this._updateScreenInfo()
-  }
-
-  componentWillUnmount() {
-    BackHandler.removeEventListener("hardwareBackPress", this._onBackButtonPressAndroid)
   }
 
   render() {

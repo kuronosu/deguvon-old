@@ -1,8 +1,4 @@
-import React, { Component } from 'react'
-import Directory from '../../features/directory/containers';
+import Directory from '../../features/directory/containers'
+import withHandleAndroidBackButton from '../../navigation/handle-android-back-button'
 
-export default class DirectoryScreen extends Component {
-  render(){
-    return <Directory/>
-  }
-}
+export default DirectoryScreen = withHandleAndroidBackButton(Directory)
