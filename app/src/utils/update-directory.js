@@ -32,7 +32,8 @@ const updateDirectory = async () => {
     dispatch({
       type: 'SET_DIRECTORY_DATA',
       payload: {
-        updating: false
+        updating: false,
+        updated: false,
       }
     })
     console.log(error)
