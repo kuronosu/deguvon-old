@@ -1,4 +1,4 @@
 import Settings from '../../features/settings/containers'
-import withHandleAndroidBackButton from '../../navigation/handle-android-back-button'
+import withHandlePressBack from '../../navigation/handle-press-back'
 
-export default SettingsScreen = withHandleAndroidBackButton(Settings)
+export default SettingsScreen = withHandlePressBack(Settings)

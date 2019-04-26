@@ -1,4 +1,4 @@
 import AnimeDetails from '../../features/anime/containers/index'
-import withHandleAndroidBackButton from '../../navigation/handle-android-back-button'
+import withHandlePressBack from '../../navigation/handle-press-back'
 
-export default AnimeScreen = withHandleAndroidBackButton(AnimeDetails)
+export default AnimeScreen = withHandlePressBack(AnimeDetails)

@@ -1,4 +1,4 @@
 import Directory from '../../features/directory/containers'
-import withHandleAndroidBackButton from '../../navigation/handle-android-back-button'
+import withHandlePressBack from '../../navigation/handle-press-back'
 
-export default DirectoryScreen = withHandleAndroidBackButton(Directory)
+export default DirectoryScreen = withHandlePressBack(Directory)

@@ -1,4 +1,4 @@
 import Recent from '../../features/recent/containers'
-import withHandleAndroidBackButton from '../../navigation/handle-android-back-button'
+import withHandlePressBack from '../../navigation/handle-press-back'
 
-export default RecentScreen = withHandleAndroidBackButton(Recent)
+export default RecentScreen = withHandlePressBack(Recent)

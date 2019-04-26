@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import Search from '../../features/search/containers'
-import withHandleAndroidBackButton from '../../navigation/handle-android-back-button'
+import withHandlePressBack from '../../navigation/handle-press-back'
 
 class SearchScreen extends Component {
 
@@ -27,4 +27,4 @@ const mapStateToProps = state => ({
   data: state.directory.data
 })
 
-export default withHandleAndroidBackButton(SearchScreen, mapStateToProps)
+export default withHandlePressBack(SearchScreen, mapStateToProps)
