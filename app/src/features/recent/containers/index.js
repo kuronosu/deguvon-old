@@ -11,21 +11,21 @@ import updateDirectory from "../../../api/update-directory"
 import Card from "../../../utils/components/card"
 import GeneralLayout from "../../../utils/components/general-layout"
 
-class Recent extends PureComponent{
+class Recent extends PureComponent {
 
   state = {
     refreshing: false
   }
 
-  componentDidMount(){
+  componentDidMount() {
     this._fetchData()
   }
 
-  async _fetchData(){
+  async _fetchData() {
     try {
-      this.setState({refreshing: true})
+      this.setState({ refreshing: true })
       let recentList = await getRecent()
-      if (this.props.last.id != recentList[0].id && !this.props.directoryUpdating){
+      if (this.props.last.id != recentList[0].id && !this.props.directoryUpdating) {
         updateDirectory()
       }
       this.props.dispatch({
@@ -34,16 +34,16 @@ class Recent extends PureComponent{
           recentList
         }
       })
-      this.setState({refreshing: false})
+      this.setState({ refreshing: false })
     } catch (error) {
-      this.setState({refreshing: false})
+      this.setState({ refreshing: false })
       DropDownHolder.alert('error', 'Error', 'Error obtener los ultimos episodios')
     }
   }
 
-  _onRefresh = () => {this._fetchData()}
+  _onRefresh = () => { this._fetchData() }
 
-  _onPressRecentCard = ({id, number, anime}) => {
+  _onPressRecentCard = ({ id, number, anime }) => {
     (async () => {
       const server = await getServers(id)
       const availableServers = getAvailableServers(server)
@@ -51,7 +51,7 @@ class Recent extends PureComponent{
       this.props.dispatch(NavigationActions.navigate({
         routeName: 'Player',
         params: {
-          video: natsukiVideoList.length > 0 ? natsukiVideoList[0].file: '',
+          video: natsukiVideoList.length > 0 ? natsukiVideoList[0].file : '',
           title: `${anime.name} ${number}`
         }
       }))
@@ -60,17 +60,21 @@ class Recent extends PureComponent{
 
   _onLongPressRecentCard = episode => {
     const anime = this.props.directoryData.find(anime => anime.aid == episode.anime.aid)
-    this.props.dispatch(NavigationActions.navigate({
-      routeName: 'Anime',
-      params: {anime}
-    }))
+    if (anime) {
+      this.props.dispatch(NavigationActions.navigate({
+        routeName: 'Anime',
+        params: { anime }
+      }))
+    } else {
+      DropDownHolder.alert('warn', 'El anime no esta en el directorio', 'Intenta actualizar el directorio')
+    }
   }
 
-  _renderEmtpy = () => <Empty text='Sin animes recientes'/>
+  _renderEmtpy = () => <Empty text='Sin animes recientes' />
 
-  _itemSeparator = () => <VerticalSeparator numCards={this.props.mode? 2: 4} />
+  _itemSeparator = () => <VerticalSeparator numCards={this.props.mode ? 2 : 4} />
 
-  _renderItem = ({item, index}) =>  <Card
+  _renderItem = ({ item, index }) => <Card
     pressData={item}
     mode={this.props.mode}
     screenWidth={this.props.screenWidth}
@@ -87,18 +91,18 @@ class Recent extends PureComponent{
 
   _keyExtractor = item => item.id.toString()
 
-  render(){
-    return(
+  render() {
+    return (
       <GeneralLayout>
         <FlatList
           data={this.props.list}
           ListEmptyComponent={this._renderEmtpy}
           ItemSeparatorComponent={this._itemSeparator}
-          numColumns={this.props.mode ? 2: 4}
+          numColumns={this.props.mode ? 2 : 4}
           key={this.props.mode ? 'v' : 'h'}
           renderItem={this._renderItem}
           keyExtractor={this._keyExtractor}
-          contentContainerStyle={{ padding: this.props.mode? this.props.screenWidth * 1/30:  this.props.screenWidth * 1/50  }}
+          contentContainerStyle={{ padding: this.props.mode ? this.props.screenWidth * 1 / 30 : this.props.screenWidth * 1 / 50 }}
           onRefresh={this._onRefresh}
           refreshing={this.state.refreshing}
         />
