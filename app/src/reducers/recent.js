@@ -7,6 +7,12 @@ function recent(state = {}, action) {
         last: action.payload.recentList[0]
       }
     }
+    case 'RESET_LAST': {
+      return {
+        ...state,
+        last: {id: null}
+      }
+    }
     default:
       return state
   }

@@ -36,6 +36,7 @@ const updateDirectory = async () => {
         updated: false,
       }
     })
+    dispatch({type: 'RESET_LAST'})
     console.log(error)
   }
 }
