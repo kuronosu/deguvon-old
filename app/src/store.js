@@ -13,7 +13,7 @@ import reducer from './reducers';
 const persistConfig = {
   key: 'root',
   storage: FilesystemStorage,
-  blacklist: ['nav', 'search']
+  blacklist: [ !__DEV__ & 'nav', 'search']
 }
 
 const defaultStore = {
