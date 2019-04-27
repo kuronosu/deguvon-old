@@ -1,6 +1,6 @@
-import DropDownHolder from './dropdownholder';
-import Api from '../api';
-import { store } from '../store';
+import DropDownHolder from '../utils/dropdownholder'
+import { getDirectory } from '.'
+import { store } from '../store'
 
 const updateDirectory = async () => {
   const { dispatch } = store
@@ -12,7 +12,7 @@ const updateDirectory = async () => {
         updating: true
       }
     })
-    let directory = await Api.getDirectory();
+    let directory = await getDirectory()
     dispatch({
       type: 'SET_DIRECTORY_DATA',
       payload: {

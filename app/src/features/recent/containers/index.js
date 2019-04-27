@@ -2,16 +2,14 @@ import React, { PureComponent } from "react"
 import { FlatList } from "react-native"
 import { connect } from 'react-redux'
 import { NavigationActions } from 'react-navigation'
-import Api, { getServers } from '../../../api/index'
+import { getServers, getRecent } from '../../../api'
 import Empty from "../../../utils/components/empty"
-import { getAvailableServers, getNatsukiVideo } from '../../../utils/video-servers'
+import { getAvailableServers, getNatsukiVideo } from '../../../api/video-servers'
 import VerticalSeparator from "../../../utils/components/separator"
 import DropDownHolder from "../../../utils/dropdownholder"
-import updateDirectory from "../../../utils/update-directory"
+import updateDirectory from "../../../api/update-directory"
 import Card from "../../../utils/components/card"
 import GeneralLayout from "../../../utils/components/general-layout"
-
-
 
 class Recent extends PureComponent{
 
@@ -26,7 +24,7 @@ class Recent extends PureComponent{
   async _fetchData(){
     try {
       this.setState({refreshing: true})
-      let recentList = await Api.getRecent()
+      let recentList = await getRecent()
       if (this.props.last.id != recentList[0].id && !this.props.directoryUpdating){
         updateDirectory()
       }

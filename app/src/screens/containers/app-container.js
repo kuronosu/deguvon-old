@@ -1,7 +1,7 @@
 import React, { Component } from "react"
 import { Dimensions } from "react-native"
 import { connect } from 'react-redux'
-import updateDirectory from "../../utils/update-directory"
+import updateDirectory from "../../api/update-directory"
 import GeneralLayout from "../../utils/components/general-layout"
 
 class AppContainer extends Component {

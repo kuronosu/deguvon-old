@@ -6,7 +6,7 @@ import {
 } from 'react-native'
 import { connect } from 'react-redux'
 import { withNavigation } from 'react-navigation'
-import Api from '../../../api/index'
+import { getAnimeDetails } from '../../../api'
 
 class AnimeDetail extends Component {
 
@@ -19,7 +19,7 @@ class AnimeDetail extends Component {
   getData = () => {
     const anime = this.props.navigation.getParam('anime', {aid: -1})
     if (anime.aid == -1){
-      Api.getAnimeDetails(anime.aid)
+      getAnimeDetails(anime.aid)
       .then(data => {
         this.setState({anime: data.anime, relations: data.relations, loadded: true});
       }).catch(e => this.setState({loadded: false}));
