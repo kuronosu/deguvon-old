@@ -5,9 +5,9 @@ import {
   ScrollView
 } from 'react-native'
 import { connect } from 'react-redux'
-import { withNavigation, NavigationActions } from 'react-navigation'
+import { NavigationActions } from 'react-navigation'
 import { getAnimeDetails } from '../../../api'
-import DropDownHolder from '../../../utils/dropdownholder';
+import DropDownHolder from '../../../utils/dropdownholder'
 
 class AnimeDetail extends Component {
 
@@ -22,7 +22,7 @@ class AnimeDetail extends Component {
     if (anime && !anime.inDirectory) {
       getAnimeDetails(anime.aid)
         .then(data => {
-          this.setState({ anime: data.anime, relations: data.relations, loadded: true });
+          this.setState({ anime: data.anime, relations: data.relations, loadded: true })
         }).catch(e => {
           this.setState({ loadded: false })
           DropDownHolder.alert('error', "Error", "Error al cargar la informacion del anime")

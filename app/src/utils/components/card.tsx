@@ -24,7 +24,7 @@ interface CardProps {
   uniqueInRow?: boolean
   cardsPerRowLandscape?: number
   cardsPerRowPortrait?: number
-  primaryOverlay?: boolean,
+  primaryOverlay?: boolean
   imgAspectRatioSize?: number
 }
 
@@ -54,27 +54,29 @@ const Card = (props: CardProps) => {
   }
 
   return (
-    <TouchableNativeFeedback
-      onPress={() => {props.onPressCard && props.onPressCard(props.pressData)}}
-      onLongPress={() => {props.onLongPressCard && props.onLongPressCard(props.pressData)}}
-      background={TouchableNativeFeedback.Ripple('white')}
-      useForeground={true}
-      >
-      <View style={marginStyle}>
-        <Image
-          style={[styles.cover, props.primaryOverlay && styles. coverBoderAll]}
-          source={{
-            uri: `https://kuronosu.dev${props.image}`
-          }}
-        />
-        <View style={styles.secondary}>
-          <Text style={styles.secondaryText}>{props.secondaryText}</Text>
+    <View style={marginStyle}>
+      <TouchableNativeFeedback
+        onPress={() => {props.onPressCard && props.onPressCard(props.pressData)}}
+        onLongPress={() => {props.onLongPressCard && props.onLongPressCard(props.pressData)}}
+        background={TouchableNativeFeedback.Ripple('white')}
+        useForeground={true}
+        >
+        <View>
+          <Image
+            style={[styles.cover, props.primaryOverlay && styles. coverBoderAll]}
+            source={{
+              uri: `https://kuronosu.dev${props.image}`
+            }}
+          />
+          <View style={styles.secondary}>
+            <Text style={styles.secondaryText}>{props.secondaryText}</Text>
+          </View>
+          <View style={[styles.primary, props.primaryOverlay && styles.primaryOverlay]}>
+            <Text numberOfLines={1} style={styles.primaryText}>{props.primaryText}</Text>
+          </View>
         </View>
-        <View style={[styles.primary, props.primaryOverlay && styles.primaryOverlay]}>
-          <Text numberOfLines={1} style={styles.primaryText}>{props.primaryText}</Text>
-        </View>
-      </View>
-    </TouchableNativeFeedback>
+      </TouchableNativeFeedback>    
+    </View>
   )
 }
 
