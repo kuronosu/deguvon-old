@@ -16,17 +16,18 @@ const AppNavigator = createStackNavigator(
       screen: HomeNavigator,
       navigationOptions: ({ navigation }) => {
         if (navigation.state.routes[navigation.state.index].key == 'Directory')
-          return {title: 'Directorio'}
+          return { title: 'Directorio' }
         else if (navigation.state.routes[navigation.state.index].key == 'Config')
-          return {title: 'Configuracion'}
+          return { title: 'Configuracion' }
         return {}
       }
     },
     Anime: {
       screen: AnimeScreen,
       navigationOptions: ({ navigation }) => {
+        const anime = navigation.getParam('anime', null)
         return {
-          title: navigation.getParam('anime', {name: 'Anime'}).name
+          title: anime ? anime.name : 'Anime'
         }
       }
     },
@@ -34,7 +35,7 @@ const AppNavigator = createStackNavigator(
       screen: SearchScreen,
       navigationOptions: ({ navigation }) => {
         return {
-          header: props => <NavbarSearch {...props} onChangeText={navigation.state.params? navigation.state.params.handleChangeText: ()=>{}}/>
+          header: props => <NavbarSearch {...props} onChangeText={navigation.state.params ? navigation.state.params.handleChangeText : () => { }} />
         }
       }
     },
@@ -58,7 +59,7 @@ const AppNavigator = createStackNavigator(
         color: 'white',
         fontWeight: 'normal'
       },
-      headerRight: <SearchButton/>,
+      headerRight: <SearchButton />,
       headerRightContainerStyle: {
         marginRight: 20
       }

@@ -4,7 +4,6 @@ import {
   Text,
   ScrollView
 } from 'react-native'
-import { connect } from 'react-redux'
 import { getAnimeDetails } from '../../../api'
 import DropDownHolder from '../../../utils/dropdownholder'
 
@@ -36,7 +35,7 @@ class AnimeDetail extends Component {
     }
   }
 
-  UNSAFE_componentWillMount() {
+  componentDidMount() {
     this.getData()
   }
 
