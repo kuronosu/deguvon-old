@@ -75,8 +75,15 @@ class Player extends Component {
   }
 
   relativeSeek = offset => {
-    this.player.seek(this.state.currentTime + offset)
+    const newTime = this.state.currentTime + offset
+    this.setState({
+      currentTime: newTime,
+      currentTimeFormated: timeFormater(newTime, this.timeFormat)
+    })
+    this.seek(newTime)
   }
+
+  seek = async (newTime) => { this.player.seek(newTime) }
 
   setVideoRef = ref => {
     this.player = ref
