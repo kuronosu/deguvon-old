@@ -10,7 +10,6 @@ import GeneralLayout from '../../../utils/components/general-layout';
 class Search extends Component {
 
   _onPressAnimeCard = anime => {
-    anime.inDirectory = true
     this.props.dispatch(NavigationActions.navigate({
       routeName: 'Anime',
       params: {anime}

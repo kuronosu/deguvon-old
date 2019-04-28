@@ -60,15 +60,15 @@ class Recent extends PureComponent {
 
   _onLongPressRecentCard = episode => {
     let anime = this.props.directoryData.find(anime => anime.aid == episode.anime.aid)
+    let executeFetch = false
     if (!anime) {
       DropDownHolder.alert('warn', 'El anime no esta en el directorio', 'Intenta actualizar el directorio')
-      anime = { aid: episode.anime.aid, inDirectory: false, name: episode.anime.name }
-    } else {
-      anime.inDirectory = true
+      anime = episode.anime
+      executeFetch = true
     }
     this.props.dispatch(NavigationActions.navigate({
       routeName: 'Anime',
-      params: { anime }
+      params: { anime, executeFetch }
     }))
   }
 
