@@ -14,11 +14,11 @@ class SearchScreen extends Component {
     })
   }
 
-  componentWillMount() {
+  componentDidMount() {
     this.props.navigation.setParams({ handleChangeText: text => this._onChangeText(text) })
   }
 
-  render(){
+  render() {
     return <Search />
   }
 }

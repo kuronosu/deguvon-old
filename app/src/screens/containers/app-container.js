@@ -6,7 +6,12 @@ import GeneralLayout from "../../utils/components/general-layout"
 
 class AppContainer extends Component {
 
-  _updateScreenInfo(){
+  constructor(props) {
+    super(props)
+    this._updateScreenInfo()
+  }
+
+  _updateScreenInfo() {
     const d = Dimensions.get('window')
     this.props.dispatch({
       type: 'SET_DEVICE_DATA',
@@ -22,19 +27,15 @@ class AppContainer extends Component {
   }
 
   componentDidMount() {
-    if (!this.props.directoryUpdated){
+    if (!this.props.directoryUpdated) {
       updateDirectory()
     }
-  }
-
-  componentWillMount(){
-    this._updateScreenInfo()
   }
 
   render() {
     return (
       <GeneralLayout onLayout={this._onLayout}>
-        { this.props.children }
+        {this.props.children}
       </GeneralLayout>
     )
   }

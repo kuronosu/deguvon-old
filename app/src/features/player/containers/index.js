@@ -12,6 +12,11 @@ import DropDownHolder from '../../../utils/dropdownholder'
 
 class Player extends Component {
 
+  constructor(props) {
+    super(props)
+    Orientation.lockToLandscape()
+  }
+
   state = {
     paused: false,
     loading: true,
@@ -34,7 +39,7 @@ class Player extends Component {
 
   onVideoLoaded = ({ duration }) => {
     // this.player.seek(1)
-    if (duration >= 3600){
+    if (duration >= 3600) {
       this.timeFormat = false
     }
     this.setState({
@@ -77,10 +82,6 @@ class Player extends Component {
     this.player = ref
   }
 
-  componentWillMount() {
-    Orientation.lockToLandscape()
-  }
-
   componentWillUnmount() {
     Orientation.unlockAllOrientations()
   }
@@ -101,7 +102,7 @@ class Player extends Component {
       />
       {
         this.state.loading &&
-        <PlayerLoader/>
+        <PlayerLoader />
       }
       {
         this.state.showContols &&

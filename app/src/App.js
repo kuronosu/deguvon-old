@@ -13,8 +13,9 @@ import AppContainer from "./screens/containers/app-container"
 console.disableYellowBox = true
 
 export default class Deguvon extends Component {
-  
-  componentWillMount(){
+
+  constructor(props) {
+    super(props)
     Orientation.unlockAllOrientations()
   }
 
@@ -24,13 +25,13 @@ export default class Deguvon extends Component {
         <Provider
           store={store}
         >
-          <PersistGate loading={<Loading/>} persistor={persistor}>
+          <PersistGate loading={<Loading />} persistor={persistor}>
             <AppContainer>
-              <AppNavigatorWithState/>
+              <AppNavigatorWithState />
             </AppContainer>
           </PersistGate>
         </Provider>
-        <DropdownAlert ref={ref => DropDownHolder.setDropDown(ref)} closeInterval={4000}/>
+        <DropdownAlert ref={ref => DropDownHolder.setDropDown(ref)} closeInterval={4000} />
       </Fragment>
     )
   }

@@ -17,17 +17,26 @@ class AnimeDetail extends Component {
     relations: []
   }
 
-  getData = () => {
+  constructor(props) {
+    super(props)
+    this.getData(true)
+  }
+
+  fetchData = aid => {
+    getAnimeDetails(aid)
+      .then(data => {
+        this.setState({ anime: data.anime, relations: data.relations, loadded: true })
+      }).catch(e => {
+        this.setState({ loadded: false })
+        DropDownHolder.alert('error', "Error", "Error al cargar la informacion del anime")
+        this.props.dispatch(NavigationActions.back())
+      })
+  }
+
+  getData = noMakeRequest => {
     const anime = this.props.navigation.getParam('anime', { aid: -1 })
-    if (anime && !anime.inDirectory) {
-      getAnimeDetails(anime.aid)
-        .then(data => {
-          this.setState({ anime: data.anime, relations: data.relations, loadded: true })
-        }).catch(e => {
-          this.setState({ loadded: false })
-          DropDownHolder.alert('error', "Error", "Error al cargar la informacion del anime")
-          this.props.dispatch(NavigationActions.back())
-        })
+    if (anime && !anime.inDirectory && !noMakeRequest) {
+      this.fetchData(anime.aid)
     } else if (!anime || anime.aid === -1) {
       this.props.dispatch(NavigationActions.back())
     } else {
@@ -35,8 +44,10 @@ class AnimeDetail extends Component {
     }
   }
 
-  componentWillMount() {
-    this.getData()
+  componentDidMount() {
+    if (!this.state.loadded) {
+      this.getData()
+    }
   }
 
   render() {
