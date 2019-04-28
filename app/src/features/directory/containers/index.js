@@ -19,6 +19,7 @@ class Directory extends Component{
   }
 
   _onPressAnimeCard = anime => {
+    anime.inDirectory = true
     this.props.dispatch(NavigationActions.navigate({
       routeName: 'Anime',
       params: {anime}

@@ -5,8 +5,9 @@ import {
   ScrollView
 } from 'react-native'
 import { connect } from 'react-redux'
-import { withNavigation } from 'react-navigation'
+import { withNavigation, NavigationActions } from 'react-navigation'
 import { getAnimeDetails } from '../../../api'
+import DropDownHolder from '../../../utils/dropdownholder';
 
 class AnimeDetail extends Component {
 
@@ -17,23 +18,30 @@ class AnimeDetail extends Component {
   }
 
   getData = () => {
-    const anime = this.props.navigation.getParam('anime', {aid: -1})
-    if (anime.aid == -1){
+    const anime = this.props.navigation.getParam('anime', { aid: -1 })
+    if (anime && !anime.inDirectory) {
       getAnimeDetails(anime.aid)
-      .then(data => {
-        this.setState({anime: data.anime, relations: data.relations, loadded: true});
-      }).catch(e => this.setState({loadded: false}));
+        .then(data => {
+          this.setState({ anime: data.anime, relations: data.relations, loadded: true });
+        }).catch(e => {
+          this.setState({ loadded: false })
+          DropDownHolder.alert('error', "Error", "Error al cargar la informacion del anime")
+          this.props.dispatch(NavigationActions.back())
+        })
+    } else if (!anime || anime.aid === -1) {
+      this.props.dispatch(NavigationActions.back())
     } else {
-      this.setState({anime, loadded: true})
+      this.setState({ anime, loadded: true })
     }
   }
 
-  componentWillMount(){
+  componentWillMount() {
     this.getData()
   }
-  render(){
-    if (this.state.loadded){
-      return(
+
+  render() {
+    if (this.state.loadded && this.state.anime) {
+      return (
         <ScrollView>
           <Text>{this.state.anime.name}</Text>
           <View>
@@ -57,4 +65,4 @@ class AnimeDetail extends Component {
   }
 }
 
-export default withNavigation(connect(null)(AnimeDetail))
+export default connect(null)(AnimeDetail)

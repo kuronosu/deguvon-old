@@ -59,15 +59,17 @@ class Recent extends PureComponent {
   }
 
   _onLongPressRecentCard = episode => {
-    const anime = this.props.directoryData.find(anime => anime.aid == episode.anime.aid)
-    if (anime) {
-      this.props.dispatch(NavigationActions.navigate({
-        routeName: 'Anime',
-        params: { anime }
-      }))
-    } else {
+    let anime = this.props.directoryData.find(anime => anime.aid == episode.anime.aid)
+    if (!anime) {
       DropDownHolder.alert('warn', 'El anime no esta en el directorio', 'Intenta actualizar el directorio')
+      anime = { aid: episode.anime.aid, inDirectory: false, name: episode.anime.name }
+    } else {
+      anime.inDirectory = true
     }
+    this.props.dispatch(NavigationActions.navigate({
+      routeName: 'Anime',
+      params: { anime }
+    }))
   }
 
   _renderEmtpy = () => <Empty text='Sin animes recientes' />
