@@ -17,18 +17,12 @@ const updateDirectory = async () => {
       type: 'SET_DIRECTORY_DATA',
       payload: {
         updated: true,
+        updating: false,
         data: Object.values(directory)
       }
     })
     DropDownHolder.alert('success', 'Directorio actualizado', 'Directorio actualizado con exito')
-    dispatch({
-      type: 'SET_DIRECTORY_DATA',
-      payload: {
-        updating: false
-      }
-    })
   } catch (error) {
-    DropDownHolder.alert('error', 'Error', 'Error al actualizar el directorio')
     dispatch({
       type: 'SET_DIRECTORY_DATA',
       payload: {
@@ -37,8 +31,9 @@ const updateDirectory = async () => {
       }
     })
     dispatch({type: 'RESET_LAST'})
+    DropDownHolder.alert('error', 'Error', 'Error al actualizar el directorio')
     console.log(error)
   }
 }
 
-export default updateDirectory 
+export default updateDirectory

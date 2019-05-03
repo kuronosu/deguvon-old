@@ -9,6 +9,10 @@ class AppContainer extends Component {
   constructor(props) {
     super(props)
     this._updateScreenInfo()
+    this.props.dispatch({
+      type: 'SET_DIRECTORY_DATA',
+      payload: {updating: false}
+    })
   }
 
   _updateScreenInfo() {
