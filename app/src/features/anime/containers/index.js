@@ -1,20 +1,16 @@
 import React, { Component } from 'react'
 import {
-  Image,
-  Dimensions,
   View,
   Text,
-  ScrollView
+  ScrollView,
+  FlatList
 } from 'react-native'
 import { connect } from 'react-redux'
 import { NavigationActions } from 'react-navigation'
 import { getAnimeDetails, getServers } from '../../../api'
 import { getAvailableServers, getNatsukiVideo } from '../../../api/video-servers'
 import DropDownHolder from '../../../utils/dropdownholder'
-import Icon from '../../../utils/components/icon'
-import { FlatList } from 'react-native-gesture-handler';
-
-const p = 135 / 240
+import Episode from '../components/episode'
 
 class AnimeDetail extends Component {
 
@@ -48,7 +44,7 @@ class AnimeDetail extends Component {
     this.getData()
   }
 
-  showEpisode = (id, number, name ) => {
+  playEpisode = (id, number, name ) => {
     (async () => {
       const server = await getServers(id)
       const availableServers = getAvailableServers(server)
@@ -63,47 +59,24 @@ class AnimeDetail extends Component {
     })()
   }
 
-  renderEpisode = ({ item: episode, index }) => (
-    <View style={{
-      flexDirection: 'row',
-      height: (Dimensions.get('window').width * 0.25) * p
-    }}>
-      <Image
-        source={{uri: "https://kuronosu.dev" + episode.image}}
-        style={{
-          width: Dimensions.get('window').width * 0.25,
-        }}
-        resizeMode='contain'
-      />
-      <View
-        style={{
-          flexDirection: 'row',
-          justifyContent: 'space-around',
-          alignItems: 'center',
-          flex: 1,
-        }}
-      >
-        <Text style={{fontSize: 20}}>{`Episodio ${episode.number}`}</Text>
-        <View
-          style={{
-            paddingHorizontal: 20,
-            alignItems: 'flex-end',
-            flex: 1
-          }}
-        >
-          <Icon
-            onPress={() => this.showEpisode(episode.url.split('/')[2], episode.number, this.state.anime.name)}
-            iconSet='Entypo'
-            name='controller-play'
-            size={40}
-            color='black'
-          />
-        </View>
-      </View>
-    </View>
+  renderEpisode = ({ item: e }) => (
+    <Episode
+      episode={e}
+      playHandle={() => this.playEpisode(e.url.split('/')[2], e.number, this.state.anime.name)}
+    />
   )
+
   _keyExtractor = item => `episode_${item.number}_${item.url}`
-  itemSeparator = () => <View style={{borderColor: 'black', borderBottomWidth: 1}}/>
+
+  renderSeparator = () => <View
+    style={{
+      height: 1,
+      width: "75%",
+      backgroundColor: "#CED0CE",
+      marginLeft: "25%",
+      marginVertical: 1
+    }}
+  />
 
   render() {
     if (this.state.loadded) {
@@ -120,7 +93,7 @@ class AnimeDetail extends Component {
               data={this.state.anime.episodeList}
               keyExtractor={this._keyExtractor}
               renderItem={this.renderEpisode}
-              ItemSeparatorComponent={this.itemSeparator}
+              ItemSeparatorComponent={this.renderSeparator}
             />
           </View>
           <Text>{this.state.anime.synopsis}</Text>
