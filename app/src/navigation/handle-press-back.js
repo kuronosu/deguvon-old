@@ -26,10 +26,10 @@ const withHandlePressBack = (WrappedComponent, mapStateToProps) => connect(mapSt
 
     handleBackPress = () => {
       if (getCurrentRoute().toLowerCase() === 'recent') {
-        if(this.timer) {clearTimeout(this.timer)}
-        this.timer = setTimeout(() => {this.counter = 0}, 500)
+        if (this.timer) { clearTimeout(this.timer) }
+        this.timer = setTimeout(() => { this.counter = 0 }, 500)
         this.counter += 1
-        if (this.counter >= 2){
+        if (this.counter >= 2) {
           clearTimeout(this.timer)
           BackHandler.exitApp()
         }
@@ -38,7 +38,7 @@ const withHandlePressBack = (WrappedComponent, mapStateToProps) => connect(mapSt
       return true
     }
 
-    render(){
+    render() {
       return <WrappedComponent {...this.props} />
     }
   }

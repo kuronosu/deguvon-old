@@ -11,7 +11,7 @@ import FilterMaganer from '../../../utils/filter-maganer';
 import Card from '../../../utils/components/card';
 import GeneralLayout from '../../../utils/components/general-layout';
 
-class Directory extends Component{
+class Directory extends Component {
 
   state = {
     filterIndex: 0,
@@ -21,17 +21,17 @@ class Directory extends Component{
   _onPressAnimeCard = anime => {
     this.props.dispatch(NavigationActions.navigate({
       routeName: 'Anime',
-      params: {anime}
+      params: { anime }
     }))
   }
 
-  _renderEmtpy = () => <Empty text='Directorio vacio'/>
+  _renderEmtpy = () => <Empty text='Directorio vacio' />
 
-  _itemSeparator = () => <VerticalSeparator numCards={this.props.mode? 3: 4} />
+  _itemSeparator = () => <VerticalSeparator numCards={this.props.mode ? 3 : 4} />
 
   _keyExtractor = item => `anime_${item.aid.toString()}`
 
-  _renderItem = ({item, index}) =>  <Card
+  _renderItem = ({ item, index }) => <Card
     pressData={item}
     mode={this.props.mode}
     screenWidth={this.props.screenWidth}
@@ -46,8 +46,8 @@ class Directory extends Component{
 
   _filter = async () => {
     this.setState(pState => {
-      const {data, index} = FilterMaganer.next(this.props.data, pState.filterIndex)
-      return {data, filterIndex: index}
+      const { data, index } = FilterMaganer.next(this.props.data, pState.filterIndex)
+      return { data, filterIndex: index }
     })
   }
 
@@ -58,27 +58,27 @@ class Directory extends Component{
   //   return {length: ITEM_HEIGHT + 43.5, offset: ITEM_HEIGHT * index, index}
   // }
 
-  componentDidMount(){
-    this.setState({data: this.props.data})
+  componentDidMount() {
+    this.setState({ data: this.props.data })
   }
 
-  render(){
+  render() {
     return (
       <GeneralLayout>
         <FlatList
           data={this.state.data}
           ListEmptyComponent={this._renderEmtpy}
           ItemSeparatorComponent={this._itemSeparator}
-          numColumns={this.props.mode ? 3: 4}
+          numColumns={this.props.mode ? 3 : 4}
           key={this.props.mode ? 'v' : 'h'}
           renderItem={this._renderItem}
           keyExtractor={this._keyExtractor}
-          contentContainerStyle={{ padding: this.props.mode? this.props.screenWidth * 1/40:  this.props.screenWidth * 1/50  }}
+          contentContainerStyle={{ padding: this.props.mode ? this.props.screenWidth * 1 / 40 : this.props.screenWidth * 1 / 50 }}
           // getItemLayout={this._getItemLayout} // Posible optimizacion
           initialNumToRender={12}
           removeClippedSubviews
         />
-        <DirectoryFloatActionButton filterType={FilterMaganer.getText(this.state.filterIndex)} onPressFilter={this._filter}/>
+        <DirectoryFloatActionButton filterType={FilterMaganer.getText(this.state.filterIndex)} onPressFilter={this._filter} />
       </GeneralLayout>
     )
   }

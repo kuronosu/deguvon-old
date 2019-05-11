@@ -37,15 +37,15 @@ const Card = (props: CardProps) => {
   } else {
     styles = createStyles(
       props.screenWidth,
-      props.mode ? 1 / ((props.cardsPerRowPortrait + 1) * 10) / 2: 1 / ((props.cardsPerRowLandscape + 1) * 10) / 2,
-      0.9 / (props.mode ? props.cardsPerRowPortrait: props.cardsPerRowLandscape)
+      props.mode ? 1 / ((props.cardsPerRowPortrait + 1) * 10) / 2 : 1 / ((props.cardsPerRowLandscape + 1) * 10) / 2,
+      0.9 / (props.mode ? props.cardsPerRowPortrait : props.cardsPerRowLandscape)
     )
-    switch (props.index % (props.mode ? props.cardsPerRowPortrait: props.cardsPerRowLandscape)) {
+    switch (props.index % (props.mode ? props.cardsPerRowPortrait : props.cardsPerRowLandscape)) {
       case 0:
         marginStyle = styles.marginRight
         break;
-      case (props.mode ? props.cardsPerRowPortrait: props.cardsPerRowLandscape) - 1:
-      marginStyle = styles.marginLeft
+      case (props.mode ? props.cardsPerRowPortrait : props.cardsPerRowLandscape) - 1:
+        marginStyle = styles.marginLeft
         break;
       default:
         marginStyle = styles.marginHorizontal
@@ -54,16 +54,16 @@ const Card = (props: CardProps) => {
   }
 
   return (
-    <View style={marginStyle}>
+    <View style={[marginStyle, styles.shadow]}>
       <TouchableNativeFeedback
-        onPress={() => {props.onPressCard && props.onPressCard(props.pressData)}}
-        onLongPress={() => {props.onLongPressCard && props.onLongPressCard(props.pressData)}}
+        onPress={() => { props.onPressCard && props.onPressCard(props.pressData) }}
+        onLongPress={() => { props.onLongPressCard && props.onLongPressCard(props.pressData) }}
         background={TouchableNativeFeedback.Ripple('white')}
         useForeground={true}
-        >
+      >
         <View>
           <Image
-            style={[styles.cover, props.primaryOverlay && styles. coverBoderAll]}
+            style={[styles.cover, props.primaryOverlay && styles.coverBoderAll]}
             source={{
               uri: `https://kuronosu.dev${props.image}`
             }}
@@ -75,14 +75,14 @@ const Card = (props: CardProps) => {
             <Text numberOfLines={1} style={styles.primaryText}>{props.primaryText}</Text>
           </View>
         </View>
-      </TouchableNativeFeedback>    
+      </TouchableNativeFeedback>
     </View>
   )
 }
 
 export default Card
 
-const createStyles = (screenWidth: number, separatorSize: number, sizePercent: number, imgAspectRatioSize: number=defaultImgAspectRatioSize) => {
+const createStyles = (screenWidth: number, separatorSize: number, sizePercent: number, imgAspectRatioSize: number = defaultImgAspectRatioSize) => {
   return StyleSheet.create({
     primary: {
       backgroundColor: '#484848',
@@ -112,7 +112,7 @@ const createStyles = (screenWidth: number, separatorSize: number, sizePercent: n
       borderRadius: 5
     },
     secondary: {
-      position:'absolute',
+      position: 'absolute',
       left: 0,
       top: 0,
       backgroundColor: '#f9a825',//'#ff7e00',
@@ -128,11 +128,14 @@ const createStyles = (screenWidth: number, separatorSize: number, sizePercent: n
     marginRight: {
       marginRight: screenWidth * separatorSize
     },
-    marginHorizontal:{
+    marginHorizontal: {
       marginHorizontal: screenWidth * separatorSize
     },
     marginLeft: {
       marginLeft: screenWidth * separatorSize
+    },
+    shadow: {
+      elevation: 5
     }
   })
 }

@@ -13,17 +13,17 @@ import reducer from './reducers';
 const persistConfig = {
   key: 'root',
   storage: FilesystemStorage,
-  blacklist: [ 'nav', 'search']
+  blacklist: ['nav', 'search']
 }
 
 const defaultStore = {
-  recent: {recentList: [], last: {id: null}}, // valores por defecto para el Reducer recent
+  recent: { recentList: [], last: { id: null } }, // valores por defecto para el Reducer recent
   app: { // valores por defecto para el Reducer general
-    device: {screenMode: true, screenSize: {}},
-    config: {api: {host: 'kuronosu.dev', route: '/api/v1'}}
+    device: { screenMode: true, screenSize: {} },
+    config: { api: { host: 'kuronosu.dev', route: '/api/v1' } }
   },
-  directory: {updated: false, data: [], updating: false},
-  search: {text: ''},
+  directory: { updated: false, data: [], updating: false },
+  search: { text: '' },
 }
 
 const persistedReducer = persistReducer(persistConfig, reducer)

@@ -9,7 +9,7 @@ import {
 const Loading = () => (
   <SafeAreaView style={styles.container}>
     <Text style={styles.text}>Deguvon</Text>
-    <ActivityIndicator/>
+    <ActivityIndicator />
   </SafeAreaView>
 )
 

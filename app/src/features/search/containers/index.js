@@ -12,17 +12,17 @@ class Search extends Component {
   _onPressAnimeCard = anime => {
     this.props.dispatch(NavigationActions.navigate({
       routeName: 'Anime',
-      params: {anime}
+      params: { anime }
     }))
   }
 
-  _renderEmtpy = () => <Empty text='Sin resultados' color='white'/>
+  _renderEmtpy = () => <Empty text='Sin resultados' color='white' />
 
-  _itemSeparator = () => <VerticalSeparator numCards={this.props.mode? 3: 4} />
+  _itemSeparator = () => <VerticalSeparator numCards={this.props.mode ? 3 : 4} />
 
   _keyExtractor = item => `anime_${item.aid.toString()}`
 
-  _renderItem = ({item, index}) =>  <Card
+  _renderItem = ({ item, index }) => <Card
     pressData={item}
     mode={this.props.mode}
     screenWidth={this.props.screenWidth}
@@ -35,18 +35,18 @@ class Search extends Component {
     cardsPerRowLandscape={4}
   />
 
-  render(){
-    return(
+  render() {
+    return (
       <GeneralLayout>
         <FlatList
           data={this.props.data}
           ListEmptyComponent={this._renderEmtpy}
           ItemSeparatorComponent={this._itemSeparator}
-          numColumns={this.props.mode ? 3: 4}
+          numColumns={this.props.mode ? 3 : 4}
           key={this.props.mode ? 'v' : 'h'}
           renderItem={this._renderItem}
           keyExtractor={this._keyExtractor}
-          contentContainerStyle={{ padding: this.props.mode? this.props.screenWidth * 1/40:  this.props.screenWidth * 1/50  }}
+          contentContainerStyle={{ padding: this.props.mode ? this.props.screenWidth * 1 / 40 : this.props.screenWidth * 1 / 50 }}
           // getItemLayout={this._getItemLayout} // Posible optimizacion
           initialNumToRender={12}
           removeClippedSubviews

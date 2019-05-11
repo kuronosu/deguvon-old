@@ -14,7 +14,7 @@ class NavbarSearch extends Component {
           onChangeText={this.props.onChangeText}
           value={this.props.text}
         />
-        <BackButton backImage={<Icon name='close' size={25} color='white' />}/>
+        <BackButton backImage={<Icon name='close' size={25} color='white' />} />
       </NavbarSearchLayout>
     );
   }

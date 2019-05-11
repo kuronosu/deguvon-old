@@ -5,7 +5,7 @@ import IconContainer from './icon-container'
 
 const IconController = props => {
   let Icon = IconAntDesign
-  if (props.set == 'MaterialIcons'){
+  if (props.set == 'MaterialIcons') {
     Icon = MaterialIcons
   }
   return (
@@ -13,7 +13,7 @@ const IconController = props => {
       <Icon
         onPress={props.onPress}
         name={props.name}
-        color={props.disable? 'rgba(255, 255, 255, 0.3)': (props.color? props.color: 'white')}
+        color={props.disable ? 'rgba(255, 255, 255, 0.3)' : (props.color ? props.color : 'white')}
         size={25}
       />
     </IconContainer>

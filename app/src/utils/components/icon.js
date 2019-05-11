@@ -20,7 +20,7 @@ const Icon = props => {
       break;
   }
   return (
-    <IconSet {...props}/>
+    <IconSet {...props} />
   )
 }
 

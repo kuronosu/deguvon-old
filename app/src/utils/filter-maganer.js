@@ -7,9 +7,9 @@ export default class FilterMaganer {
 
   static next = (data, state) => {
     if (state >= FilterMaganer.animeTypeList.length - 1) {
-      return {data, index: 0}
+      return { data, index: 0 }
     }
-    return {data: FilterMaganer.filter(data, state + 1), index: state + 1}
+    return { data: FilterMaganer.filter(data, state + 1), index: state + 1 }
   }
 
   static filter = (data, filterType) => {

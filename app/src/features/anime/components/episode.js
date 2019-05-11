@@ -7,12 +7,12 @@ import {
 
 import Icon from '../../../utils/components/icon'
 
-const Episode = ({episode, handlePlay}) => (
+const Episode = ({ episode, handlePlay }) => (
   <View style={{
     flexDirection: 'row'
   }}>
     <Image
-      source={{uri: "https://kuronosu.dev" + episode.image}}
+      source={{ uri: "https://kuronosu.dev" + episode.image }}
       style={{
         width: '25%',
         height: 60
@@ -28,7 +28,7 @@ const Episode = ({episode, handlePlay}) => (
         flex: 1,
       }}
     >
-      <Text style={{fontSize: 20}}>{`Episodio ${episode.number}`}</Text>
+      <Text style={{ fontSize: 20 }}>{`Episodio ${episode.number}`}</Text>
       <View
         style={{
           paddingHorizontal: 20,

@@ -20,7 +20,7 @@ const Video = props => (
     />
     {
       props.showContols &&
-      <Overlay opacity/>
+      <Overlay opacity />
     }
   </TouchableWithoutFeedback>
 )

@@ -11,14 +11,14 @@ const HomeNavigator = createMaterialBottomTabNavigator(
       screen: RecentScreen,
       navigationOptions: {
         title: 'Recientes',
-        tabBarIcon: props =>  <HomeNavigatorIcon iconSet='EvilIcons' name="clock" {...props} />
+        tabBarIcon: props => <HomeNavigatorIcon iconSet='EvilIcons' name="clock" {...props} />
       }
     },
     Directory: {
       screen: DirectoryScreen,
       navigationOptions: {
         title: 'Directorio',
-        tabBarIcon: props =>  <HomeNavigatorIcon iconSet='Entypo' name="grid" {...props} />
+        tabBarIcon: props => <HomeNavigatorIcon iconSet='Entypo' name="grid" {...props} />
       },
     },
     // Config: {

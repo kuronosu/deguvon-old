@@ -21,17 +21,17 @@ const Controls = props => {
       <View style={[styles.bar, styles.controls]}>
         <Text style={styles.controlTime}>{props.currentTime}</Text>
         <View style={[styles.controls, styles.controlButtons]}>
-          <IconController name='' disable/>
-          <IconController name='doubleleft' disable/>
-          <IconController name='left' onPress={() => {props.relativeSeek(-5)}}/>
+          <IconController name='' disable />
+          <IconController name='doubleleft' disable />
+          <IconController name='left' onPress={() => { props.relativeSeek(-5) }} />
           <PlayPause onPress={props.togglePlay} paused={props.paused} />
-          <IconController name='right' onPress={() => {props.relativeSeek(15)}}/>
-          <IconController name='doubleright' disable/>
-          <IconController name='rotate-right' set='MaterialIcons' onPress={() => {props.relativeSeek(85)}}/>
+          <IconController name='right' onPress={() => { props.relativeSeek(15) }} />
+          <IconController name='doubleright' disable />
+          <IconController name='rotate-right' set='MaterialIcons' onPress={() => { props.relativeSeek(85) }} />
         </View>
         <View>
           <Text style={styles.controlTime}>{props.duration}</Text>
-          <Text style={[styles.controlTime, {marginTop: 0  }]}>{props.timeLeft}</Text>
+          <Text style={[styles.controlTime, { marginTop: 0 }]}>{props.timeLeft}</Text>
         </View>
       </View>
     </Overlay>

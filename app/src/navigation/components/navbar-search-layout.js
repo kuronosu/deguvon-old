@@ -3,7 +3,7 @@ import { View, StyleSheet } from 'react-native'
 
 const NavbarSearchLayout = props => (
   <View style={styles.container}>
-   {props.children}
+    {props.children}
   </View>
 )
 

@@ -4,7 +4,7 @@ import { width, height } from '../../../utils/screen-landscape'
 
 const PlayerLayout = props => (
   <View style={styles.container}>
-    { props.children }
+    {props.children}
   </View>
 )
 

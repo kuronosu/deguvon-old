@@ -10,7 +10,7 @@ function recent(state = {}, action) {
     case 'RESET_LAST': {
       return {
         ...state,
-        last: {id: null}
+        last: { id: null }
       }
     }
     default:
