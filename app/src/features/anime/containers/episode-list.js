@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { View, FlatList, Button, Text } from 'react-native'
+import { FlatList, Button, Text } from 'react-native'
 import { NavigationActions } from 'react-navigation'
 
 import Episode from '../components/episode'
@@ -7,6 +7,7 @@ import { getServers } from '../../../api'
 import { getAvailableServers, getNatsukiVideo } from '../../../api/video-servers'
 import EpisodeSeparator from '../components/episode-separator'
 import DropDownHolder from '../../../utils/dropdownholder'
+import GeneralLayout from '../../../utils/components/general-layout'
 
 const playEpisode = (id, number, name, dispatch) => {
   (async () => {
@@ -45,7 +46,7 @@ const EpisodeList = props => {
   const { name: animeName = '', episodeList = [] } = props.navigation.getParam('anime', null)
   const [data, setData] = useState(episodeList)
   return (
-    <View>
+    <GeneralLayout>
       <Button
         title={data[0].number > data[data.length - 1].number ? 'Mayor a menor' : 'Menor a mayor'}
         onPress={() => {
@@ -61,7 +62,7 @@ const EpisodeList = props => {
         renderItem={({ item }) => renderEpisode(item, animeName, props.dispatch)}
         ItemSeparatorComponent={EpisodeSeparator}
       />
-    </View>
+    </GeneralLayout>
   )
 }
 
