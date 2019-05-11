@@ -4,8 +4,8 @@ import {
   createAppContainer
 } from 'react-navigation'
 import HomeNavigator from './home-navigator'
+import AnimeNavigator from './anime-navigator'
 import SearchButton from './containers/search-button';
-import AnimeScreen from '../screens/containers/anime'
 import SearchScreen from '../screens/containers/search';
 import NavbarSearch from './containers/navbar-search';
 import PlayerScreen from '../screens/containers/player';
@@ -23,7 +23,7 @@ const AppNavigator = createStackNavigator(
       }
     },
     Anime: {
-      screen: AnimeScreen,
+      screen: AnimeNavigator,
       navigationOptions: ({ navigation }) => {
         const anime = navigation.getParam('anime', null)
         return {

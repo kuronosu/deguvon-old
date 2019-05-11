@@ -7,7 +7,7 @@ import {
 
 import Icon from '../../../utils/components/icon'
 
-const Episode = ({episode, playHandle}) => (
+const Episode = ({episode, handlePlay}) => (
   <View style={{
     flexDirection: 'row'
   }}>
@@ -37,7 +37,7 @@ const Episode = ({episode, playHandle}) => (
         }}
       >
         <Icon
-          onPress={playHandle}
+          onPress={handlePlay}
           iconSet='Entypo'
           name='controller-play'
           size={40}
