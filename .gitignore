@@ -69,5 +69,5 @@ directory.json
 
 api/images/
 
-.vscode/.ropeproject
+.vscode/
 app/android/gradle.properties
