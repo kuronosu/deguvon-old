@@ -21,7 +21,7 @@ const AnimeNavigator = createMaterialTopTabNavigator(
     tabBarOptions: {
       activeTintColor: '#fff',
       style: {
-        backgroundColor: '#37474f',
+        backgroundColor: '#629749',
       },
     }
   }

@@ -18,7 +18,14 @@ const HomeNavigator = createMaterialBottomTabNavigator(
       screen: DirectoryScreen,
       navigationOptions: {
         tabBarIcon: <Icon iconSet='Entypo' name='grid' size={25} color='white'/>,
-        title: 'Directorio'
+        title: 'Directorio',
+        // drawerIcon: ({ tintColor }) => (
+        //   <Image
+        //     source={require("../assets/icons/home.png")}
+        //     resizeMode="contain"
+        //     style={{ width: 20, height: 20, tintColor: tintColor }}
+        //   />
+        // )
       },
     },
     // Config: {
@@ -32,7 +39,7 @@ const HomeNavigator = createMaterialBottomTabNavigator(
   {
     activeColor: '#fff',
     inactiveColor: '#3e2465',
-    barStyle: { backgroundColor: '#37474f' },
+    barStyle: { backgroundColor: '#558b2f' },
     labeled: false,
   }
 )

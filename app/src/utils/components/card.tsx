@@ -115,7 +115,7 @@ const createStyles = (screenWidth: number, separatorSize: number, sizePercent: n
       position:'absolute',
       left: 0,
       top: 0,
-      backgroundColor: '#FF9800',//'#ff7e00',
+      backgroundColor: '#f9a825',//'#ff7e00',
       borderBottomEndRadius: 15,
       borderTopStartRadius: 5
     },
