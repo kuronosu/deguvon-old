@@ -1,10 +1,9 @@
 import React from 'react'
-import { View, Text } from 'react-native'
 import { createMaterialBottomTabNavigator } from 'react-navigation-material-bottom-tabs'
 import RecentScreen from '../screens/containers/recent'
 import SettingsScreen from '../screens/containers/settings'
-import Icon from '../utils/components/icon';
-import DirectoryScreen from '../screens/containers/directory';
+import DirectoryScreen from '../screens/containers/directory'
+import HomeNavigatorIcon from './components/home-navigator-icon'
 
 const HomeNavigator = createMaterialBottomTabNavigator(
   {
@@ -12,18 +11,14 @@ const HomeNavigator = createMaterialBottomTabNavigator(
       screen: RecentScreen,
       navigationOptions: {
         title: 'Recientes',
-        tabBarIcon: ({ tintColor, focused }) =>  <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-          <Icon iconSet='EvilIcons' name="clock" size={focused ? 28: 26} color={tintColor}/>
-        </View>
+        tabBarIcon: props =>  <HomeNavigatorIcon iconSet='EvilIcons' name="clock" {...props} />
       }
     },
     Directory: {
       screen: DirectoryScreen,
       navigationOptions: {
         title: 'Directorio',
-        tabBarIcon: ({ tintColor, focused }) => <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-          <Icon iconSet='Entypo' name='grid' size={focused ? 28: 25} color={tintColor}/>
-          </View>
+        tabBarIcon: props =>  <HomeNavigatorIcon iconSet='Entypo' name="grid" {...props} />
       },
     },
     // Config: {
@@ -36,7 +31,7 @@ const HomeNavigator = createMaterialBottomTabNavigator(
   },
   {
     activeColor: '#fff',
-    inactiveColor: '#DCE775',
+    inactiveColor: '#9E9E9E',
     barStyle: { backgroundColor: '#33691e' },
     labeled: false,
   }
