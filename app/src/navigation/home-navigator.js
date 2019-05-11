@@ -1,4 +1,5 @@
 import React from 'react'
+import { View, Text } from 'react-native'
 import { createMaterialBottomTabNavigator } from 'react-navigation-material-bottom-tabs'
 import RecentScreen from '../screens/containers/recent'
 import SettingsScreen from '../screens/containers/settings'
@@ -11,21 +12,18 @@ const HomeNavigator = createMaterialBottomTabNavigator(
       screen: RecentScreen,
       navigationOptions: {
         title: 'Recientes',
-        tabBarIcon: <Icon iconSet='EvilIcons' name="clock" size={28} color='white'/>
+        tabBarIcon: ({ tintColor, focused }) =>  <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+          <Icon iconSet='EvilIcons' name="clock" size={focused ? 28: 26} color={tintColor}/>
+        </View>
       }
     },
     Directory: {
       screen: DirectoryScreen,
       navigationOptions: {
-        tabBarIcon: <Icon iconSet='Entypo' name='grid' size={25} color='white'/>,
         title: 'Directorio',
-        // drawerIcon: ({ tintColor }) => (
-        //   <Image
-        //     source={require("../assets/icons/home.png")}
-        //     resizeMode="contain"
-        //     style={{ width: 20, height: 20, tintColor: tintColor }}
-        //   />
-        // )
+        tabBarIcon: ({ tintColor, focused }) => <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+          <Icon iconSet='Entypo' name='grid' size={focused ? 28: 25} color={tintColor}/>
+          </View>
       },
     },
     // Config: {
@@ -38,8 +36,8 @@ const HomeNavigator = createMaterialBottomTabNavigator(
   },
   {
     activeColor: '#fff',
-    inactiveColor: '#3e2465',
-    barStyle: { backgroundColor: '#558b2f' },
+    inactiveColor: '#DCE775',
+    barStyle: { backgroundColor: '#33691e' },
     labeled: false,
   }
 )
