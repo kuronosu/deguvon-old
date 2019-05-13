@@ -25,10 +25,7 @@ const AppNavigator = createStackNavigator(
     Anime: {
       screen: AnimeNavigator,
       navigationOptions: ({ navigation }) => {
-        const anime = navigation.getParam('anime', null)
-        return {
-          title: anime ? anime.name : 'Anime'
-        }
+        return {title: navigation.getParam('title', 'Anime')}
       }
     },
     Search: {

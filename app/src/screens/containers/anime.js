@@ -1,4 +1,4 @@
 import AnimeDetails from '../../features/anime/containers/index'
 import withHandlePressBack from '../../navigation/handle-press-back'
 
-export default AnimeScreen = withHandlePressBack(AnimeDetails)
+export default AnimeScreen = withHandlePressBack(AnimeDetails, state => ({anime: state.anime}))

@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
-import { FlatList, Button, Text } from 'react-native'
+import React, { useState, useEffect } from 'react'
+import { FlatList, Button } from 'react-native'
 import { NavigationActions } from 'react-navigation'
 
 import Episode from '../components/episode'
@@ -42,24 +42,25 @@ const renderEpisode = (episode, animeName, dispatch) => (
 
 const keyExtractor = item => `episode_${item.number}_${item.url}`
 
-const EpisodeList = props => {
-  const { name: animeName = '', episodeList = [] } = props.navigation.getParam('anime', null)
-  const [data, setData] = useState(episodeList)
+const EpisodeList = ({ dispatch, animeName = '', list = [] }) => {
+  const [data, setData] = useState(list)
+  useEffect(() => {
+    setData(data.length ? data : list)
+  })
   return (
     <GeneralLayout>
       <Button
-        title={data[0].number > data[data.length - 1].number ? 'Mayor a menor' : 'Menor a mayor'}
+        title={data.length > 0 && data[0].number < data[data.length - 1].number ? 'Menor a mayor' : 'Mayor a menor'}
         onPress={() => {
           let tmp = data.slice()
           tmp.reverse()
           setData(tmp)
-
         }}
       />
       <FlatList
         data={data}
         keyExtractor={keyExtractor}
-        renderItem={({ item }) => renderEpisode(item, animeName, props.dispatch)}
+        renderItem={({ item }) => renderEpisode(item, animeName, dispatch)}
         ItemSeparatorComponent={EpisodeSeparator}
       />
     </GeneralLayout>

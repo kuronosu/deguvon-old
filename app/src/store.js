@@ -13,7 +13,7 @@ import reducer from './reducers';
 const persistConfig = {
   key: 'root',
   storage: FilesystemStorage,
-  blacklist: ['nav', 'search']
+  blacklist: ['nav', 'search', 'anime']
 }
 
 const defaultStore = {
@@ -24,6 +24,7 @@ const defaultStore = {
   },
   directory: { updated: false, data: [], updating: false },
   search: { text: '' },
+  anime: {},
 }
 
 const persistedReducer = persistReducer(persistConfig, reducer)

@@ -66,9 +66,10 @@ class Recent extends PureComponent {
       anime = episode.anime
       executeFetch = true
     }
+    this.props.dispatch({type: 'SET_ANIME_DATA', payload: anime})
     this.props.dispatch(NavigationActions.navigate({
       routeName: 'Anime',
-      params: { anime, executeFetch }
+      params: { executeFetch, title: anime.name }
     }))
   }
 

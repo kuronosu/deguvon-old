@@ -6,7 +6,8 @@ import {
 } from 'react-native'
 import { getAnimeDetails } from '../../../api'
 import DropDownHolder from '../../../utils/dropdownholder'
-import GeneralLayout from '../../../utils/components/general-layout';
+import GeneralLayout from '../../../utils/components/general-layout'
+import DetailCard from '../components/detail-card'
 
 class AnimeDetail extends Component {
 
@@ -20,19 +21,22 @@ class AnimeDetail extends Component {
     getAnimeDetails(aid)
       .then(data => {
         this.setState({ anime: data.anime, relations: data.relations, loadded: true })
+        this.props.dispatch({
+          type: 'SET_ANIME_DATA',
+          payload: data.anime
+        })
       }).catch(e => {
         this.setState({ loadded: false })
-        DropDownHolder.alert('error', "Error", "Error al cargar la informacion del anime")
+        DropDownHolder.alert('error', "Error", e.message)
       })
   }
 
   getData = () => {
-    const anime = this.props.navigation.getParam('anime', null)
     const executeFetch = this.props.navigation.getParam('executeFetch', false)
     if (executeFetch) {
-      this.fetchData(anime.aid)
+      this.fetchData(this.props.anime.aid)
     } else {
-      this.setState({ anime, loadded: true })
+      this.setState({ anime: this.props.anime, relations: this.props.anime.listAnmRel, loadded: true })
     }
   }
 
@@ -45,7 +49,10 @@ class AnimeDetail extends Component {
       return (
         <GeneralLayout>
           <ScrollView>
-            <Text>{this.state.anime.name}</Text>
+            <DetailCard
+              title={this.state.anime.name}
+              priority
+            />
             <View>
               {
                 this.state.anime.genres.map(g => (
@@ -59,7 +66,7 @@ class AnimeDetail extends Component {
         </GeneralLayout>
       )
     }
-    return <View><Text>Cargando</Text></View>
+    return <GeneralLayout><Text>Cargando</Text></GeneralLayout>
   }
 }
 
