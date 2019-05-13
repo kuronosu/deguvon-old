@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
-import { FlatList, Button } from 'react-native'
+import { FlatList } from 'react-native'
+import { Button } from 'react-native-paper'
 import { NavigationActions } from 'react-navigation'
 
 import Episode from '../components/episode'
@@ -50,13 +51,14 @@ const EpisodeList = ({ dispatch, animeName = '', list = [] }) => {
   return (
     <GeneralLayout>
       <Button
-        title={data.length > 0 && data[0].number < data[data.length - 1].number ? 'Menor a mayor' : 'Mayor a menor'}
+        mode="outlined"
+        color='#424242'
         onPress={() => {
           let tmp = data.slice()
           tmp.reverse()
           setData(tmp)
         }}
-      />
+      >{data.length > 0 && data[0].number < data[data.length - 1].number ? 'Menor a mayor' : 'Mayor a menor'}</Button>
       <FlatList
         data={data}
         keyExtractor={keyExtractor}
