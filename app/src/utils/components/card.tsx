@@ -54,7 +54,7 @@ const Card = (props: CardProps) => {
   }
 
   return (
-    <View style={[marginStyle, styles.shadow]}>
+    <View style={marginStyle}>
       <TouchableNativeFeedback
         onPress={() => { props.onPressCard && props.onPressCard(props.pressData) }}
         onLongPress={() => { props.onLongPressCard && props.onLongPressCard(props.pressData) }}
@@ -62,12 +62,14 @@ const Card = (props: CardProps) => {
         useForeground={true}
       >
         <View>
-          <Image
-            style={[styles.cover, props.primaryOverlay && styles.coverBoderAll]}
-            source={{
-              uri: `https://kuronosu.dev${props.image}`
-            }}
-          />
+          <View style={[styles.cover, props.primaryOverlay && styles.coverBoderAll, styles.backgroundImageColor]}>
+            <Image
+              style={[styles.cover, props.primaryOverlay && styles.coverBoderAll]}
+              source={{
+                uri: `https://kuronosu.dev${props.image}`
+              }}
+            />
+          </View>
           <View style={styles.secondary}>
             <Text style={styles.secondaryText}>{props.secondaryText}</Text>
           </View>
@@ -134,8 +136,9 @@ const createStyles = (screenWidth: number, separatorSize: number, sizePercent: n
     marginLeft: {
       marginLeft: screenWidth * separatorSize
     },
-    shadow: {
-      elevation: 5
+    backgroundImageColor: {
+      backgroundColor: '#222d34',
+      borderTopRightRadius: 10
     }
   })
 }
