@@ -1,11 +1,11 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { withNavigation, NavigationActions } from 'react-navigation'
-import { FlatList } from 'react-native';
-import Empty from '../../../utils/components/empty';
-import VerticalSeparator from '../../../utils/components/separator';
-import Card from '../../../utils/components/card';
-import GeneralLayout from '../../../utils/components/general-layout';
+import { FlatList } from 'react-native'
+import Empty from '../../../utils/components/empty'
+import VerticalSeparator from '../../../utils/components/separator'
+import Card from '../../../utils/components/card'
+import GeneralLayout from '../../../utils/components/general-layout'
 
 class Search extends Component {
 
@@ -17,7 +17,7 @@ class Search extends Component {
     }))
   }
 
-  _renderEmtpy = () => <Empty text='Sin resultados' color='white' />
+  _renderEmtpy = () => <Empty text='Sin resultados' />
 
   _itemSeparator = () => <VerticalSeparator numCards={this.props.mode ? 3 : 4} />
 

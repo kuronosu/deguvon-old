@@ -50,7 +50,7 @@ const AppNavigator = createStackNavigator(
       title: "Deguvon",
       headerTintColor: 'white',
       headerStyle: {
-        backgroundColor: '#33691E'
+        backgroundColor: '#558b2f'
       },
       headerTitleStyle: {
         color: 'white',
