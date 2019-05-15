@@ -28,7 +28,7 @@ interface CardProps {
   imgAspectRatioSize?: number
 }
 
-const Card = (props: CardProps) => {
+const Card: React.FC<CardProps> = (props: CardProps) => {
   let styles
   let marginStyle
   if (props.uniqueInRow) {
@@ -62,7 +62,7 @@ const Card = (props: CardProps) => {
         useForeground={true}
       >
         <View>
-          <View style={[styles.cover, props.primaryOverlay && styles.coverBoderAll, styles.backgroundImageColor]}>
+          <View style={[styles.cover, props.primaryOverlay && styles.coverBoderAll, props.primaryOverlay && styles.radiusBot, styles.backgroundImage]}>
             <Image
               style={[styles.cover, props.primaryOverlay && styles.coverBoderAll]}
               source={{
@@ -136,9 +136,14 @@ const createStyles = (screenWidth: number, separatorSize: number, sizePercent: n
     marginLeft: {
       marginLeft: screenWidth * separatorSize
     },
-    backgroundImageColor: {
+    backgroundImage: {
       backgroundColor: '#222d34',
-      borderTopRightRadius: 10
+      borderTopRightRadius: 10,
+      borderTopLeftRadius: 7,
+    },
+    radiusBot: {
+      borderBottomLeftRadius: 6,
+      borderBottomRightRadius: 6
     }
   })
 }
