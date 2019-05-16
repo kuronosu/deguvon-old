@@ -12,7 +12,7 @@ export default PlayerLayout
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#0F0',
+    backgroundColor: 'black',
     height,
     width
   }
