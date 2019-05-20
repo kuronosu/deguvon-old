@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import { StatusBar } from 'react-native'
-import { withNavigation } from 'react-navigation'
 import Orientation from 'react-native-orientation'
 
 import PlayerLoader from '../components/player-loader'
@@ -9,6 +8,7 @@ import PlayerLayout from '../components/player-layout'
 import Video from '../components/video'
 import timeFormater from '../../../utils/time-formater'
 import DropDownHolder from '../../../utils/dropdownholder'
+import withHandlePressBack from '../../../navigation/handle-press-back';
 
 class Player extends Component {
 
@@ -128,4 +128,4 @@ class Player extends Component {
   )
 }
 
-export default withNavigation(Player)
+export default PlayerScreen = withHandlePressBack(Player)

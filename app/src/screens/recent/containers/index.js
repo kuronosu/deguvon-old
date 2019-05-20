@@ -1,6 +1,5 @@
 import React, { PureComponent } from "react"
 import { FlatList } from "react-native"
-import { connect } from 'react-redux'
 import { NavigationActions } from 'react-navigation'
 import { getServers, getRecent } from '../../../api'
 import Empty from "../../../utils/components/empty"
@@ -10,6 +9,7 @@ import DropDownHolder from "../../../utils/dropdownholder"
 import updateDirectory from "../../../api/update-directory"
 import Card from "../../../utils/components/card"
 import GeneralLayout from "../../../utils/components/general-layout"
+import withHandlePressBack from "../../../navigation/handle-press-back"
 
 class Recent extends PureComponent {
 
@@ -125,4 +125,4 @@ function mapStateToProps(state) {
   }
 }
 
-export default connect(mapStateToProps)(Recent)
+export default RecentScreen = withHandlePressBack(Recent, mapStateToProps)

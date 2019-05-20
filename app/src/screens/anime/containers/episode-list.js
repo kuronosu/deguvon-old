@@ -9,6 +9,8 @@ import { getAvailableServers, getNatsukiVideo } from '../../../api/video-servers
 import EpisodeSeparator from '../components/episode-separator'
 import DropDownHolder from '../../../utils/dropdownholder'
 import GeneralLayout from '../../../utils/components/general-layout'
+import withHandlePressBack from '../../../navigation/handle-press-back'
+
 
 const playEpisode = (id, number, name, dispatch) => {
   (async () => {
@@ -69,4 +71,4 @@ const EpisodeList = ({ dispatch, animeName = '', list = [] }) => {
   )
 }
 
-export default EpisodeList
+export default EpisodeListScreen = withHandlePressBack(EpisodeList, state => ({list: state.anime.episodeList, animeName: state.anime.name}))

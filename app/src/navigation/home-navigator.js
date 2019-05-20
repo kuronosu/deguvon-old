@@ -1,9 +1,8 @@
 import React from 'react'
 import { createMaterialBottomTabNavigator } from 'react-navigation-material-bottom-tabs'
-import RecentScreen from '../screens/containers/recent'
-import SettingsScreen from '../screens/containers/settings'
-import DirectoryScreen from '../screens/containers/directory'
 import HomeNavigatorIcon from './components/home-navigator-icon'
+import RecentScreen from '../screens/recent/containers'
+import DirectoryScreen from '../screens/directory/containers'
 
 const HomeNavigator = createMaterialBottomTabNavigator(
   {

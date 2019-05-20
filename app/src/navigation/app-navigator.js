@@ -5,10 +5,10 @@ import {
 } from 'react-navigation'
 import HomeNavigator from './home-navigator'
 import AnimeNavigator from './anime-navigator'
-import SearchButton from './containers/search-button';
-import SearchScreen from '../screens/containers/search';
-import NavbarSearch from './containers/navbar-search';
-import PlayerScreen from '../screens/containers/player';
+import SearchButton from './containers/search-button'
+import NavbarSearch from './containers/navbar-search'
+import SearchScreen from '../screens/containers/search'
+import PlayerScreen from '../screens/player/containers'
 
 const AppNavigator = createStackNavigator(
   {

@@ -8,6 +8,7 @@ import { getAnimeDetails } from '../../../api'
 import DropDownHolder from '../../../utils/dropdownholder'
 import GeneralLayout from '../../../utils/components/general-layout'
 import DetailCard from '../components/detail-card'
+import withHandlePressBack from '../../../navigation/handle-press-back'
 
 class AnimeDetail extends Component {
 
@@ -70,4 +71,4 @@ class AnimeDetail extends Component {
   }
 }
 
-export default AnimeDetail
+export default AnimeScreen = withHandlePressBack(AnimeDetail, state => ({anime: state.anime}))

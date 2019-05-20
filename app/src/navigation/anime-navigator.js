@@ -1,6 +1,6 @@
 import { createMaterialTopTabNavigator } from 'react-navigation'
-import EpisodeListScreen from '../screens/containers/episode-list'
-import AnimeScreen from '../screens/containers/anime'
+import EpisodeListScreen from '../screens/anime/containers/episode-list'
+import AnimeScreen from '../screens/anime/containers'
 
 const AnimeNavigator = createMaterialTopTabNavigator(
   {

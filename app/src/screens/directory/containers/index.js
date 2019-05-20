@@ -1,15 +1,13 @@
 import React, { Component } from 'react'
-import {
-  FlatList
-} from 'react-native'
-import { connect } from 'react-redux'
+import { FlatList } from 'react-native'
 import { NavigationActions } from 'react-navigation'
 import Empty from '../../../utils/components/empty'
-import VerticalSeparator from '../../../utils/components/separator';
-import DirectoryFloatActionButton from '../components/float-action-button';
-import FilterMaganer from '../../../utils/filter-maganer';
-import Card from '../../../utils/components/card';
-import GeneralLayout from '../../../utils/components/general-layout';
+import VerticalSeparator from '../../../utils/components/separator'
+import DirectoryFloatActionButton from '../components/float-action-button'
+import FilterMaganer from '../../../utils/filter-maganer'
+import Card from '../../../utils/components/card'
+import GeneralLayout from '../../../utils/components/general-layout'
+import withHandlePressBack from '../../../navigation/handle-press-back'
 
 class Directory extends Component {
 
@@ -95,4 +93,5 @@ const mapStateToProps = state => {
   }
 }
 
-export default connect(mapStateToProps)(Directory)
+
+export default DirectoryScreen = withHandlePressBack(Directory, mapStateToProps)

@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import Search from '../../features/search/containers'
+import Search from '../search/containers'
 import withHandlePressBack from '../../navigation/handle-press-back'
 
 class SearchScreen extends Component {
