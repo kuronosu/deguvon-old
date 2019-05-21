@@ -1,9 +1,9 @@
-import React, { Component } from 'react';
+import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { TextInput, StyleSheet } from 'react-native';
-import BackButton from './back-button';
-import NavbarSearchLayout from '../components/navbar-search-layout';
-import Icon from 'react-native-vector-icons/MaterialIcons'
+import { TextInput, StyleSheet } from 'react-native'
+import BackButton from './back-button'
+import NavbarSearchLayout from '../components/navbar-search-layout'
+import Icon from '../../utils/components/icon'
 
 class NavbarSearch extends Component {
   render() {
@@ -14,7 +14,7 @@ class NavbarSearch extends Component {
           onChangeText={this.props.onChangeText}
           value={this.props.text}
         />
-        <BackButton backImage={<Icon name='close' size={25} color='white' />} />
+        <BackButton backImage={<Icon set='MaterialIcons' name='close' size={25} color='white' />} />
       </NavbarSearchLayout>
     );
   }

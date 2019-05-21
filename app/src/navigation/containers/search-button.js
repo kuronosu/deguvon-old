@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { NavigationActions } from 'react-navigation'
-import Icon from 'react-native-vector-icons/Ionicons'
+import Icon from '../../utils/components/icon'
 
 class SearchButton extends Component {
   _onPressSearchButton = () => {
@@ -11,7 +11,7 @@ class SearchButton extends Component {
   }
 
   render() {
-    return <Icon name="ios-search" size={25} color='white' onPress={this._onPressSearchButton} />
+    return <Icon set='Ionicons' name="ios-search" size={25} color='white' onPress={this._onPressSearchButton} />
   }
 }
 
