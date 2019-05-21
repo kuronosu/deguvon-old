@@ -1,13 +1,16 @@
 import React from 'react'
 import { View, Text, StyleSheet } from "react-native"
 
-const Empty = props => {
-  return (
-    <View style={styles.container} >
-      <Text style={[styles.text, (props.color && { color: props.color })]} >{props.text}</Text>
-    </View>
-  )
+type Props = {
+  text: string
+  color?: string
 }
+
+const Empty: React.FC<Props> = ({color, text}: Props) => (
+  <View style={styles.container} >
+    <Text style={[styles.text, color ? { color } : {}]} >{text}</Text>
+  </View>
+)
 
 export default Empty
 

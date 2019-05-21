@@ -71,3 +71,7 @@ api/images/
 
 .vscode/
 app/android/gradle.properties
+
+# Jest
+#
+.jest/
