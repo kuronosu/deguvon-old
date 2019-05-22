@@ -315,6 +315,19 @@ class DataBase:
             for anime in anime_list:
                 try:
                     directory[anime.aid] = DataBase.get_by_url(anime.url).to_json()
+                    list_anmRel = []
+                    for r in directory[anime.aid]['listAnmRel']:
+                        try:
+                            anime_rel = Anime.get(Anime.url == r['url'])
+                            list_anmRel.append({
+                                'url': r['url'],
+                                'rel': r['rel'],
+                                'name': anime_rel.name,
+                                'aid': anime_rel.aid
+                            })
+                        except:
+                            pass
+                    directory[anime.aid]['listAnmRel'] = list_anmRel
                 except:
                     pass
         return directory
