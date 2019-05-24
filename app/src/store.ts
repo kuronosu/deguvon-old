@@ -25,7 +25,6 @@ const defaultStore: ApplicationState = {
   directory: { updated: false, data: [], updating: false },
   search: { text: '' },
   anime: { aid: '', url: '', slug: '', name: '', image: '', typea: '', synopsis: '', genres: [], listAnmRel: [], episodeList: [] },
-  nav: { index: -1, routes: [], isTransitioning: false, key: '', params: {}, }
 }
 
 const persistedReducer = persistReducer(persistConfig, reducer)

@@ -60,6 +60,6 @@ export interface ApplicationState {
   recent: recent.recentStore
   search: search
   anime: anime.AnimeModel
-  nav: NavigationState
   app: any
+  nav?: NavigationState
 }
