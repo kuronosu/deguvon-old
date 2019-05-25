@@ -2,8 +2,8 @@ import { createStore, applyMiddleware } from 'redux'
 import { persistStore, persistReducer, PersistConfig } from 'redux-persist'
 import { createReactNavigationReduxMiddleware } from 'react-navigation-redux-helpers'
 import FilesystemStorage from 'redux-persist-filesystem-storage'
-import reducer from './store/reducers'
-import { StoreState } from './store/types'
+import reducer from './reducers'
+import { StoreState } from './types'
 import { Dimensions } from 'react-native'
 
 // const store = createStore(reducer, {
