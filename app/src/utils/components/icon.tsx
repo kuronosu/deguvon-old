@@ -52,6 +52,7 @@ function loadSet(set: Props["set"]): typeof RNVectorIcon {
     case "Zocial":
       return ZocialI
   }
+  return MaterialCommunityIconsI
 }
 
 const Icon = (props: Props) => {

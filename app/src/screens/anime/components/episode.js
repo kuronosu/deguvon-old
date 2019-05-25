@@ -38,7 +38,7 @@ const Episode = ({ episode, handlePlay }) => (
       >
         <Icon
           onPress={handlePlay}
-          iconSet='Entypo'
+          set='Entypo'
           name='controller-play'
           size={40}
           color='black'
