@@ -1,36 +1,35 @@
-import { createStore, applyMiddleware, Store } from 'redux'
-import { persistStore, persistReducer } from 'redux-persist'
+import { createStore, applyMiddleware } from 'redux'
+import { persistStore, persistReducer, PersistConfig } from 'redux-persist'
 import { createReactNavigationReduxMiddleware } from 'react-navigation-redux-helpers'
 import FilesystemStorage from 'redux-persist-filesystem-storage'
 import reducer from './store/reducers'
-import { ApplicationState } from './store/types'
+import { StoreState } from './store/types'
+import { Dimensions } from 'react-native'
 
 // const store = createStore(reducer, {
 //   recent: {recentList: [], refreshing: false},
 //   deviceInfo: {screenMode: false, screenSize: {}}
 // })
 
-const persistConfig = {
+const persistConfig: PersistConfig = {
   key: 'root',
   storage: FilesystemStorage,
   blacklist: ['nav', 'search', 'anime']
 }
 
-const defaultStore: ApplicationState = {
-  recent: { recentList: [], last: { id: undefined } }, // valores por defecto para el Reducer recent
+const defaultStore: StoreState = {
+  recent: { list: [], last: {id: null} }, // valores por defecto para el Reducer recent
   app: { // valores por defecto para el Reducer general
-    device: { screenMode: true, screenSize: {} },
-    config: { api: { host: 'kuronosu.dev', route: '/api/v1' } }
+    config: { api: { host: 'kuronosu.dev', route: '/api/v1' } },
+    device: {screenMode: true, screenSize: Dimensions.get('window')}
   },
   directory: { updated: false, data: [], updating: false },
-  search: { text: '' },
-  anime: { aid: '', url: '', slug: '', name: '', image: '', typea: '', synopsis: '', genres: [], listAnmRel: [], episodeList: [] },
 }
 
 const persistedReducer = persistReducer(persistConfig, reducer)
 
 const navigationMiddleware = createReactNavigationReduxMiddleware(
-  (state: ApplicationState) => state.nav,
+  (state: StoreState) => state.nav,
 )
 
 const store = createStore(
@@ -42,20 +41,4 @@ const store = createStore(
 
 const persistor = persistStore(store)
 
-
 export { store, persistor }
-
-// export default function configureStore(history: History, initialState: ApplicationState): Store<ApplicationState> {
-//   // create the composing function for our middlewares
-//   const composeEnhancers = composeWithDevTools({});
-
-//   // We'll create our store with the combined reducers and the initial Redux state that
-//   // we'll be passing from our entry point.
-//   return createStore<ApplicationState>(
-//     reducers,
-//     initialState,
-//     composeEnhancers(applyMiddleware(
-//       routerMiddleware(history),
-//     )),
-//   );
-// }

@@ -1,6 +1,10 @@
-function general(state = {}, action) {
+import { StoreState } from "../types"
+import { SET_DEVICE_DATA, SET_CONFIG } from "../constants"
+import { AppDataAction } from "../actions"
+
+function app(state: StoreState['app'] = {}, action: AppDataAction): StoreState['app'] {
   switch (action.type) {
-    case 'SET_DEVICE_DATA': {
+    case SET_DEVICE_DATA: {
       return {
         ...state,
         device: {
@@ -9,7 +13,7 @@ function general(state = {}, action) {
         }
       }
     }
-    case 'SET_CONFIG': {
+    case SET_CONFIG: {
       return {
         ...state,
         config: {
@@ -23,4 +27,4 @@ function general(state = {}, action) {
   }
 }
 
-export default general
+export default app

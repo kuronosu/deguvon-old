@@ -30,14 +30,12 @@ class Recent extends PureComponent {
       }
       this.props.dispatch({
         type: 'SET_RECENT_DATA',
-        payload: {
-          recentList
-        }
+        payload: recentList
       })
       this.setState({ refreshing: false })
     } catch (error) {
       this.setState({ refreshing: false })
-      DropDownHolder.alert('error', 'Error', 'Error obtener los ultimos episodios')
+      DropDownHolder.alert('error', 'Error', error.message)
     }
   }
 
@@ -116,7 +114,7 @@ class Recent extends PureComponent {
 
 function mapStateToProps(state) {
   return {
-    list: state.recent.recentList,
+    list: state.recent.list,
     last: state.recent.last,
     mode: state.app.device.screenMode,
     screenWidth: state.app.device.screenSize.width,

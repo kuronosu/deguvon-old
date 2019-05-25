@@ -30,7 +30,7 @@ const updateDirectory = async () => {
         updated: false,
       }
     })
-    dispatch({type: 'RESET_LAST'})
+    dispatch({type: 'CLEAR_LAST'})
     DropDownHolder.alert('error', 'Error', 'Error al actualizar el directorio')
     console.log(error)
   }

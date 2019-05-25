@@ -1,5 +1,6 @@
 
 import { NavigationState } from 'react-navigation'
+import { ScaledSize } from 'react-native'
 
 export namespace recent {
   export type recentEpisode = {
@@ -13,11 +14,12 @@ export namespace recent {
       aid: string
     }
   }
+  export type last = {
+    id: string | null | undefined
+  }
   export type recentStore = {
-    recentList: recentEpisode[]
-    last: {
-      id?: string
-    }
+    list: recentEpisode[]
+    last: last
   }
 }
 
@@ -46,20 +48,36 @@ export namespace anime {
 }
 
 export namespace directory {
-  export type directoryStore= {
+  export type directoryStore = {
     updated: boolean
     updating: boolean
     data: anime.AnimeModel[]
-  } 
+  }
 }
 
-type search = { text: string }
+type search = {
+  text: string
+  data: anime.AnimeModel[]
+}
 
-export interface ApplicationState {
+export namespace app {
+  export type device = {
+    screenMode: boolean
+    screenSize: ScaledSize
+  }
+  export type config = any // Para luego
+
+  export type data = {
+    device?: device
+    config?: config
+  }
+}
+
+export interface StoreState {
   directory: directory.directoryStore
   recent: recent.recentStore
-  search: search
-  anime: anime.AnimeModel
-  app: any
+  search?: search
+  anime?: anime.AnimeModel | {}
+  app?: app.data
   nav?: NavigationState
 }
