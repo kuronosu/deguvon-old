@@ -53,6 +53,9 @@ export namespace directory {
     updating: boolean
     data: anime.AnimeModel[]
   }
+  export type directory = {
+    [aid: string]: anime.AnimeModel
+  }
 }
 
 type search = {
@@ -70,6 +73,22 @@ export namespace app {
   export type data = {
     device?: device
     config?: config
+  }
+}
+
+export namespace servers {
+  export type langKeys = 'LAT' | 'SUB'
+  export type serverInfo = {
+    server: string
+    title: string
+    allow_mobile: boolean
+    code: string
+    url?: string
+  }
+  export type videos =  {
+    LAT?: serverInfo
+    SUB?: serverInfo
+    available_servers: string[]
   }
 }
 

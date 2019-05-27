@@ -1,4 +1,5 @@
-import { HOST, ROUTE, getServers } from "."
+import { getServers } from '.'
+import { HOST, ROUTE } from "./constants"
 
 /** Funcion para filtrar los servidores disponibles 
 *  @param {Object} servers Objecto que contiene la informacion de los servidores - devuelta por el servidor

@@ -1,10 +1,11 @@
 import DropDownHolder from '../utils/dropdownholder'
 import { getDirectory } from '.'
 import { store } from '../store'
+import { resetLastRecent } from '../store/actions'
 
 const updateDirectory = async () => {
   const { dispatch } = store
-  DropDownHolder.alert('info', 'Actualizando directorio','')
+  DropDownHolder.alert('info', 'Actualizando directorio', '')
   try {
     dispatch({
       type: 'SET_DIRECTORY_DATA',
@@ -30,7 +31,7 @@ const updateDirectory = async () => {
         updated: false,
       }
     })
-    dispatch({type: 'CLEAR_LAST'})
+    dispatch(resetLastRecent())
     DropDownHolder.alert('error', 'Error', 'Error al actualizar el directorio')
     console.log(error)
   }
