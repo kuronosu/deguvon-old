@@ -85,9 +85,9 @@ export namespace servers {
     code: string
     url?: string
   }
-  export type videos =  {
-    LAT?: serverInfo
-    SUB?: serverInfo
+  export type videos = {
+    LAT?: serverInfo[]
+    SUB?: serverInfo[]
     available_servers: string[]
   }
 }
