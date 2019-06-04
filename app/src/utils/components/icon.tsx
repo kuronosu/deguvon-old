@@ -12,19 +12,20 @@ import FeatherI from 'react-native-vector-icons/Feather'
 import EntypoI from 'react-native-vector-icons/Entypo'
 import ZocialI from 'react-native-vector-icons/Zocial'
 
+export type IconSet = 'MaterialCommunityIcons' |
+                      'SimpleLineIcons' |
+                      'MaterialIcons' |
+                      'FontAwesome' |
+                      'Foundation' |
+                      'EvilIcons' |
+                      'Octicons' |
+                      'Ionicons' |
+                      'Feather' |
+                      'Entypo' |
+                      'Zocial'
+
 interface Props extends IconProps {
-  set:
-  'MaterialCommunityIcons' |
-  'SimpleLineIcons' |
-  'MaterialIcons' |
-  'FontAwesome' |
-  'Foundation' |
-  'EvilIcons' |
-  'Octicons' |
-  'Ionicons' |
-  'Feather' |
-  'Entypo' |
-  'Zocial'
+  set: IconSet
 }
 
 function loadSet(set: Props["set"]): typeof RNVectorIcon {

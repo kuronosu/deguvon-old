@@ -13,6 +13,7 @@ type serverType = {
 */
 export const getAvailableServers = (serversData: servers.videos, lang: servers.langKeys | 'ALL' = 'ALL') => {
   let avServers: serverType = {}
+  let serversNames = new Set<string>()
   // lang = ['SUB', 'LAT', 'ALL'].includes(lang.toUpperCase()) ? lang.toUpperCase() : 'ALL'
   if (lang == 'ALL') {
     for (const key in serversData) {
@@ -27,27 +28,31 @@ export const getAvailableServers = (serversData: servers.videos, lang: servers.l
         (langServerList ? langServerList : []).forEach((s: servers.serverInfo) => {
           if (serversData.available_servers.includes(s.server.toLowerCase())) {
             avServers[key].push(s)
+            serversNames.add(s.server.toLowerCase())
           }
         })
       }
     }
   } else if (serversData.hasOwnProperty(lang)) {
     avServers[lang] = []
-    if (serversData.hasOwnProperty(lang)) {
-      let serverList: servers.serverInfo[] | undefined
-      if (lang == 'LAT') {
-        serverList = serversData.LAT
-      } else if (lang == 'SUB') {
-        serverList = serversData.SUB
-      }
-      (serverList ? serverList : []).forEach((s: servers.serverInfo) => {
-        if (serversData.available_servers.includes(s.server.toLowerCase())) {
-          avServers[lang].push(s)
-        }
-      })
+    let serverList: servers.serverInfo[] | undefined
+    if (lang == 'LAT') {
+      serverList = serversData.LAT
+    } else if (lang == 'SUB') {
+      serverList = serversData.SUB
     }
+    (serverList ? serverList : []).forEach((s: servers.serverInfo) => {
+      if (serversData.available_servers.includes(s.server.toLowerCase())) {
+        avServers[lang].push(s)
+        serversNames.add(s.server.toLowerCase())
+      }
+    })
   }
-  return avServers
+  const data: servers.videos = {
+    ...avServers,
+    available_servers: Array.from(serversNames.values())
+  }
+  return data
 }
 
 /** Funcion para obtener el video del servidor natsuki 
