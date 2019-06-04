@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
 import { NavigationActions, HeaderBackButton } from 'react-navigation'
-import { connect } from 'react-redux'
-import { TouchableNativeFeedback } from 'react-native-gesture-handler';
+import { connect, DispatchProp } from 'react-redux'
+import { TouchableNativeFeedback } from 'react-native-gesture-handler'
 
-class BackButton extends Component {
+class BackButton extends Component<DispatchProp, {}> {
 
   _back = () => {
     this.props.dispatch(NavigationActions.back())
@@ -21,4 +21,4 @@ class BackButton extends Component {
 }
 
 
-export default connect(null)(BackButton)
+export default connect()(BackButton)

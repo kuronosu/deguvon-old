@@ -4,8 +4,14 @@ import { TextInput, StyleSheet } from 'react-native'
 import BackButton from './back-button'
 import NavbarSearchLayout from '../components/navbar-search-layout'
 import Icon from '../../utils/components/icon'
+import { StoreState } from '../../store/types'
 
-class NavbarSearch extends Component {
+type Props = {
+  onChangeText: (text: string) => void,
+  text?: string
+}
+
+class NavbarSearch extends Component<Props> {
   render() {
     return (
       <NavbarSearchLayout>
@@ -20,9 +26,9 @@ class NavbarSearch extends Component {
   }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state: StoreState) => {
   return {
-    text: state.search.text
+    text: state.search && state.search.text
   }
 }
 

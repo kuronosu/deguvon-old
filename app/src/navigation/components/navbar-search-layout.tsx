@@ -1,7 +1,7 @@
 import React from 'react'
 import { View, StyleSheet } from 'react-native'
 
-const NavbarSearchLayout = props => (
+const NavbarSearchLayout: React.FC = props => (
   <View style={styles.container}>
     {props.children}
   </View>
