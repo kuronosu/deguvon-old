@@ -1,7 +1,13 @@
 import React from 'react'
 import { View, Text, StyleSheet } from 'react-native'
 
-const DetailCard = ({ title, content, priority }) => (
+type Props = {
+  title: string
+  content: string
+  priority: boolean
+}
+
+const DetailCard: React.FC<Props> = ({ title, content, priority }) => (
   <View style={styles.container}>
     <Text style={[styles.title, priority && styles.priority]}>{title}</Text>
     {content && <Text style={styles.content}>{content}</Text>}
