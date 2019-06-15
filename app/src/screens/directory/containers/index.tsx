@@ -1,22 +1,38 @@
 import React, { Component } from 'react'
-import { FlatList } from 'react-native'
+import { DispatchProp } from 'react-redux'
+import { FlatList, Dimensions } from 'react-native'
 import { NavigationActions } from 'react-navigation'
-import Empty from '../../../utils/components/empty'
-import VerticalSeparator from '../../../utils/components/separator'
-import DirectoryFloatActionButton from '../components/float-action-button'
-import FilterMaganer from '../../../utils/filter-maganer'
+
 import Card from '../../../utils/components/card'
+import Empty from '../../../utils/components/empty'
+import { StoreState, anime } from '../../../store/types'
+import FilterMaganer from '../../../utils/filter-maganer'
+import VerticalSeparator from '../../../utils/components/separator'
 import GeneralLayout from '../../../utils/components/general-layout'
 import withHandlePressBack from '../../../navigation/handle-press-back'
+import DirectoryFloatActionButton from '../components/float-action-button'
 
-class Directory extends Component {
+type Props = {
+  data: anime.AnimeModel[],
+  updated: boolean
+  mode: boolean
+  screenWidth: number,
+  updating: boolean
+}
 
-  state = {
+type State = {
+  filterIndex: number
+  data: anime.AnimeModel[]
+}
+
+class Directory extends Component<Props & DispatchProp, State> {
+
+  state: State = {
     filterIndex: 0,
     data: []
   }
 
-  _onPressAnimeCard = anime => {
+  _onPressAnimeCard = (anime: anime.AnimeModel) => {
     this.props.dispatch({ type: 'SET_ANIME_DATA', payload: anime })
     this.props.dispatch(NavigationActions.navigate({
       routeName: 'Anime',
@@ -28,9 +44,9 @@ class Directory extends Component {
 
   _itemSeparator = () => <VerticalSeparator numCards={this.props.mode ? 3 : 4} />
 
-  _keyExtractor = item => `anime_${item.aid.toString()}`
+  _keyExtractor = (item: anime.AnimeModel) => `anime_${item.aid.toString()}`
 
-  _renderItem = ({ item, index }) => <Card
+  _renderItem = ({ item, index }: {item: anime.AnimeModel, index: number}) => <Card
     pressData={item}
     mode={this.props.mode}
     screenWidth={this.props.screenWidth}
@@ -83,15 +99,16 @@ class Directory extends Component {
   }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state: StoreState): Props => {
   return {
     data: state.directory.data,
     updated: state.directory.updated,
-    mode: state.app.device.screenMode,
-    screenWidth: state.app.device.screenSize.width,
+    mode: state.app && state.app.device ? state.app.device.screenMode : true,
+    screenWidth: state.app && state.app.device ? state.app.device.screenSize.width : Dimensions.get('screen').width,
     updating: state.directory.updating
   }
 }
 
+const DirectoryScreen = withHandlePressBack(mapStateToProps)(Directory)
 
-export default DirectoryScreen = withHandlePressBack(mapStateToProps)(Directory)
+export default DirectoryScreen

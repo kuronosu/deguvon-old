@@ -1,17 +1,18 @@
-import React, { useState, useEffect } from 'react'
+import { Dispatch } from 'redux'
 import { FlatList } from 'react-native'
+import { DispatchProp } from 'react-redux'
 import { Button } from 'react-native-paper'
+import React, { useState, useEffect } from 'react'
 import { NavigationActions } from 'react-navigation'
 
-import Episode from '../components/episode'
 import { getServers } from '../../../api'
-import { getAvailableServers, getNatsukiVideo } from '../../../api/video-servers'
-import EpisodeSeparator from '../components/episode-separator'
+import Episode from '../components/episode'
+import { anime, StoreState } from '../../../store/types'
 import DropDownHolder from '../../../utils/dropdownholder'
+import EpisodeSeparator from '../components/episode-separator'
 import GeneralLayout from '../../../utils/components/general-layout'
 import withHandlePressBack from '../../../navigation/handle-press-back'
-import { anime, StoreState } from '../../../store/types'
-import { Dispatch } from 'redux'
+import { getAvailableServers, getNatsukiVideo } from '../../../api/video-servers'
 
 const playEpisode = (id: number, number: number, name: string, dispatch: Dispatch) => {
   (async () => {
@@ -58,12 +59,11 @@ const getOrderText = (data: anime.episode[]) => {
 }
 
 type Props = {
-  dispatch: Dispatch
   animeName: string
   list: anime.episode[]
 }
 
-const EpisodeList: React.FC<Props> = ({ dispatch, animeName = '', list = [] }) => {
+const EpisodeList: React.FC<Props & DispatchProp> = ({ dispatch, animeName, list }) => {
   const [data, setData] = useState(list)
   useEffect(() => {
     setData(data.length ? data : list)
@@ -85,8 +85,8 @@ const EpisodeList: React.FC<Props> = ({ dispatch, animeName = '', list = [] }) =
   )
 }
 
-const mapStateToProps = (state: StoreState) => ({
-  list: state.anime && typeof state.anime ? state.anime.episodeList : [],
+const mapStateToProps = (state: StoreState): Props => ({
+  list: state.anime ? state.anime.episodeList : [],
   animeName: state.anime ? state.anime.name : ''
 })
 

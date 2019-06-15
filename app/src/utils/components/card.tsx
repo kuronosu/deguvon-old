@@ -17,11 +17,11 @@ interface CardProps {
   mode: boolean
   screenWidth: number
   index: number
-  onPressCard: Function
-  onLongPressCard: Function
   image: string
   primaryText: string
   secondaryText: string
+  onPressCard?: Function
+  onLongPressCard?: Function
   uniqueInRow?: boolean
   cardsPerRowLandscape?: number
   cardsPerRowPortrait?: number
