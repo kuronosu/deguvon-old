@@ -31,18 +31,20 @@ type Props = {
 const DirectoryFloatActionButton = ({ filterType, onPressFilter }: Props) => {
   const [open, setOpen] = useState(false)
   return (
-    <Portal>
-      <FAB.Group
-        open={open}
-        accessibilityLabel='Filtros'
-        fabStyle={{ backgroundColor: 'green' }}
-        icon={open ? 'close' : 'add'}
-        actions={[
-          buildAction('filter-list', onPressFilter, `Tipo: ${filterType}`)
-        ]}
-        onStateChange={({ open }) => setOpen(open)}
-      />
-    </Portal>
+    <Portal.Host>
+      <Portal>
+        <FAB.Group
+          open={open}
+          accessibilityLabel='Filtros'
+          fabStyle={{ backgroundColor: 'green' }}
+          icon={open ? 'close' : 'add'}
+          actions={[
+            buildAction('filter-list', onPressFilter, `Tipo: ${filterType}`)
+          ]}
+          onStateChange={({ open }) => setOpen(open)}
+        />
+      </Portal>
+    </Portal.Host>
   )
 }
 
