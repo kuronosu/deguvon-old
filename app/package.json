@@ -9,7 +9,6 @@
   "dependencies": {
     "react": "16.8.3",
     "react-native": "0.59.4",
-    "react-native-action-button": "2.8.5",
     "react-native-dropdownalert": "3.9.2",
     "react-native-fetch-blob": "0.10.8",
     "react-native-gesture-handler": "1.1.0",
@@ -62,5 +61,10 @@
       "<rootDir>/node_modules/"
     ],
     "cacheDirectory": ".jest/cache"
+  },
+  "author": {
+    "name": "Andrés Felipe Martínez Salazar (Kuronosu)",
+    "email": "andresfelipe.2031@gmail.com",
+    "url": "https://github.com/kuronosu"
   }
 }

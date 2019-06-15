@@ -43,7 +43,7 @@ class Directory extends Component {
     cardsPerRowLandscape={4}
   />
 
-  _filter = async () => {
+  _filter = () => {
     this.setState(pState => {
       const { data, index } = FilterMaganer.next(this.props.data, pState.filterIndex)
       return { data, filterIndex: index }
