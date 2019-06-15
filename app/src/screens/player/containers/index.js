@@ -128,4 +128,4 @@ class Player extends Component {
   )
 }
 
-export default PlayerScreen = withHandlePressBack(Player)
+export default PlayerScreen = withHandlePressBack()(Player)

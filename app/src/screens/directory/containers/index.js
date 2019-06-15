@@ -94,4 +94,4 @@ const mapStateToProps = state => {
 }
 
 
-export default DirectoryScreen = withHandlePressBack(Directory, mapStateToProps)
+export default DirectoryScreen = withHandlePressBack(mapStateToProps)(Directory)

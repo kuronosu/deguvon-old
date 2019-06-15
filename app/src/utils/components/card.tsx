@@ -8,6 +8,7 @@ import {
   TouchableHighlight,
   TouchableNativeFeedback
 } from 'react-native'
+import { HOST } from '../../api/constants'
 
 const defaultImgAspectRatioSize = 238 / 339
 
@@ -66,7 +67,7 @@ const Card: React.FC<CardProps> = (props: CardProps) => {
             <Image
               style={[styles.cover, props.primaryOverlay && styles.coverBoderAll]}
               source={{
-                uri: `https://kuronosu.dev${props.image}`
+                uri: `${HOST}${props.image}`
               }}
             />
           </View>

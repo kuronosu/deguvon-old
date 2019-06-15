@@ -20,7 +20,6 @@ const persistConfig: PersistConfig = {
 const defaultStore: StoreState = {
   recent: { list: [], last: {id: null} }, // valores por defecto para el Reducer recent
   app: { // valores por defecto para el Reducer general
-    config: { api: { host: 'kuronosu.dev', route: '/api/v1' } },
     device: {screenMode: true, screenSize: Dimensions.get('window')}
   },
   directory: { updated: false, data: [], updating: false },

@@ -27,4 +27,4 @@ const mapStateToProps = state => ({
   data: state.directory.data
 })
 
-export default withHandlePressBack(SearchScreen, mapStateToProps)
+export default withHandlePressBack(mapStateToProps)(SearchScreen)

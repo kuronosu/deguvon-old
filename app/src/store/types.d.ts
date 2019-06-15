@@ -33,17 +33,29 @@ export namespace anime {
     typea: string
     synopsis: string
     genres: string[]
-    listAnmRel: {
-      url: string
-      rel: string
-      aid: string
-      name: string
-    }[]
-    episodeList: {
-      number: number
-      url: string
-      image: string
-    }[]
+    listAnmRel: relation[]
+    episodeList: episode[]
+  }
+  export type relation = {
+    url: string
+    rel: string
+    name?: string
+    aid?: string
+    image?: string
+  }
+  export type episode = {
+    number: number
+    url: string
+    image: string
+  }
+
+  export type relationObject = {
+    [animeUrl: string]: relation
+  }
+
+  export type AnimeRequest = {
+    anime: anime.AnimeModel
+    relations: relationObject
   }
 }
 
@@ -96,7 +108,7 @@ export interface StoreState {
   directory: directory.directoryStore
   recent: recent.recentStore
   search?: search
-  anime?: anime.AnimeModel | {}
+  anime?: anime.AnimeModel
   app?: app.data
   nav?: NavigationState
 }

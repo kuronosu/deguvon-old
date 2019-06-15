@@ -4,6 +4,7 @@ import { View, StyleSheet, ViewStyle, StyleProp } from "react-native";
 type Props = {
   children?: ReactNode,
   style?: StyleProp<ViewStyle>
+  [prop: string]: any
 }
 
 const GeneralLayout: React.FC<Props> = ({children, style, ...rest}: Props) => {

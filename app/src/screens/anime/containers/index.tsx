@@ -4,24 +4,36 @@ import {
   Text,
   ScrollView,
 } from 'react-native'
+import { DispatchProp } from 'react-redux'
+import DetailCard from '../components/detail-card'
+import { NavigationInjectedProps } from 'react-navigation'
 import { getAnimeDetails } from '../../../api'
 import DropDownHolder from '../../../utils/dropdownholder'
 import GeneralLayout from '../../../utils/components/general-layout'
-import DetailCard from '../components/detail-card'
 import withHandlePressBack from '../../../navigation/handle-press-back'
+import { anime, StoreState } from '../../../store/types'
 
-class AnimeDetail extends Component {
+type State = {
+  loadded: boolean
+  anime?: anime.AnimeModel
+  relations: anime.relation[]
+}
 
-  state = {
+type Props = {
+  anime: anime.AnimeModel
+}
+
+class AnimeDetail extends Component<Props & DispatchProp & NavigationInjectedProps, State> {
+
+  state: State = {
     loadded: false,
-    anime: null,
-    relations: []
+    relations: [],
   }
 
-  fetchData = aid => {
-    getAnimeDetails(aid)
+  fetchData = (aid: string) => {
+    getAnimeDetails(parseInt(aid))
       .then(data => {
-        this.setState({ anime: data.anime, relations: data.relations, loadded: true })
+        this.setState({ anime: data.anime, relations: Object.values(data.relations), loadded: true })
         this.props.dispatch({
           type: 'SET_ANIME_DATA',
           payload: data.anime
@@ -46,7 +58,7 @@ class AnimeDetail extends Component {
   }
 
   render() {
-    if (this.state.loadded) {
+    if (this.state.loadded && this.state.anime) {
       return (
         <GeneralLayout>
           <ScrollView>
@@ -57,7 +69,7 @@ class AnimeDetail extends Component {
             <View>
               {
                 this.state.anime.genres.map(g => (
-                  <Text key={`genre_${g}_${this.state.anime.aid}`}>{g}</Text>
+                  <Text key={`genre_${g}_${this.state.anime? this.state.anime.aid: ''}`}>{g}</Text>
                 ))
               }
             </View>
@@ -71,4 +83,5 @@ class AnimeDetail extends Component {
   }
 }
 
-export default AnimeScreen = withHandlePressBack(AnimeDetail, state => ({anime: state.anime}))
+const AnimeScreen = withHandlePressBack((state: StoreState) => ({ anime: state.anime }))(AnimeDetail)
+export default AnimeScreen

@@ -123,4 +123,4 @@ function mapStateToProps(state) {
   }
 }
 
-export default RecentScreen = withHandlePressBack(Recent, mapStateToProps)
+export default RecentScreen = withHandlePressBack(mapStateToProps)(Recent)

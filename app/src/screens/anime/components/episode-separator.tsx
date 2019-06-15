@@ -1,7 +1,7 @@
 import React from 'React'
 import { View, StyleSheet } from 'react-native'
 
-const EpisodeSeparator = () => <View style={styles.separator} />
+const EpisodeSeparator: React.FC = () => <View style={styles.separator} />
 
 const styles = StyleSheet.create({
   separator: {

@@ -10,9 +10,10 @@ import EpisodeSeparator from '../components/episode-separator'
 import DropDownHolder from '../../../utils/dropdownholder'
 import GeneralLayout from '../../../utils/components/general-layout'
 import withHandlePressBack from '../../../navigation/handle-press-back'
+import { anime, StoreState } from '../../../store/types'
+import { Dispatch } from 'redux'
 
-
-const playEpisode = (id, number, name, dispatch) => {
+const playEpisode = (id: number, number: number, name: string, dispatch: Dispatch) => {
   (async () => {
     try {
       const server = await getServers(id)
@@ -36,16 +37,33 @@ const playEpisode = (id, number, name, dispatch) => {
   })()
 }
 
-const renderEpisode = (episode, animeName, dispatch) => (
+const renderEpisode = (episode: anime.episode, animeName: string, dispatch: Dispatch) => (
   <Episode
     episode={episode}
-    handlePlay={() => playEpisode(episode.url.split('/')[2], episode.number, animeName, dispatch)}
+    handlePlay={() => playEpisode(parseInt(episode.url.split('/')[2]), episode.number, animeName, dispatch)}
   />
 )
 
-const keyExtractor = item => `episode_${item.number}_${item.url}`
+const keyExtractor = (item: anime.episode, index: number) => `episode_${item.number}_${index}`
 
-const EpisodeList = ({ dispatch, animeName = '', list = [] }) => {
+const reverse = (data: anime.episode[], setData: React.Dispatch<React.SetStateAction<anime.episode[]>>) => {
+  let tmp = data.slice()
+  tmp.reverse()
+  setData(tmp)
+}
+
+const getOrderText = (data: anime.episode[]) => {
+  if (data.length > 0 && data[0].number < data[data.length - 1].number) return 'Menor a mayor'
+  return 'Mayor a menor'
+}
+
+type Props = {
+  dispatch: Dispatch
+  animeName: string
+  list: anime.episode[]
+}
+
+const EpisodeList: React.FC<Props> = ({ dispatch, animeName = '', list = [] }) => {
   const [data, setData] = useState(list)
   useEffect(() => {
     setData(data.length ? data : list)
@@ -55,12 +73,8 @@ const EpisodeList = ({ dispatch, animeName = '', list = [] }) => {
       <Button
         mode="outlined"
         color='#424242'
-        onPress={() => {
-          let tmp = data.slice()
-          tmp.reverse()
-          setData(tmp)
-        }}
-      >{data.length > 0 && data[0].number < data[data.length - 1].number ? 'Menor a mayor' : 'Mayor a menor'}</Button>
+        onPress={() => reverse(data, setData)}
+      > {getOrderText(data)} </Button>
       <FlatList
         data={data}
         keyExtractor={keyExtractor}
@@ -71,4 +85,11 @@ const EpisodeList = ({ dispatch, animeName = '', list = [] }) => {
   )
 }
 
-export default EpisodeListScreen = withHandlePressBack(EpisodeList, state => ({list: state.anime.episodeList, animeName: state.anime.name}))
+const mapStateToProps = (state: StoreState) => ({
+  list: state.anime && typeof state.anime ? state.anime.episodeList : [],
+  animeName: state.anime ? state.anime.name : ''
+})
+
+const EpisodeListScreen = withHandlePressBack(mapStateToProps)(EpisodeList)
+
+export default EpisodeListScreen

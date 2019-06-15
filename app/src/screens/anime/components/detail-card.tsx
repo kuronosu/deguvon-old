@@ -3,8 +3,8 @@ import { View, Text, StyleSheet } from 'react-native'
 
 type Props = {
   title: string
-  content: string
-  priority: boolean
+  content?: string
+  priority?: boolean
 }
 
 const DetailCard: React.FC<Props> = ({ title, content, priority }) => (

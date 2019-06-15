@@ -13,4 +13,4 @@ class Settings extends Component {
   }
 }
 
-export default SettingsScreen = withHandlePressBack(Settings)
+export default SettingsScreen = withHandlePressBack()(Settings)

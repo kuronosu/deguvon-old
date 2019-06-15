@@ -1,12 +1,17 @@
 import React, { Component } from "react"
 import { Dimensions } from "react-native"
-import { connect } from 'react-redux'
+import { connect, DispatchProp } from 'react-redux'
 import updateDirectory from "../../api/update-directory"
 import GeneralLayout from "../../utils/components/general-layout"
+import { StoreState } from "../../store/types";
 
-class AppContainer extends Component {
+interface Props extends DispatchProp {
+  directoryUpdated: boolean
+}
 
-  constructor(props) {
+class AppContainer extends Component<Props> {
+
+  constructor(props: Props) {
     super(props)
     this._updateScreenInfo()
     this.props.dispatch({
@@ -26,7 +31,7 @@ class AppContainer extends Component {
     })
   }
 
-  _onLayout = e => {
+  _onLayout = () => {
     this._updateScreenInfo()
   }
 
@@ -45,7 +50,7 @@ class AppContainer extends Component {
   }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state: StoreState) => {
   return {
     directoryUpdated: state.directory.updated
   }

@@ -6,7 +6,7 @@ import {
   ActivityIndicator
 } from 'react-native'
 
-const Loading = () => (
+const Loading: React.FC = () => (
   <SafeAreaView style={styles.container}>
     <Text style={styles.text}>Deguvon</Text>
     <ActivityIndicator />
