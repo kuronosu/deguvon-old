@@ -3,12 +3,12 @@ import { BackHandler } from 'react-native'
 import { connect, DispatchProp } from 'react-redux'
 import { NavigationActions } from 'react-navigation'
 import getCurrentRoute from './get-current-route'
-import { StoreState } from '../store/types';
+import { StoreState } from '../store/types'
 
 /**
  * Permite que un componente maneje el evento de atras en android
  * @param Component Componente que manejara el evento
- * @param mapStateToProps Funcion que conecta el Componente al store de redux
+ * @param mapStateToProps Funcion que extrae datos del store de redux
  */
 const withHandlePressBack = <P extends any>(mapStateToProps?: (state: StoreState) => object) => (
   (Component: React.ComponentType<P & DispatchProp>) => connect(mapStateToProps)(
