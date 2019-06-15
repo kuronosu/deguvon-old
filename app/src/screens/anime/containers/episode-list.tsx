@@ -90,6 +90,6 @@ const mapStateToProps = (state: StoreState): Props => ({
   animeName: state.anime  && state.anime.name ? state.anime.name : ''
 })
 
-const EpisodeListScreen = withHandlePressBack(mapStateToProps)(EpisodeList)
+const EpisodeListScreen = withHandlePressBack<Props>(mapStateToProps)(EpisodeList)
 
 export default EpisodeListScreen

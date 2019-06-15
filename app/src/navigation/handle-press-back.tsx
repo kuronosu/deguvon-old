@@ -11,7 +11,7 @@ import { StoreState } from '../store/types';
  * @param mapStateToProps Funcion que conecta el Componente al store de redux
  */
 const withHandlePressBack = <P extends any>(mapStateToProps?: (state: StoreState) => object) => (
-  (Component: React.ComponentType<P>) => connect(mapStateToProps)(
+  (Component: React.ComponentType<P & DispatchProp>) => connect(mapStateToProps)(
     class extends React.Component<P & DispatchProp> {
 
       counter: number = 0
@@ -41,7 +41,7 @@ const withHandlePressBack = <P extends any>(mapStateToProps?: (state: StoreState
       }
 
       render() {
-        return <Component {...this.props as P} />
+        return <Component {...this.props as P & DispatchProp} />
       }
     }
   )
