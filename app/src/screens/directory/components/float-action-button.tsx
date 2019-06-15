@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { FAB, Portal, Provider, FABGroupAction } from 'react-native-paper'
+import { FAB, Portal, FABGroupAction } from 'react-native-paper'
 import { StyleSheet } from 'react-native'
 
 type buildAction = (
@@ -31,20 +31,18 @@ type Props = {
 const DirectoryFloatActionButton = ({ filterType, onPressFilter }: Props) => {
   const [open, setOpen] = useState(false)
   return (
-    <Provider>
-      <Portal>
-        <FAB.Group
-          open={open}
-          accessibilityLabel='Filtros'
-          fabStyle={{ backgroundColor: 'green' }}
-          icon={open ? 'close' : 'add'}
-          actions={[
-            buildAction('filter-list', onPressFilter, `Tipo: ${filterType}`)
-          ]}
-          onStateChange={({ open }) => setOpen(open)}
-        />
-      </Portal>
-    </Provider>
+    <Portal>
+      <FAB.Group
+        open={open}
+        accessibilityLabel='Filtros'
+        fabStyle={{ backgroundColor: 'green' }}
+        icon={open ? 'close' : 'add'}
+        actions={[
+          buildAction('filter-list', onPressFilter, `Tipo: ${filterType}`)
+        ]}
+        onStateChange={({ open }) => setOpen(open)}
+      />
+    </Portal>
   )
 }
 
