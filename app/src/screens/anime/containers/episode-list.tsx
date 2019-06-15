@@ -86,8 +86,8 @@ const EpisodeList: React.FC<Props & DispatchProp> = ({ dispatch, animeName, list
 }
 
 const mapStateToProps = (state: StoreState): Props => ({
-  list: state.anime ? state.anime.episodeList : [],
-  animeName: state.anime ? state.anime.name : ''
+  list: state.anime && state.anime.episodeList ? state.anime.episodeList : [],
+  animeName: state.anime  && state.anime.name ? state.anime.name : ''
 })
 
 const EpisodeListScreen = withHandlePressBack(mapStateToProps)(EpisodeList)
