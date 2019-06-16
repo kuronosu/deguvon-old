@@ -65,4 +65,5 @@ class Menus:
 if __name__ == '__main__':
     DataBase.create_tables()
     generate_cookies()
-    Menus.main_menu()
+    if len(sys.argv) >= 2 and sys.argv[1] == '-u': DataBase.update_database()
+    else: Menus.main_menu()
