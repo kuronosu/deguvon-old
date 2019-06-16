@@ -45,7 +45,7 @@ class AnimeDetail extends Component<Props & DispatchProp & NavigationInjectedPro
   }
 
   getData = () => {
-    const executeFetch = this.props.navigation.getParam('executeFetch', false)
+    const executeFetch: boolean = this.props.navigation.getParam('executeFetch', false)
     if (executeFetch) {
       this.fetchData(this.props.anime.aid)
     } else {
@@ -83,5 +83,5 @@ class AnimeDetail extends Component<Props & DispatchProp & NavigationInjectedPro
   }
 }
 
-const AnimeScreen = withHandlePressBack((state: StoreState) => ({ anime: state.anime }))(AnimeDetail)
+const AnimeScreen = withHandlePressBack<Props & NavigationInjectedProps>((state: StoreState) => ({ anime: state.anime }))(AnimeDetail)
 export default AnimeScreen

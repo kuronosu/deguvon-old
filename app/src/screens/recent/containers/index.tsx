@@ -1,17 +1,33 @@
-import React, { PureComponent } from "react"
-import { FlatList } from "react-native"
+import React from "react"
+import { DispatchProp } from "react-redux"
+import { FlatList, Dimensions } from "react-native"
 import { NavigationActions } from 'react-navigation'
-import { getServers, getRecent } from '../../../api'
+
+import Card from "../../../utils/components/card"
 import Empty from "../../../utils/components/empty"
-import { getAvailableServers, getNatsukiVideo } from '../../../api/video-servers'
-import VerticalSeparator from "../../../utils/components/separator"
+import { getServers, getRecent } from '../../../api'
 import DropDownHolder from "../../../utils/dropdownholder"
 import updateDirectory from "../../../api/update-directory"
-import Card from "../../../utils/components/card"
+import { StoreState, recent, anime } from "../../../store/types"
+import VerticalSeparator from "../../../utils/components/separator"
 import GeneralLayout from "../../../utils/components/general-layout"
 import withHandlePressBack from "../../../navigation/handle-press-back"
+import { getAvailableServers, getNatsukiVideo } from '../../../api/video-servers'
 
-class Recent extends PureComponent {
+type State = {
+  refreshing: boolean
+}
+
+type Props = {
+  list: recent.recentEpisode[]
+  last: recent.last
+  mode: boolean
+  screenWidth: number
+  directoryUpdating: boolean
+  directoryData: anime.AnimeModel[]
+}
+
+class Recent extends React.PureComponent<Props & DispatchProp, State> {
 
   state = {
     refreshing: false
@@ -41,11 +57,11 @@ class Recent extends PureComponent {
 
   _onRefresh = () => { this._fetchData() }
 
-  _onPressRecentCard = ({ id, number, anime }) => {
+  _onPressRecentCard = ({ id, number, anime }: recent.recentEpisode) => {
     (async () => {
-      const server = await getServers(id)
+      const server = await getServers(parseInt(id))
       const availableServers = getAvailableServers(server)
-      const natsukiVideoList = await getNatsukiVideo(id, availableServers)
+      const natsukiVideoList = await getNatsukiVideo(parseInt(id), availableServers)
       this.props.dispatch(NavigationActions.navigate({
         routeName: 'Player',
         params: {
@@ -56,8 +72,8 @@ class Recent extends PureComponent {
     })()
   }
 
-  _onLongPressRecentCard = episode => {
-    let anime = this.props.directoryData.find(anime => anime.aid == episode.anime.aid)
+  _onLongPressRecentCard = (episode: recent.recentEpisode) => {
+    let anime: anime.AnimeModel | recent.recentEpisode['anime'] | undefined = this.props.directoryData.find(anime => anime.aid == episode.anime.aid)
     let executeFetch = false
     if (!anime) {
       DropDownHolder.alert('warn', 'El anime no esta en el directorio', 'Intenta actualizar el directorio')
@@ -75,7 +91,7 @@ class Recent extends PureComponent {
 
   _itemSeparator = () => <VerticalSeparator numCards={this.props.mode ? 2 : 4} />
 
-  _renderItem = ({ item, index }) => <Card
+  _renderItem = ({ item, index }: {item: recent.recentEpisode, index: number}) => <Card
     pressData={item}
     mode={this.props.mode}
     screenWidth={this.props.screenWidth}
@@ -90,7 +106,7 @@ class Recent extends PureComponent {
     primaryOverlay={true}
   />
 
-  _keyExtractor = item => item.id.toString()
+  _keyExtractor = (item: recent.recentEpisode) => item.id.toString()
 
   render() {
     return (
@@ -112,15 +128,16 @@ class Recent extends PureComponent {
   }
 }
 
-function mapStateToProps(state) {
+function mapStateToProps(state: StoreState): Props {
   return {
     list: state.recent.list,
     last: state.recent.last,
-    mode: state.app.device.screenMode,
-    screenWidth: state.app.device.screenSize.width,
+    mode: state.app && state.app.device? state.app.device.screenMode: true,
+    screenWidth: state.app && state.app.device? state.app.device.screenSize.width: Dimensions.get("screen").width,
     directoryUpdating: state.directory.updating,
     directoryData: state.directory.data
   }
 }
 
-export default RecentScreen = withHandlePressBack(mapStateToProps)(Recent)
+const RecentScreen = withHandlePressBack<Props>(mapStateToProps)(Recent)
+export default RecentScreen
