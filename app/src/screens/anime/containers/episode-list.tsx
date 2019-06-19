@@ -71,7 +71,6 @@ const EpisodeList: React.FC<Props & DispatchProp> = ({ dispatch, animeName, list
   return (
     <GeneralLayout>
       <Button
-        mode="outlined"
         color='#424242'
         onPress={() => reverse(data, setData)}
       > {getOrderText(data)} </Button>
@@ -85,10 +84,12 @@ const EpisodeList: React.FC<Props & DispatchProp> = ({ dispatch, animeName, list
   )
 }
 
-const mapStateToProps = (state: StoreState): Props => ({
-  list: state.anime && state.anime.episodeList ? state.anime.episodeList : [],
-  animeName: state.anime  && state.anime.name ? state.anime.name : ''
-})
+const mapStateToProps = (state: StoreState): Props => {
+  let animeStote = state.anime as anime.AnimeModel
+  return {
+  list: state.anime && animeStote.episodeList ? animeStote.episodeList : [],
+  animeName: state.anime  && animeStote.name ? animeStote.name : ''
+}}
 
 const EpisodeListScreen = withHandlePressBack<Props>(mapStateToProps)(EpisodeList)
 
