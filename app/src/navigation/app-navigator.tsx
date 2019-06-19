@@ -1,20 +1,22 @@
 import React from 'react'
 import {
   createStackNavigator,
-  createAppContainer
+  createAppContainer,
+  HeaderProps,
+  NavigationInjectedProps
 } from 'react-navigation'
 import HomeNavigator from './home-navigator'
 import AnimeNavigator from './anime-navigator'
 import SearchButton from './containers/search-button'
 import NavbarSearch from './containers/navbar-search'
-import SearchScreen from '../screens/containers/search'
+import SearchScreen from '../screens/search/containers'
 import VideoPlayer from '../screens/player/containers'
 
 const AppNavigator = createStackNavigator(
   {
     Home: {
       screen: HomeNavigator,
-      navigationOptions: ({ navigation }) => {
+      navigationOptions: ({ navigation }: NavigationInjectedProps) => {
         if (navigation.state.routes[navigation.state.index].key == 'Directory')
           return { title: 'Directorio' }
         else if (navigation.state.routes[navigation.state.index].key == 'Config')
@@ -24,15 +26,15 @@ const AppNavigator = createStackNavigator(
     },
     Anime: {
       screen: AnimeNavigator,
-      navigationOptions: ({ navigation }) => {
-        return {title: navigation.getParam('title', 'Anime')}
+      navigationOptions: ({ navigation }: NavigationInjectedProps) => {
+        return { title: navigation.getParam('title', 'Anime') }
       }
     },
     Search: {
       screen: SearchScreen,
-      navigationOptions: ({ navigation }) => {
+      navigationOptions: ({ navigation }: NavigationInjectedProps) => {
         return {
-          header: props => <NavbarSearch {...props} onChangeText={navigation.state.params ? navigation.state.params.handleChangeText : () => { }} />
+          header: (props: HeaderProps) => <NavbarSearch {...props} onChangeText={navigation.state.params ? navigation.state.params.handleChangeText : () => { }} />
         }
       }
     },

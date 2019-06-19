@@ -10,27 +10,20 @@ const HomeNavigator = createMaterialBottomTabNavigator(
       screen: RecentScreen,
       navigationOptions: {
         title: 'Recientes',
-        tabBarIcon: props => <HomeNavigatorIcon iconSet='EvilIcons' name="clock" {...props} />
+        tabBarIcon: (props: TabBarIconProps) => <HomeNavigatorIcon iconSet='EvilIcons' name="clock" {...props} />
       }
     },
     Directory: {
       screen: DirectoryScreen,
       navigationOptions: {
         title: 'Directorio',
-        tabBarIcon: props => <HomeNavigatorIcon iconSet='Entypo' name="grid" {...props} />
+        tabBarIcon: (props: TabBarIconProps) => <HomeNavigatorIcon iconSet='Entypo' name="grid" {...props} />
       },
     },
-    // Config: {
-    //   screen: SettingsScreen,
-    //   navigationOptions: {
-    //     title: 'Configuracion',
-    //     tabBarIcon: <Icon iconSet='Octicons' name="settings" size={25} color='white'/>
-    //   }
-    // }
   },
   {
-    activeColor: '#fff',
-    inactiveColor: '#9E9E9E',
+    activeTintColor: '#fff',
+    inactiveTintColor: '#9E9E9E',
     barStyle: { backgroundColor: '#558b2f' },
     labeled: false,
   }

@@ -973,7 +973,7 @@
     "@types/react" "*"
     "@types/react-native" "*"
 
-"@types/react-native-video@^3.1.4":
+"@types/react-native-video@3.1.4":
   version "3.1.4"
   resolved "https://registry.yarnpkg.com/@types/react-native-video/-/react-native-video-3.1.4.tgz#17049b708d22f7254971b823523d7afe9a8a9bb6"
   integrity sha512-bFAgMtItNyHDhg9XV2EYw+o4ARZD26h4AEAuQkYBBs3DXe3cdFfiDKD1SKMV25hu2JjGsfQ/n6Si+N+s+tFWaA==
@@ -989,7 +989,15 @@
     "@types/prop-types" "*"
     "@types/react" "*"
 
-"@types/react-navigation@^3.0.7":
+"@types/react-navigation-material-bottom-tabs@^0.3.1":
+  version "0.3.1"
+  resolved "https://registry.yarnpkg.com/@types/react-navigation-material-bottom-tabs/-/react-navigation-material-bottom-tabs-0.3.1.tgz#c0856e68e4fe42d41a4c8cc1bc3984f287b80142"
+  integrity sha512-ywdoyaDvCP+dsdShB+O9HmBJ93hQV4JkfzlG2yF80Ec5wemliJUjdzWM8vjnVloDURxUKnSawxRZ5wR1/YQUCQ==
+  dependencies:
+    "@types/react-native" "*"
+    "@types/react-navigation" "*"
+
+"@types/react-navigation@*", "@types/react-navigation@^3.0.7":
   version "3.0.7"
   resolved "https://registry.yarnpkg.com/@types/react-navigation/-/react-navigation-3.0.7.tgz#5d327b00de2bb58203977002c3ea21302da72034"
   integrity sha512-JFsNeCAQEQGTpObiD1QczDyCyQkFBaQA/F85Fo2W8QML1b6UNYHlUDtEYJA6jcfXqPoL15dVPBVj9NBJlHToqA==
