@@ -1,9 +1,9 @@
 import React from 'react'
 import { View, StyleSheet } from 'react-native'
 
-const Overlay = props => (
-  <View style={[styles.overlay, props.opacity && styles.opacity]}>
-    {props.children}
+const Overlay: React.FC<{ opaque?: boolean }> = ({ opaque, children }) => (
+  <View style={[styles.overlay, opaque && styles.opacity]}>
+    {children}
   </View>
 )
 

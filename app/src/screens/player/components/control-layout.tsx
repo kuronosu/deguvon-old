@@ -5,13 +5,23 @@ import {
   Text
 } from 'react-native'
 
-import IconController from './icon-cotroller'
-import PlayPause from './play-pause'
-import BackButton from '../../../navigation/containers/back-button'
 import Overlay from './overlay'
+import PlayPause from './play-pause'
+import IconController from './icon-cotroller'
 import { height } from '../../../utils/screen-landscape'
+import BackButton from '../../../navigation/containers/back-button'
 
-const Controls = props => {
+type Props = {
+  title: string
+  currentTime: string | number
+  relativeSeek: (offset: number) => void
+  togglePlay: () => void
+  paused: boolean
+  duration: string | number
+  timeLeft: string | number
+}
+
+const Controls: React.FC<Props> = props => {
   return (
     <Overlay >
       <View style={[styles.bar, styles.header]}>
@@ -19,7 +29,10 @@ const Controls = props => {
         <Text style={styles.title}>{props.title}</Text>
       </View>
       <View style={[styles.bar, styles.controls]}>
-        <Text style={styles.controlTime}>{props.currentTime}</Text>
+        <View style={styles.controlTimeContainer}>
+          <Text style={styles.controlTime}>{props.currentTime}</Text>
+          <Text />
+        </View>
         <View style={[styles.controls, styles.controlButtons]}>
           <IconController name='' disable />
           <IconController name='doubleleft' disable />
@@ -29,9 +42,9 @@ const Controls = props => {
           <IconController name='doubleright' disable />
           <IconController name='rotate-right' set='MaterialIcons' onPress={() => { props.relativeSeek(85) }} />
         </View>
-        <View>
+        <View style={styles.controlTimeContainer}>
           <Text style={styles.controlTime}>{props.duration}</Text>
-          <Text style={[styles.controlTime, { marginTop: 0 }]}>{props.timeLeft}</Text>
+          <Text style={[styles.controlTime]}>{props.timeLeft}</Text>
         </View>
       </View>
     </Overlay>
@@ -62,11 +75,13 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center'
   },
+  controlTimeContainer: {
+    alignItems: 'flex-start',
+    marginHorizontal: 10,
+    marginTop: 5
+  },
   controlTime: {
     color: 'white',
-    marginHorizontal: 10,
-    marginTop: 5,
-    alignSelf: 'flex-start'
   },
   controlButtons: {
     flexDirection: 'row',

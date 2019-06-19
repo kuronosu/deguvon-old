@@ -30,6 +30,7 @@
     "@types/jest": "24.0.13",
     "@types/react": "16.8.18",
     "@types/react-native": "0.57.58",
+    "@types/react-native-video": "3.1.4",
     "@types/react-native-orientation": "5.0.1",
     "@types/react-native-vector-icons": "6.4.0",
     "@types/react-navigation": "^3.0.7",

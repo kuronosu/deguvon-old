@@ -2,9 +2,9 @@ import React from 'react'
 import { View, StyleSheet } from 'react-native'
 import { width, height } from '../../../utils/screen-landscape'
 
-const PlayerLayout = props => (
+const PlayerLayout: React.FC = ({ children }) => (
   <View style={styles.container}>
-    {props.children}
+    {children}
   </View>
 )
 

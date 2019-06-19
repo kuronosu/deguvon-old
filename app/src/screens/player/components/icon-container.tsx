@@ -1,9 +1,9 @@
 import React from 'react'
 import { View, StyleSheet } from 'react-native'
 
-const IconContainer = props => (
+const IconContainer: React.FC = ({ children }) => (
   <View style={styles.container}>
-    {props.children}
+    {children}
   </View>
 )
 

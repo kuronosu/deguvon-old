@@ -8,7 +8,7 @@ import AnimeNavigator from './anime-navigator'
 import SearchButton from './containers/search-button'
 import NavbarSearch from './containers/navbar-search'
 import SearchScreen from '../screens/containers/search'
-import PlayerScreen from '../screens/player/containers'
+import VideoPlayer from '../screens/player/containers'
 
 const AppNavigator = createStackNavigator(
   {
@@ -37,7 +37,7 @@ const AppNavigator = createStackNavigator(
       }
     },
     Player: {
-      screen: PlayerScreen,
+      screen: VideoPlayer,
       navigationOptions: {
         headerVisible: false,
         headerMode: 'none',

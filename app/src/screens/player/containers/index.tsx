@@ -2,21 +2,35 @@ import React, { Component } from 'react'
 import { StatusBar } from 'react-native'
 import Orientation from 'react-native-orientation'
 
-import PlayerLoader from '../components/player-loader'
-import Controls from '../components/control-layout'
-import PlayerLayout from '../components/player-layout'
 import Video from '../components/video'
-import timeFormater from '../../../utils/time-formater'
+import Controls from '../components/control-layout'
+import PlayerLoader from '../components/player-loader'
+import PlayerLayout from '../components/player-layout'
+import timeFormatter from '../../../utils/time-formater'
 import DropDownHolder from '../../../utils/dropdownholder'
-import withHandlePressBack from '../../../navigation/handle-press-back';
+import { NavigationInjectedProps } from 'react-navigation'
+import withHandlePressBack from '../../../navigation/handle-press-back'
+import { OnLoadData, OnProgressData, LoadError } from 'react-native-video'
 
-class Player extends Component {
+type State = {
+  paused: boolean
+  loading: boolean
+  video: string,
+  showContols: boolean
+  currentTimeFormated: string
+  durationFormated: string
+  timeLeftFormated: string
+  currentTime: number
+  duration: number
+}
 
-  constructor(props) {
+class Player extends Component<NavigationInjectedProps, State> {
+
+  constructor(props: NavigationInjectedProps) {
     super(props)
     Orientation.lockToLandscape()
   }
-
+  
   state = {
     paused: false,
     loading: true,
@@ -28,37 +42,37 @@ class Player extends Component {
     currentTime: 0,
     duration: 0,
   }
-
+  
+  video: any
   timeFormat = true // true = '00:00' (14, 5) false = '00:00:00' (11, 8)
 
-  onVideoBuffer = ({ isBuffering }) => {
+  onVideoBuffer = ({ isBuffering }: { isBuffering: boolean }) => {
     this.setState({
       loading: isBuffering
     })
   }
 
-  onVideoLoaded = ({ duration }) => {
-    // this.player.seek(1)
+  onVideoLoaded = ({ duration }: OnLoadData) => {
     if (duration >= 3600) {
       this.timeFormat = false
     }
     this.setState({
       loading: false,
-      durationFormated: timeFormater(duration, this.timeFormat, false),
+      durationFormated: timeFormatter(duration, this.timeFormat, false),
       duration
     })
   }
 
-  onVideoError = e => {
+  onVideoError = (e: LoadError) => {
     this.props.navigation.goBack()
     DropDownHolder.alert('error', 'Error', 'Error al reproducir el video')
   }
 
-  onVideoProgress = ({ currentTime }) => {
+  onVideoProgress = ({ currentTime }: OnProgressData) => {
     this.setState({
-      currentTimeFormated: timeFormater(currentTime, this.timeFormat),
+      currentTimeFormated: timeFormatter(currentTime, this.timeFormat),
       currentTime,
-      timeLeftFormated: timeFormater(this.state.duration - currentTime, this.timeFormat, true)
+      timeLeftFormated: timeFormatter(this.state.duration - currentTime, this.timeFormat, true)
     })
   }
 
@@ -74,19 +88,19 @@ class Player extends Component {
     }))
   }
 
-  relativeSeek = offset => {
+  relativeSeek = (offset: number) => {
     const newTime = this.state.currentTime + offset
     this.setState({
       currentTime: newTime,
-      currentTimeFormated: timeFormater(newTime, this.timeFormat)
+      currentTimeFormated: timeFormatter(newTime, this.timeFormat)
     })
     this.seek(newTime)
   }
 
-  seek = async (newTime) => { this.player.seek(newTime) }
+  seek = (newTime: number) => { this.video.seek(newTime) }
 
-  setVideoRef = ref => {
-    this.player = ref
+  setVideoRef = (ref: any) => {
+    this.video = ref
   }
 
   componentWillUnmount() {
@@ -97,11 +111,12 @@ class Player extends Component {
     <PlayerLayout>
       <StatusBar hidden={true} />
       <Video
-        showContols={this.state.showContols}
+        source={{}}
         toggleControls={this.toggleControls}
+        setRef={this.setVideoRef}
+        showContols={this.state.showContols}
         paused={this.state.paused}
         src={this.props.navigation.getParam('video', '')}
-        setRef={this.setVideoRef}
         onLoad={this.onVideoLoaded}
         onBuffer={this.onVideoBuffer}
         onError={this.onVideoError}
@@ -121,11 +136,11 @@ class Player extends Component {
           paused={this.state.paused}
           relativeSeek={this.relativeSeek}
           togglePlay={this.togglePlay}
-          toFullScreen={this.toFullScreen}
         />
       }
     </PlayerLayout>
   )
 }
 
-export default PlayerScreen = withHandlePressBack()(Player)
+const VideoPlayer = withHandlePressBack()(Player)
+export default VideoPlayer

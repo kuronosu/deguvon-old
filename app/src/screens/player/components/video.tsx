@@ -1,15 +1,23 @@
 import React from 'react'
-import RNVideo from 'react-native-video'
 import { StyleSheet } from 'react-native'
+import RNVideo, { VideoProperties } from 'react-native-video'
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler'
 
 import Overlay from './overlay'
+import { Overwrite } from '../../../utils'
 import { height, width } from '../../../utils/screen-landscape'
 
-const Video = props => (
+type Props = {
+  showContols: boolean
+  toggleControls: () => void
+  setRef: (ref: any) => void
+  onBuffer: (data: { isBuffering: boolean }) => void
+}
+
+const Video: React.FC<Overwrite<VideoProperties, Props>> = props => (
   <TouchableWithoutFeedback onPress={props.toggleControls}>
     <RNVideo
-      {...props}
+      {...props as VideoProperties}
       volume={1}
       controls={false}
       fullscreen={true}
@@ -20,7 +28,7 @@ const Video = props => (
     />
     {
       props.showContols &&
-      <Overlay opacity />
+      <Overlay opaque />
     }
   </TouchableWithoutFeedback>
 )
