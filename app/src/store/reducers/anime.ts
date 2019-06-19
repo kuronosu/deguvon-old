@@ -1,8 +1,8 @@
 import { SET_ANIME_DATA } from "../constants"
-import { StoreState } from "../types"
+import { StoreState, recent } from "../types"
 import { SetAnimeData } from "../actions"
 
-function anime(state: StoreState["anime"] = {}, action: SetAnimeData): StoreState["anime"] {
+function anime(state: StoreState["anime"] = {}, action: SetAnimeData): StoreState["anime"] | recent.recentEpisode ['anime'] {
   switch (action.type) {
     case SET_ANIME_DATA: {
       return {

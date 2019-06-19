@@ -6,6 +6,7 @@ import { NavigationActions } from 'react-navigation'
 import Card from "../../../utils/components/card"
 import Empty from "../../../utils/components/empty"
 import { getServers, getRecent } from '../../../api'
+import { setAnimeData, setRecentData } from "../../../store/actions"
 import DropDownHolder from "../../../utils/dropdownholder"
 import updateDirectory from "../../../api/update-directory"
 import { StoreState, recent, anime } from "../../../store/types"
@@ -44,10 +45,7 @@ class Recent extends React.PureComponent<Props & DispatchProp, State> {
       if (this.props.last.id != recentList[0].id && !this.props.directoryUpdating) {
         updateDirectory()
       }
-      this.props.dispatch({
-        type: 'SET_RECENT_DATA',
-        payload: recentList
-      })
+      this.props.dispatch(setRecentData(recentList))
       this.setState({ refreshing: false })
     } catch (error) {
       this.setState({ refreshing: false })
@@ -80,7 +78,7 @@ class Recent extends React.PureComponent<Props & DispatchProp, State> {
       anime = episode.anime
       executeFetch = true
     }
-    this.props.dispatch({type: 'SET_ANIME_DATA', payload: anime})
+    this.props.dispatch(setAnimeData(anime))
     this.props.dispatch(NavigationActions.navigate({
       routeName: 'Anime',
       params: { executeFetch, title: anime.name }

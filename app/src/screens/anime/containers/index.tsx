@@ -5,13 +5,15 @@ import {
   ScrollView,
 } from 'react-native'
 import { DispatchProp } from 'react-redux'
-import DetailCard from '../components/detail-card'
-import { NavigationInjectedProps } from 'react-navigation'
+
 import { getAnimeDetails } from '../../../api'
+import DetailCard from '../components/detail-card'
+import { setAnimeData } from '../../../store/actions'
+import { anime, StoreState } from '../../../store/types'
 import DropDownHolder from '../../../utils/dropdownholder'
+import { NavigationInjectedProps } from 'react-navigation'
 import GeneralLayout from '../../../utils/components/general-layout'
 import withHandlePressBack from '../../../navigation/handle-press-back'
-import { anime, StoreState } from '../../../store/types'
 
 type State = {
   loadded: boolean
@@ -34,10 +36,7 @@ class AnimeDetail extends Component<Props & DispatchProp & NavigationInjectedPro
     getAnimeDetails(parseInt(aid))
       .then(data => {
         this.setState({ anime: data.anime, relations: Object.values(data.relations), loadded: true })
-        this.props.dispatch({
-          type: 'SET_ANIME_DATA',
-          payload: data.anime
-        })
+        this.props.dispatch(setAnimeData(data.anime))
       }).catch(e => {
         this.setState({ loadded: false })
         DropDownHolder.alert('error', "Error", e.message)

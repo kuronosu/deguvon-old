@@ -1,14 +1,20 @@
 import * as constants from './constants'
 import { anime, recent, directory, search, app } from './types';
 
+export type directoryPayload = {
+  updated?: boolean
+  updating?: boolean
+  data?: anime.AnimeModel[]
+}
+
 export interface SetAnimeData {
   type: constants.SET_ANIME_DATA
-  payload: anime.AnimeModel
+  payload: anime.AnimeModel | recent.recentEpisode['anime']
 }
 
 export interface SetDirectoryData {
   type: constants.SET_DIRECTORY_DATA
-  payload: directory.directoryStore
+  payload: directoryPayload
 }
 
 export interface SetRecentData {
@@ -41,14 +47,14 @@ export type RecentAction = SetRecentData | ClearLastRecent
 
 // export type EnthusiasmAction = IncrementEnthusiasm | DecrementEnthusiasm; // Example
 
-export function setAnimeData(anime: anime.AnimeModel): SetAnimeData {
+export function setAnimeData(anime: anime.AnimeModel | recent.recentEpisode['anime']): SetAnimeData {
   return {
     type: constants.SET_ANIME_DATA,
     payload: anime
   }
 }
 
-export function setDirectoryData(directory: directory.directoryStore): SetDirectoryData {
+export function setDirectoryData(directory: directoryPayload): SetDirectoryData {
   return {
     type: constants.SET_DIRECTORY_DATA,
     payload: directory

@@ -5,6 +5,7 @@ import { NavigationActions, NavigationInjectedProps } from 'react-navigation'
 
 import Card from '../../../utils/components/card'
 import Empty from '../../../utils/components/empty'
+import { setAnimeData, setSearchData } from '../../../store/actions'
 import { anime, StoreState } from '../../../store/types'
 import VerticalSeparator from '../../../utils/components/separator'
 import GeneralLayout from '../../../utils/components/general-layout'
@@ -21,13 +22,7 @@ type Props = {
 class Search extends Component<Props & DispatchProp & NavigationInjectedProps> {
 
   _onChangeText = (text: string) => {
-    this.props.dispatch({
-      type: 'SET_SEARCH_DATA',
-      payload: {
-        data: this.props.directoryData.filter(el => el.name.toLowerCase().includes(text.toLowerCase())),
-        text,
-      }
-    })
+    this.props.dispatch(setSearchData(text, this.props.directoryData.filter(el => el.name.toLowerCase().includes(text.toLowerCase()))))
   }
 
   componentDidMount() {
@@ -35,7 +30,7 @@ class Search extends Component<Props & DispatchProp & NavigationInjectedProps> {
   }
 
   _onPressAnimeCard = (anime: anime.AnimeModel) => {
-    this.props.dispatch({ type: 'SET_ANIME_DATA', payload: anime })
+    this.props.dispatch(setAnimeData(anime))
     this.props.dispatch(NavigationActions.navigate({
       routeName: 'Anime',
       params: { title: anime.name }

@@ -2,7 +2,7 @@ import { SET_RECENT_DATA, CLEAR_LAST } from "../constants"
 import { StoreState } from "../types"
 import { RecentAction } from "../actions"
 
-function recent(state: StoreState['recent'] = {list: []}, action: RecentAction): StoreState['recent'] {
+function recent(state: StoreState['recent'] = {list: [], last:{id: null}}, action: RecentAction): StoreState['recent'] {
   switch (action.type) {
     case SET_RECENT_DATA: {
       return {

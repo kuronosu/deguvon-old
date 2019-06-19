@@ -4,6 +4,7 @@ import { connect, DispatchProp } from 'react-redux'
 import updateDirectory from "../../api/update-directory"
 import GeneralLayout from "../../utils/components/general-layout"
 import { StoreState } from "../../store/types";
+import { setDeviceData } from "../../store/actions";
 
 interface Props extends DispatchProp {
   directoryUpdated: boolean
@@ -22,13 +23,10 @@ class AppContainer extends Component<Props> {
 
   _updateScreenInfo() {
     const d = Dimensions.get('window')
-    this.props.dispatch({
-      type: 'SET_DEVICE_DATA',
-      payload: {
-        screenMode: d.width < d.height,
-        screenSize: d
-      }
-    })
+    this.props.dispatch(setDeviceData({
+      screenMode: d.width < d.height,
+      screenSize: d
+    }))
   }
 
   _onLayout = () => {

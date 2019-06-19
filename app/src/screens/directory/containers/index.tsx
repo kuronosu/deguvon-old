@@ -5,6 +5,7 @@ import { NavigationActions } from 'react-navigation'
 
 import Card from '../../../utils/components/card'
 import Empty from '../../../utils/components/empty'
+import { setAnimeData } from '../../../store/actions'
 import { StoreState, anime } from '../../../store/types'
 import FilterMaganer from '../../../utils/filter-maganer'
 import VerticalSeparator from '../../../utils/components/separator'
@@ -33,7 +34,7 @@ class Directory extends Component<Props & DispatchProp, State> {
   }
 
   _onPressAnimeCard = (anime: anime.AnimeModel) => {
-    this.props.dispatch({ type: 'SET_ANIME_DATA', payload: anime })
+    this.props.dispatch(setAnimeData(anime))
     this.props.dispatch(NavigationActions.navigate({
       routeName: 'Anime',
       params: { title: anime.name }

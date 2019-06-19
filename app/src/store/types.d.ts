@@ -108,7 +108,7 @@ export interface StoreState {
   directory: directory.directoryStore
   recent: recent.recentStore
   search?: search
-  anime?: anime.AnimeModel
+  anime?: anime.AnimeModel | {}
   app?: app.data
   nav?: NavigationState
 }
