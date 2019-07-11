@@ -4,7 +4,8 @@ import requests
 import click
 import platform
 from http.cookies import SimpleCookie
-from selenium.webdriver import Firefox, FirefoxOptions
+from selenium.webdriver import Chrome
+from selenium.webdriver.chrome.options import Options
 
 from .patterns import (
     ANIME_SCRIPT_PATTERN,
@@ -20,12 +21,10 @@ BASE_DIR = os.environ.get('BASE_DIR', os.path.abspath(
     os.path.dirname(os.path.dirname(__file__))))
 USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.109 Safari/537.36"
 
-options = FirefoxOptions()
-options.add_argument('-headless')
+options = Options()
+options.headless = True
 click.secho("Creando webdriver", fg='blue')
-firefox_driver_path = os.path.join(
-    BASE_DIR, 'webdrivers', 'geckodriver' + ('.exe' if platform.system() == 'Windows' else ''))
-webdriver = Firefox(executable_path=firefox_driver_path, options=options)
+webdriver = Chrome(options=options)
 
 
 def generate_cookies():
