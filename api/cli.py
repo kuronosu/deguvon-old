@@ -2,6 +2,9 @@ import sys
 import time
 import click
 import os
+import time
+import datetime
+import json
 
 from db.actions import DataBase
 from scrape.utils import generate_cookies
@@ -52,6 +55,28 @@ def fill(drop):
 @cli.command()
 def init():
     pass
+
+
+@cli.command()
+def interval():
+    while True:
+        click.secho(f'{datetime.datetime.now()} Actualizando recientes', fg='blue')
+        crs = 0
+        last = None
+        try:
+            rs = DataBase.update_recents()
+            crs = len(rs)
+            if last is None or last != rs[0]['id']:
+                with open('directory.json', 'w') as f:
+                    directory = DataBase.all()
+                    directory = json.dumps(directory, indent=None).replace(
+                        "\\\\\"", "\\\"").replace("\\\\", "\\")
+                    f.write(directory)
+                last = rs[0]['id']
+        except Exception as e:
+            click.secho(f'{datetime.datetime.now()} ERROR: {e}', fg='red')
+        click.secho(f'{datetime.datetime.now()} Recientes actualizados {crs}', fg='green')
+        time.sleep(2*60)
 
 
 if __name__ == '__main__':
