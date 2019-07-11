@@ -1,4 +1,6 @@
-import os, json, shutil
+import os
+import json
+import shutil
 
 from peewee import DoesNotExist
 from flask import jsonify, send_file, abort, request
@@ -11,7 +13,8 @@ from scrape.episode_videos import scrape_episode, get_natsuki_video, get_fembed_
 
 from .utils import ImageSource
 
-BASE_DIR = os.environ.get('BASE_DIR', os.path.dirname(os.path.dirname(__file__)))
+BASE_DIR = os.environ.get(
+    'BASE_DIR', os.path.dirname(os.path.dirname(__file__)))
 DRIRECTORY_PATH = os.path.join(BASE_DIR, 'directory.json')
 AVAILABLE_SERVERS = [
     {'server': 'natsuki', 'controller': get_natsuki_video},
@@ -24,6 +27,7 @@ def recent():
         return json_response(DataBase.update_recents())
     except:
         return json_response([])
+
 
 def search(name):
     response = {}
@@ -46,22 +50,22 @@ def anime(aid):
     for rel in anime.listAnmRel:
         a = DataBase.get_by_url(rel.url)
         relations[a.url] = {
-                'aid': a.aid,
-                'url': a.url,
-                'name': a.name,
-                'image': a.image,
-                'rel': rel.rel
-            }
+            'aid': a.aid,
+            'url': a.url,
+            'name': a.name,
+            'image': a.image,
+            'rel': rel.rel
+        }
     anime = anime.to_json()
     response = {
         'relations': relations,
-        'anime': anime    
+        'anime': anime
     }
     return json_response(response)
 
 
 def serve_image(source, image=None, aid=None, episode=None, th=None, ext=None):
-    if source is ImageSource.UPLOADS and not (image is None or ext is None) :
+    if source is ImageSource.UPLOADS and not (image is None or ext is None):
         path = os.path.join(BASE_DIR, 'images', 'covers')
         file_path = os.path.join(path, f'{image}.{ext}')
         url = f'https://animeflv.net/uploads/animes/covers/{image}.{ext}'
@@ -95,14 +99,17 @@ def directory():
         return send_file(os.path.join(BASE_DIR, 'directory.json'), 'application/json')
     return json_response(DataBase.all())
 
+
 def episode_videos_data(eid):
     episode_querry = Episode.select().where(Episode.url.contains(f"/{eid}/"))
     episode = episode_querry[0] if episode_querry.count() == 1 else None
     if episode is None:
         abort(404)
     data = scrape_episode(episode.url)
-    data.update({'available_servers': [s['server'].lower() for s in AVAILABLE_SERVERS] })
+    data.update(
+        {'available_servers': [s['server'].lower() for s in AVAILABLE_SERVERS]})
     return json_response(data)
+
 
 def episode_video_server(eid, server, lang):
     try:

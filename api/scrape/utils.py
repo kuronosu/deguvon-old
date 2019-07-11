@@ -1,4 +1,4 @@
-import cfscrape, requests
+import cfscrape, requests, os
 from http.cookies import SimpleCookie
 
 from .patterns import (
@@ -10,6 +10,7 @@ from .patterns import (
     HTML_ENTITIES_PATTERN
 )
 
+BASE_DIR = os.environ.get('BASE_DIR', os.path.abspath(os.path.dirname(os.path.dirname(__file__))))
 USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.109 Safari/537.36"
 
 def generate_cookies():
@@ -23,12 +24,12 @@ def cookies_to_dict(string_cookies):
     return {k: morsel.value for k, morsel in cookie.items()}
 
 def save_cookies(cookies):
-    with open('cookies', 'w') as f:
+    with open(os.path.join(BASE_DIR, 'cookies'), 'w') as f:
         f.write(cookies)
 
 def load_cookies():
     try:
-        with open('cookies', 'r') as f:
+        with open(os.path.join(BASE_DIR, 'cookies'), 'r') as f:
             return cookies_to_dict(f.read())
     except Exception:
         return cookies_to_dict(generate_cookies())

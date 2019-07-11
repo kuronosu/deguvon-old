@@ -18,7 +18,6 @@ lazy-object-proxy==1.4.1
 MarkupSafe==1.1.1
 mccabe==0.6.1
 peewee==3.9.6
-pkg-resources==0.0.0
 pycparser==2.19
 pyjsparser==2.7.1
 pylint==2.3.1

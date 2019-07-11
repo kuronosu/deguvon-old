@@ -9,6 +9,15 @@ from .models import Genre, Anime, AnimeGenre, AnimeRelation, Episode, State
 class DataBase:
 
     @staticmethod
+    def connect():
+        DATABASE.connect()
+
+    @staticmethod
+    def close():
+        if not DATABASE.is_closed():
+            DATABASE.close()
+
+    @staticmethod
     def create_tables():
         if not Genre.table_exists():
             Genre.create_table()
@@ -260,6 +269,7 @@ class DataBase:
     @staticmethod
     def create_recent(recent):
         r = recent
+        del recent
         recent = None
         try:
             recent = Episode.get(Episode.url == r['url'])
@@ -292,19 +302,22 @@ class DataBase:
 
         with DATABASE.atomic():
             for r in recents:
-                dr = DataBase.create_recent(r)
-                recent = vars(EpisodeScraping(dr.number, dr.url, dr.image))
-                aditional_data = {
-                    'anime': {
-                        'url': dr.anime.url,
-                        'name': dr.anime.name,
-                        'image': dr.anime.image,
-                        'aid': dr.anime.aid
-                    },
-                    'id':  dr.url.split('/')[2]
-                }
-                recent.update(aditional_data)
-                recents_l.append(recent)
+                try:
+                    dr = DataBase.create_recent(r)
+                    recent = vars(EpisodeScraping(dr.number, dr.url, dr.image))
+                    aditional_data = {
+                        'anime': {
+                            'url': dr.anime.url,
+                            'name': dr.anime.name,
+                            'image': dr.anime.image,
+                            'aid': dr.anime.aid
+                        },
+                        'id':  dr.url.split('/')[2]
+                    }
+                    recent.update(aditional_data)
+                    recents_l.append(recent)
+                except:
+                    pass
         return recents_l
     
     @staticmethod
