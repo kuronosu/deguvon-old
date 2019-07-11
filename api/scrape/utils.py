@@ -23,9 +23,9 @@ USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTM
 options = FirefoxOptions()
 options.add_argument('-headless')
 click.secho("Creando webdriver", fg='blue')
-firefox_binary = os.path.join(
-    BASE_DIR, 'webdrivers', 'geckodriver' + '.exe' if platform.system() == 'Windows' else '')
-webdriver = Firefox(executable_path=firefox_binary, options=options)
+firefox_driver_path = os.path.join(
+    BASE_DIR, 'webdrivers', 'geckodriver' + ('.exe' if platform.system() == 'Windows' else ''))
+webdriver = Firefox(executable_path=firefox_driver_path, options=options)
 
 
 def generate_cookies():
