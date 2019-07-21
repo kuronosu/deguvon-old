@@ -133,6 +133,7 @@ class AnimeFactory:
                     ep_url,
                     f'/screenshots/{aid}/{e[0]}/th_3.jpg'
                 )
+        click.secho("Not anime episode match", fg='red')
 
     @staticmethod
     def check_recents():

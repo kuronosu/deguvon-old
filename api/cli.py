@@ -83,4 +83,5 @@ if __name__ == '__main__':
     try:
         cli()
     except Exception as e:
-        click.secho("Bye", fg='bright_blue', err=True)
+        click.secho(str(e), fg='red', err=True)
+    click.secho("Bye", fg='bright_blue')

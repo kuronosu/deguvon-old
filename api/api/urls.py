@@ -5,7 +5,7 @@ from . import views
 api_blueprint = Blueprint('api', 'api')
 
 api_blueprint.add_url_rule('/recent', view_func=views.recent)
-api_blueprint.add_url_rule('/search/<name>', view_func=views.search)
+api_blueprint.add_url_rule('/search', view_func=views.search)
 api_blueprint.add_url_rule('/anime/<aid>', view_func=views.anime)
 api_blueprint.add_url_rule('/directory', view_func=views.directory)
 api_blueprint.add_url_rule('/episode/<eid>/videos', view_func=views.episode_videos_data)

@@ -179,37 +179,38 @@ class DataBase:
             .where(Anime.name.contains(name))
         )
         animes = []
-        for i in aList:
-            gList = (AnimeGenre.select()
-                .join(Anime)
-                .where(AnimeGenre.anime == i)
-            )
-            genres = [j.genre.genre for j in gList]
-            rList = (AnimeRelation.select()
-                .join(Anime)
-                .where(AnimeRelation.anime == i)
-            )
-            listAnmRel = [AnimeReltionScraping(j.url, j.rel) for j in rList]
-            eList = (Episode.select()
-                .join(Anime)
-                .where(Episode.anime == i)
-            )
-            episode_list = [EpisodeScraping(j.number, j.url, j.image) for j in eList ]
-            
-            anime = AnimeScraping(
-                    i.aid,
-                    i.url,
-                    i.slug,
-                    i.name,
-                    i.image,
-                    i.typea,
-                    i.state.state,
-                    i.synopsis,
-                    genres,
-                    episode_list,
-                    listAnmRel
+        with DATABASE.atomic():
+            for i in aList:
+                gList = (AnimeGenre.select()
+                    .join(Anime)
+                    .where(AnimeGenre.anime == i)
                 )
-            animes.append(anime)
+                genres = [j.genre.genre for j in gList]
+                rList = (AnimeRelation.select()
+                    .join(Anime)
+                    .where(AnimeRelation.anime == i)
+                )
+                listAnmRel = [AnimeReltionScraping(j.url, j.rel) for j in rList]
+                eList = (Episode.select()
+                    .join(Anime)
+                    .where(Episode.anime == i)
+                )
+                episode_list = [EpisodeScraping(j.number, j.url, j.image) for j in eList ]
+                
+                anime = AnimeScraping(
+                        i.aid,
+                        i.url,
+                        i.slug,
+                        i.name,
+                        i.image,
+                        i.typea,
+                        i.state.state,
+                        i.synopsis,
+                        genres,
+                        episode_list,
+                        listAnmRel
+                    )
+                animes.append(anime)
         return animes
     
     @staticmethod
