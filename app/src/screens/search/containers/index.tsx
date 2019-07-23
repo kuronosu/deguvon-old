@@ -3,6 +3,7 @@ import { DispatchProp } from 'react-redux'
 import { FlatList, Dimensions } from 'react-native'
 import { NavigationActions, NavigationInjectedProps } from 'react-navigation'
 
+import { SearchProps } from '../../..'
 import Card from '../../../utils/components/card'
 import Empty from '../../../utils/components/empty'
 import { setAnimeData, setSearchData } from '../../../store/actions'
@@ -11,15 +12,7 @@ import VerticalSeparator from '../../../utils/components/separator'
 import GeneralLayout from '../../../utils/components/general-layout'
 import withHandlePressBack from '../../../navigation/handle-press-back'
 
-type Props = {
-  searchText: string
-  data: anime.AnimeModel[]
-  mode: boolean
-  screenWidth: number
-  directoryData: anime.AnimeModel[]
-}
-
-class Search extends Component<Props & DispatchProp & NavigationInjectedProps> {
+class Search extends Component<SearchProps & DispatchProp & NavigationInjectedProps> {
 
   _onChangeText = (text: string) => {
     this.props.dispatch(setSearchData(text, this.props.directoryData.filter(el => el.name.toLowerCase().includes(text.toLowerCase()))))
@@ -77,7 +70,7 @@ class Search extends Component<Props & DispatchProp & NavigationInjectedProps> {
   }
 }
 
-const mapStateToProps = (state: StoreState): Props => ({
+const mapStateToProps = (state: StoreState): SearchProps => ({
   searchText: state.search ? state.search.text : '',
   data: state.search ? state.search.data : [],
   mode: state.app ? state.app.device ? state.app.device.screenMode : true : true,
