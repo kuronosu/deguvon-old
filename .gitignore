@@ -57,10 +57,11 @@ buck-out/
 *.jsbundle
 
 # Python
-venv/*
+*/venv/
 test.py
 ddbb.sqlite3
 ddbb.sqlite3-journal
+db.sqlite3
 *.pyc
 __pycache__/
 animes.txt
