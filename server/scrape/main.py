@@ -3,12 +3,14 @@ import json
 import click
 import os
 import platform
+import click
 from bs4 import BeautifulSoup
 from requests.exceptions import RequestException
 
 from scrape.constants import ANIME_FLV_URL
 from scrape.patterns import RELATION_TEXT_PATTERN, ANIME_LINK_PATTERN
 from scrape.utils import make_request, replace_html_entities, get_script_gata
+from scrape.models import EpisodeScrape, AnimeReltionScrape, AnimeScrape
 
 
 def get_total_pages():
@@ -37,27 +39,30 @@ def scrape_page(page=1):
 
 
 def get_all_animes():
-    a = get_total_pages()
-    list_anime_links = []
-    for i in range(1, a+1):
-        print(f"Analizando pagina: {i}")
-        tmpl = scrape_page(i)
-        list_anime_links += tmpl
-    return list_anime_links
+    pages = get_total_pages()
+    links = []
+    with click.progressbar(range(1, pages + 1), label='Getting anime urls') as bar:
+        for i in bar:
+            links += scrape_page(i)
+    return links
 
 
-def get_anime(url):
-    print('Analizando: ', url)
-    rute = url
-    response = make_request(ANIME_FLV_URL + rute)
+def get_anime(route):
+    response = make_request(ANIME_FLV_URL + route)
     if response.status_code != 200:
         return None
+    url = response.url.replace(ANIME_FLV_URL, '')
 
     soup = BeautifulSoup(response.content, 'html.parser')
     containers = soup.find_all('div', {'class': 'Container'})
 
     scripts = soup.find_all('script')
     scripts.reverse()
+
+    banner = soup.find('div', {'class': 'Bg'})['style'].replace(
+        'background-image:url(', '')[:-1]
+    score = float(soup.find('span', {'id': 'votes_prmd'}).text)
+
     anime_data, episodes = get_script_gata(scripts)
     aid, name, *tail = anime_data
     slug = tail[0]
@@ -78,7 +83,7 @@ def get_anime(url):
     except Exception:
         pass
 
-    if 'idolmaster' in url or 'idolmster' in url:
+    if 'idolmaster' in url or 'idolmster' in url or 'cinderella' in url:
         synopsis = synopsis.replace('[email protected]', 'iDOLM@STER')
     if '[email protected]' in synopsis:
         print("Revisar: ", url)
@@ -90,7 +95,7 @@ def get_anime(url):
     # Episodes
     episode_list = []
     for e in episodes:
-        episode_list.append(EpisodeScraping(
+        episode_list.append(EpisodeScrape(
             float(e[0]),
             f'/ver/{e[1]}/{slug}-{e[0]}'.lower(),
             f'/screenshots/{aid}/{e[0]}/th_3.jpg'
@@ -102,17 +107,24 @@ def get_anime(url):
         listAnmRel = []
         for i in cont_listAnmRel:
             anmrel = i.find('a').text
-            print(anmrel, i.get_text())
             link = i.find('a')['href']
             rel = RELATION_TEXT_PATTERN.search(i.get_text()).group(0)[1:-1]
             if ANIME_LINK_PATTERN.search(link):
-                listAnmRel.append(AnimeReltionScraping(anmrel, link, rel))
+                listAnmRel.append(AnimeReltionScrape(anmrel, link, rel))
         del cont_listAnmRel
     else:
         listAnmRel = []
 
-    return AnimeScraping(aid, url, slug, name, image, typea, state, synopsis, genres, episode_list, listAnmRel)
+    return AnimeScrape(int(aid), name, slug, url, state, typea, image, synopsis, banner, score, genres, listAnmRel, episode_list)
 
+def get_animes_info(links):
+    animes = []
+    with click.progressbar(links, label='Getting animes info') as bar:
+        for link in bar:
+            anime = get_anime(link)
+            if anime:
+                animes.append(anime)
+    return animes
 
 def get_episode_data(ep_url):
     response = make_request(
@@ -129,7 +141,7 @@ def get_episode_data(ep_url):
 
     for e in episodes:
         if f'/ver/{e[1]}/{slug}-{e[0]}'.lower() == ep_url.lower():
-            return EpisodeScraping(
+            return EpisodeScrape(
                 float(e[0]),
                 ep_url,
                 f'/screenshots/{aid}/{e[0]}/th_3.jpg'
@@ -163,111 +175,3 @@ def get_animeUrl_by_ep(ep_url):
     response = make_request(ANIME_FLV_URL + ep_url)
     soup = BeautifulSoup(response.content, 'html.parser')
     return soup.find('a', {'class': 'CapNvLs'})['href']
-
-
-class EpisodeScraping:
-    def __init__(self, number, url, image, *las, **kwargs):
-        self.number = number
-        self.url = url
-        self.image = image
-
-    def __str__(self):
-        return str(self.number)
-
-
-class AnimeReltionScraping:
-    def __init__(self, anime, url, rel):
-        self.url = url
-        self.anime = anime
-        self.rel = rel
-
-    def to_json(self):
-        return {
-            'anime': self.anime,
-            'url': self.url,
-            'rel': self.rel,
-        }
-
-    def __str__(self):
-        return self.url + ":" + self.rel
-
-
-class AnimeScraping:
-    def __init__(self, aid, url, slug, name, image, typea, state, synopsis, genres, episode_list, listAnmRel, *args, **kwargs):
-        self.aid = aid
-        self.url = url
-        self.slug = slug
-        self.name = name
-        self.image = image
-        self.typea = typea
-        self.state = state
-        self.synopsis = synopsis
-        self.genres = genres
-        self.episode_list = episode_list
-        self.listAnmRel = listAnmRel
-
-    def __str__(self):
-        string = f"""
-aid: {self.aid}
-url: {self.url}
-slug: {self.slug}
-name: {self.name}
-image: {self.image}
-typea: {self.typea}
-state: {self.state}
-synopsis: {self.synopsis}
-genres: {self.genres}
-episode_list: {str([str(i) for i in self.episode_list])}
-listAnmRel: {str([str(i) for i in self.listAnmRel])}
-        """
-        return string
-
-    def to_db(self):
-        query = {
-            'aid': self.aid,
-            'url': self.url,
-            'slug': self.slug,
-            'name': self.name,
-            'image': self.image,
-            'typea': self.typea,
-            'synopsis': self.synopsis,
-        }
-        return query
-
-    def to_json(self):
-        anime = self.to_db()
-        anime['genres'] = self.genres
-        anime.update({'listAnmRel': self.animeRel_to_json()})
-        anime.update({'episodeList': self.episode_list_to_db()})
-        return anime
-
-    def animeRel_to_json(self):
-        query_list = []
-        for i in self.listAnmRel:
-            query = {
-                'url': i.url,
-                'rel': i.rel,
-            }
-            query_list.append(query)
-        return query_list
-
-    def animeRel_to_db(self):
-        query_list = []
-        for i in self.listAnmRel:
-            query = {
-                'url': i.url,
-                'rel': i.rel,
-            }
-            query_list.append(query)
-        return query_list
-
-    def episode_list_to_db(self):
-        query_list = []
-        for i in self.episode_list:
-            query = {
-                'number': i.number,
-                'url': i.url,
-                'image': i.image,
-            }
-            query_list.append(query)
-        return query_list

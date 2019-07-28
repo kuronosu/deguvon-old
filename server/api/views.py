@@ -1,5 +1,6 @@
 from rest_framework import viewsets
 from rest_framework.response import Response
+from api.pagination import AnimeSetPagination
 from api.models import Anime, Episode, Relation, State, Type, Genre
 from api.serializers import AnimeSerializer, EpisodeSerializer, RelationSerializer, StateSerializer, TypeSerializer, GenreSerializer
 
@@ -10,6 +11,7 @@ class AnimeViewSet(viewsets.ReadOnlyModelViewSet):
     """
     queryset = Anime.objects.all()
     serializer_class = AnimeSerializer
+    pagination_class = AnimeSetPagination
 
 
 class EpisodeViewSet(viewsets.ReadOnlyModelViewSet):

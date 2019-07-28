@@ -37,7 +37,7 @@ class Relation(models.Model):
 
 class Episode(models.Model):
     number = models.FloatField(verbose_name=_('Numero del episodio'))
-    anime_url = models.CharField(max_length=300, unique=True, verbose_name=_('Url del episodio'))
+    episode_url = models.CharField(max_length=300, unique=True, verbose_name=_('Url del episodio'))
     cover = models.CharField(
         max_length=300, verbose_name=_('Imagen'))
 
