@@ -1,17 +1,21 @@
-from rest_framework import viewsets
+from rest_framework import viewsets, views
 from rest_framework.response import Response
+from rest_framework.exceptions import APIException
+from scrape.main import get_recents
 from api.pagination import AnimeSetPagination
 from api.models import Anime, Episode, Relation, State, Type, Genre
 from api.serializers import AnimeSerializer, EpisodeSerializer, RelationSerializer, StateSerializer, TypeSerializer, GenreSerializer
+from api.utils import verify_recents
 
 
 class AnimeViewSet(viewsets.ReadOnlyModelViewSet):
     """
     API endpoint that allows animes to be viewed.
     """
-    queryset = Anime.objects.all()
+    queryset = Anime.objects.all().order_by('aid')
     serializer_class = AnimeSerializer
     pagination_class = AnimeSetPagination
+    lookup_field = 'aid'
 
 
 class EpisodeViewSet(viewsets.ReadOnlyModelViewSet):
@@ -53,3 +57,16 @@ class GenreViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Genre.objects.all()
     serializer_class = GenreSerializer
     anime_serializer_class = AnimeSerializer
+
+
+class RecentsViewSet(viewsets.ViewSet):
+
+    def list(self, request, format=None):
+        try:
+            r = get_recents()
+            r = verify_recents(r)
+            if len(r) > 0:
+                return Response(r)
+        except Exception as e:
+            print(e) # TODO logger
+        raise APIException('Could not be obtained the recent episodes')

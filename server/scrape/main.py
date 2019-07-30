@@ -28,6 +28,8 @@ def scrape_page(page=1):
     list_anime_links = []
     rute = f'/browse?order=title&page={page}'
     response = make_request(ANIME_FLV_URL + rute)
+    if response.status_code != 200:
+        return None
     soup = BeautifulSoup(response.content, 'html.parser')
     listAnimes = soup.find_all('article', {'class': 'Anime'})
 
@@ -117,6 +119,7 @@ def get_anime(route):
 
     return AnimeScrape(int(aid), name, slug, url, state, typea, image, synopsis, banner, score, genres, listAnmRel, episode_list)
 
+
 def get_animes_info(links):
     animes = []
     with click.progressbar(links, label='Getting animes info') as bar:
@@ -125,6 +128,7 @@ def get_animes_info(links):
             if anime:
                 animes.append(anime)
     return animes
+
 
 def get_episode_data(ep_url):
     response = make_request(
@@ -149,29 +153,23 @@ def get_episode_data(ep_url):
     click.secho("Not anime episode match", fg='red')
 
 
-def check_recents():
+def get_recents():
     response = make_request(ANIME_FLV_URL)
-    if response.status_code != 200 or response == None:
-        return []
+    if response.status_code != 200:
+        return None
     soup = BeautifulSoup(response.content, 'html.parser')
-    lis = (soup.find('ul', {'class': 'ListEpisodios'}) or soup.find(
-        'ul', {'class': 'List-Episodes'})).find_all('li')
+    lis = soup.find('ul', {'class': 'ListEpisodios'}).find_all('li')
     episodes = []
     for element in lis:
         episode_url = element.a['href']
-        episode_text = (element.find('span', {'class': 'Capi'}) or element.find(
-            'h2', {'class': 'Title'})).text
-        eid = episode_url.split('/')[2]
-        episodes.append({
-            'url': episode_url,
-            'episodeText': episode_text,
-            'id': eid,
-        })
+        episodes.append(episode_url)
 
     return episodes
 
 
 def get_animeUrl_by_ep(ep_url):
     response = make_request(ANIME_FLV_URL + ep_url)
+    if response.status_code != 200:
+        return None
     soup = BeautifulSoup(response.content, 'html.parser')
     return soup.find('a', {'class': 'CapNvLs'})['href']

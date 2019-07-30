@@ -25,13 +25,13 @@ class GenreSerializer(serializers.HyperlinkedModelSerializer):
 class RelationSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Relation
-        fields = '__all__'
+        exclude = ['url', 'anime']
 
 
 class EpisodeSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Episode
-        fields = '__all__'
+        exclude = ['url', 'anime']
 
 
 class AnimeSerializer(serializers.HyperlinkedModelSerializer):
@@ -39,3 +39,16 @@ class AnimeSerializer(serializers.HyperlinkedModelSerializer):
         model = Anime
         fields = '__all__'
         depth = 1
+        lookup_field = 'aid'
+        extra_kwargs = {
+            'url': {'lookup_field': 'aid'}
+        }
+
+    episodes = serializers.SerializerMethodField()
+    relations = serializers.SerializerMethodField()
+
+    def get_episodes(self, obj):
+        return EpisodeSerializer(obj.episode_set, many=True, context=self.context).data
+
+    def get_relations(self, obj):
+        return RelationSerializer(obj.relation_set, many=True, context=self.context).data

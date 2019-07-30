@@ -1,9 +1,9 @@
 
 
 class EpisodeScrape:
-    def __init__(self, number, episode_url, cover):
+    def __init__(self, number, animeflv_url, cover):
         self.number = number
-        self.episode_url = episode_url
+        self.animeflv_url = animeflv_url
         self.cover = cover
 
     def __str__(self):
@@ -12,26 +12,26 @@ class EpisodeScrape:
     def to_dict(self):
         return {
             'number': self.number,
-            'episode_url': self.episode_url,
+            'animeflv_url': self.animeflv_url,
             'cover': self.cover
         }
 
 
 class AnimeReltionScrape:
-    def __init__(self, anime, animeflv_url, relation):
-        self.anime = anime
+    def __init__(self, ra_name, animeflv_url, relation):
+        self.ra_name = ra_name
         self.animeflv_url = animeflv_url
         self.relation = relation
 
     def to_dict(self):
         return {
-            'anime': self.anime,
+            'ra_name': self.ra_name,
             'animeflv_url': self.animeflv_url,
             'relation': self.relation
         }
 
     def __str__(self):
-        return f'{self.anime}:{self.relation}'
+        return f'{self.ra_name}:{self.relation}'
 
 
 class AnimeScrape:

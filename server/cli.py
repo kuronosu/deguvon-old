@@ -1,6 +1,7 @@
 import time
 import click
-from actions import create_directory
+from api.utils import create_directory
+
 
 @click.group()
 def cli():
@@ -12,6 +13,7 @@ def fill():
     t = time.time()
     create_directory()
     click.secho(f'La operacion duró {time.time() - t} segundos')
+
 
 if __name__ == '__main__':
     cli()
