@@ -87,6 +87,8 @@ def get_anime(route):
 
     if 'idolmaster' in url or 'idolmster' in url or 'cinderella' in url:
         synopsis = synopsis.replace('[email protected]', 'iDOLM@STER')
+    elif 'sekirei' in url:
+        synopsis = synopsis.replace('[email protected]', ' L@s')
     if '[email protected]' in synopsis:
         print("Revisar: ", url)
 

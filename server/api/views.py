@@ -1,3 +1,7 @@
+import os
+import json
+from collections import OrderedDict
+from django.conf import settings
 from rest_framework import viewsets, views
 from rest_framework.response import Response
 from rest_framework.exceptions import APIException
@@ -5,7 +9,7 @@ from scrape.main import get_recents
 from api.pagination import AnimeSetPagination
 from api.models import Anime, Episode, Relation, State, Type, Genre
 from api.serializers import AnimeSerializer, EpisodeSerializer, RelationSerializer, StateSerializer, TypeSerializer, GenreSerializer
-from api.utils import verify_recents
+from api.utils import verify_recents, cache_directory
 
 
 class AnimeViewSet(viewsets.ReadOnlyModelViewSet):
@@ -60,6 +64,9 @@ class GenreViewSet(viewsets.ReadOnlyModelViewSet):
 
 
 class RecentsViewSet(viewsets.ViewSet):
+    """
+    API endpoint that allows recent episodes to be viewed.
+    """
 
     def list(self, request, format=None):
         try:
@@ -68,5 +75,23 @@ class RecentsViewSet(viewsets.ViewSet):
             if len(r) > 0:
                 return Response(r)
         except Exception as e:
-            print(e) # TODO logger
+            print(e)  # TODO logger
         raise APIException('Could not be obtained the recent episodes')
+
+
+class DirectoryViewSet(viewsets.ViewSet):
+    """
+    API endpoint that allows directory to be viewed.
+    """
+
+    def list(self, request, format=None):
+        # return Response(AnimeSerializer(Anime.objects.all().order_by('aid'), many=True, context={'request': None}).data)
+        try:
+            directory_path = os.path.join(settings.BASE_DIR, 'directory.json')
+            if not os.path.exists(directory_path):
+                cache_directory()
+            with open(directory_path, 'r') as f:
+                return Response(json.load(f))
+        except Exception as e:
+            print(e)  # TODO logger
+        raise APIException('Could not be created the directory')

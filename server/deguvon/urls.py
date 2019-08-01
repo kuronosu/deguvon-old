@@ -8,6 +8,7 @@ router.register(r'genres', views.GenreViewSet)
 router.register(r'states', views.StateViewSet)
 router.register(r'types', views.TypeViewSet)
 router.register(r'recents', views.RecentsViewSet, base_name='recents')
+router.register(r'directory', views.DirectoryViewSet, base_name='directory')
 
 # Wire up our API using automatic URL routing.
 urlpatterns = [

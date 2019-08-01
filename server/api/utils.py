@@ -2,10 +2,14 @@ import os
 import django
 import click
 import time
+import json
+from collections import OrderedDict
 from django.db import transaction
+from scrape.constants import BASE_DIR
 from scrape.main import get_anime, scrape_page, get_all_animes, get_animes_info, get_animeUrl_by_ep
 from scrape.models import AnimeScrape
 from api.models import Anime, Episode, Relation, State, Type, Genre
+from api.serializers import AnimeSerializer
 
 
 def create_directory():
@@ -25,7 +29,8 @@ def create_directory():
 def verify_recents(recent_links):
     def format_data(tmpe):
         # tmpe is Temporal episode
-        assert isinstance(tmpe, Episode), 'tmpe must be a api.models.Episode instance'
+        assert isinstance(
+            tmpe, Episode), 'tmpe must be a api.models.Episode instance'
         anime = tmpe.anime
         tmpe_data = vars(tmpe)
         del tmpe_data['_state'], tmpe_data['id'], tmpe_data['anime_id'], tmpe_data['cover']
@@ -58,3 +63,13 @@ def verify_recents(recent_links):
                         else:
                             Anime.create(get_anime(url))
     return recents
+
+def cache_directory():
+    animes = Anime.objects.all().order_by('aid')
+    list_ = []  
+    with open(os.path.join(BASE_DIR, 'directory.json'), 'w') as f, click.progressbar(animes, label='Generatting directory') as bar:
+        for anime in bar:
+            list_.append((str(anime.aid), AnimeSerializer(anime, context={'request': None}).data))
+        dict_ = OrderedDict(list_)
+        directory = json.dumps(dict_, indent=None)
+        f.write(directory)
