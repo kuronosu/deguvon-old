@@ -71,6 +71,7 @@ directory.json
 
 api/images/
 geckodriver.log
+celerybeat*
 
 .vscode/
 app/android/gradle.properties
