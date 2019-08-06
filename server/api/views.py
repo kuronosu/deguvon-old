@@ -26,7 +26,7 @@ class EpisodeViewSet(viewsets.ReadOnlyModelViewSet):
     """
     API endpoint that allows episodes to be viewed.
     """
-    queryset = Episode.objects.all()
+    queryset = Episode.objects.all().order_by('id')
     serializer_class = EpisodeSerializer
 
 
@@ -34,7 +34,7 @@ class RelationViewSet(viewsets.ReadOnlyModelViewSet):
     """
     API endpoint that allows relations to be viewed.
     """
-    queryset = Relation.objects.all()
+    queryset = Relation.objects.all().order_by('id')
     serializer_class = RelationSerializer
 
 
@@ -42,7 +42,7 @@ class StateViewSet(viewsets.ReadOnlyModelViewSet):
     """
     API endpoint that allows states to be viewed.
     """
-    queryset = State.objects.all()
+    queryset = State.objects.all().order_by('id')
     serializer_class = StateSerializer
 
 
@@ -50,7 +50,7 @@ class TypeViewSet(viewsets.ReadOnlyModelViewSet):
     """
     API endpoint that allows types to be viewed.
     """
-    queryset = Type.objects.all()
+    queryset = Type.objects.all().order_by('id')
     serializer_class = TypeSerializer
 
 
@@ -58,7 +58,7 @@ class GenreViewSet(viewsets.ReadOnlyModelViewSet):
     """
     API endpoint that allows genres to be viewed.
     """
-    queryset = Genre.objects.all()
+    queryset = Genre.objects.all().order_by('id')
     serializer_class = GenreSerializer
     anime_serializer_class = AnimeSerializer
 
