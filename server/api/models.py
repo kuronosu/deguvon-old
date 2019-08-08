@@ -1,8 +1,11 @@
+import os
 from django.db import models
+from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
 from django.core.validators import MaxValueValidator, MinValueValidator
 
 from scrape.models import AnimeScrape
+from scrape.utils import get_image
 
 
 class State(models.Model):
@@ -56,7 +59,9 @@ class Anime(models.Model):
 
         data = anime_data.to_dict()
         data.update({'state': State.objects.get_or_create(name=anime_data.state)[0],
-                     'typea': Type.objects.get_or_create(name=anime_data.typea)[0]})
+                     'typea': Type.objects.get_or_create(name=anime_data.typea)[0],
+                     'cover': f'/{settings.MEDIA_ROOT}{data["cover"]}',
+                     'banner': f'/{settings.MEDIA_ROOT}{data["banner"]}'})
         anime = cls.objects.create(**data)
         genres = []
         for g in anime_data.genres:
@@ -71,8 +76,35 @@ class Anime(models.Model):
 
         episodes = []
         for e in anime_data.episodes:
-            episodes.append(Episode.objects.create(anime=anime, **e.to_dict()))
+            episode_dict = e.to_dict()
+            episode_dict.update(
+                {'cover': f'/{settings.MEDIA_ROOT}{episode_dict["cover"]}'})
+            episodes.append(Episode.objects.create(
+                anime=anime, **episode_dict))
         anime.episode_set.add(*episodes)
+
+        # Download the images
+        anime_cover = get_image(f'https://animeflv.net{anime_data.cover}')
+        if anime_cover:
+            os.makedirs(os.path.join(settings.BASE_DIR, *
+                                     anime.cover.split('/')[:-1]), exist_ok=True)
+            anime_cover.save(os.path.join(
+                settings.BASE_DIR, *anime.cover.split('/')))
+        anime_banner = get_image(f'https://animeflv.net{anime_data.banner}')
+        if anime_banner:
+            os.makedirs(os.path.join(settings.BASE_DIR, *
+                                     anime.banner.split('/')[:-1]), exist_ok=True)
+            anime_banner.save(os.path.join(
+                settings.BASE_DIR, *anime.banner.split('/')))
+        for e in anime_data.episodes:
+            episode_cover = get_image(f'https://cdn.animeflv.net{e.cover}')
+            if episode_cover:
+                path = os.path.join(
+                    settings.BASE_DIR, settings.MEDIA_ROOT, *e.cover.split('/')[:-1])
+                os.makedirs(os.path.join(
+                    settings.BASE_DIR, settings.MEDIA_ROOT, *e.cover.split('/')[:-1]), exist_ok=True)
+                episode_cover.save(os.path.join(
+                    settings.BASE_DIR, settings.MEDIA_ROOT, *e.cover.split('/')))
 
         return anime
 
@@ -81,9 +113,13 @@ class Anime(models.Model):
             new_anime_data, AnimeScrape), 'new_anime_data must be a AnimeScrape instance'
         data = new_anime_data.to_dict()
         data.update({'state': State.objects.get_or_create(name=new_anime_data.state)[0],
-                     'typea': Type.objects.get_or_create(name=new_anime_data.typea)[0]})
+                     'typea': Type.objects.get_or_create(name=new_anime_data.typea)[0],
+                     'cover': f'/{settings.MEDIA_ROOT}{data["cover"]}',
+                     'banner': f'/{settings.MEDIA_ROOT}{data["banner"]}'})
 
-        Anime.objects.filter(animeflv_url=self.animeflv_url).update(**data)
+        for attr, value in data.items():
+            setattr(self, attr, value)
+        self.save()
 
         genres = []
         for g in new_anime_data.genres:
@@ -100,8 +136,33 @@ class Anime(models.Model):
         self.episode_set.all().delete()
         episodes = []
         for e in new_anime_data.episodes:
-            episodes.append(Episode.objects.create(anime=self, **e.to_dict()))
+            episode_dict = e.to_dict()
+            episode_dict.update(
+                {'cover': f'/{settings.MEDIA_ROOT}{episode_dict["cover"]}'})
+            episodes.append(Episode.objects.create(anime=self, **episode_dict))
         self.episode_set.add(*episodes)
+
+        # Update the images
+        anime_cover = get_image(f'https://animeflv.net{new_anime_data.cover}')
+        if anime_cover:
+            os.makedirs(os.path.join(settings.BASE_DIR, *
+                                     self.cover.split('/')[:-1]), exist_ok=True)
+            anime_cover.save(os.path.join(
+                settings.BASE_DIR, *self.cover.split('/')))
+        anime_banner = get_image(
+            f'https://animeflv.net{new_anime_data.banner}')
+        if anime_banner:
+            os.makedirs(os.path.join(settings.BASE_DIR, *
+                                     self.banner.split('/')[:-1]), exist_ok=True)
+            anime_banner.save(os.path.join(
+                settings.BASE_DIR, *self.banner.split('/')))
+        for e in new_anime_data.episodes:
+            episode_cover = get_image(f'https://cdn.animeflv.net{e.cover}')
+            if episode_cover:
+                os.makedirs(os.path.join(
+                    settings.BASE_DIR, settings.MEDIA_ROOT, *e.cover.split('/')[:-1]), exist_ok=True)
+                episode_cover.save(os.path.join(
+                    settings.BASE_DIR, settings.MEDIA_ROOT, *e.cover.split('/')))
 
 
 class Relation(models.Model):

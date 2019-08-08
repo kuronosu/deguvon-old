@@ -1,11 +1,14 @@
 import os
 import json
 from collections import OrderedDict
+from PIL import Image
 from django.conf import settings
+from django.http import HttpResponse, Http404
 from rest_framework import viewsets, views
 from rest_framework.response import Response
 from rest_framework.exceptions import APIException
 from scrape.main import get_recents
+from scrape.utils import get_image
 from api.pagination import AnimeSetPagination
 from api.models import Anime, Episode, Relation, State, Type, Genre
 from api.serializers import AnimeSerializer, EpisodeSerializer, RelationSerializer, StateSerializer, TypeSerializer, GenreSerializer

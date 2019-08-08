@@ -1,3 +1,5 @@
+from PIL import Image
+from io import BytesIO
 import os
 import cfscrape
 import requests
@@ -87,3 +89,14 @@ def remove_key(dict_obj, key):
     if key in dict_obj:
         del dict_obj[key]
     return dict_obj
+
+
+def get_image(url):
+    response = make_request(url)
+    if response.status_code is not 200:
+        return None
+    try:
+        img = Image.open(BytesIO(response.content))
+        return img
+    except:
+        return None

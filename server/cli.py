@@ -1,5 +1,13 @@
 import time
 import click
+import os
+import django
+from scrape.main import get_anime
+
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "deguvon.settings")
+django.setup()
+
+from api.models import Anime
 from api.utils import create_directory
 
 

@@ -23,7 +23,7 @@ def create_directory():
                     Anime.create(anime)
             except Exception as e:
                 click.secho(
-                    f'Error saving anime: {l}', fg='red', err=e)
+                    f'Error saving anime "{e}": {l}', fg='red', err=e)
 
 
 def verify_recents(recent_links):
