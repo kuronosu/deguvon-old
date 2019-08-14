@@ -20,7 +20,7 @@ def create_directory():
             try:
                 if not l in Anime.objects.all().values_list('animeflv_url', flat=True):
                     anime = get_anime(l)
-                    Anime.create(anime)
+                    Anime.create_or_update(anime)
             except Exception as e:
                 click.secho(
                     f'Error saving anime "{e}": {l}', fg='red', err=e)
@@ -64,12 +64,38 @@ def verify_recents(recent_links):
                             Anime.create(get_anime(url))
     return recents
 
+
 def cache_directory():
     animes = Anime.objects.all().order_by('aid')
-    list_ = []  
+    list_ = []
     with open(os.path.join(BASE_DIR, 'directory.json'), 'w') as f, click.progressbar(animes, label='Generatting directory') as bar:
         for anime in bar:
-            list_.append((str(anime.aid), AnimeSerializer(anime, context={'request': None}).data))
+            list_.append((str(anime.aid), AnimeSerializer(
+                anime, context={'request': None}).data))
         dict_ = OrderedDict(list_)
         directory = json.dumps(dict_, indent=None)
         f.write(directory)
+
+
+def load_directory(json_path='directory.json'):
+    if os.path.exists(json_path):
+        with open(json_path, 'r') as f:
+            try:
+                data = []
+                d = json.loads(f.read())
+                if type(d) is dict:
+                    for a in d.values():
+                        tmp = AnimeScrape.load_from_dict(a)
+                        if tmp:
+                            data.append(tmp)
+                with click.progressbar(data, label='Saving animes') as bar, transaction.atomic():
+                    errors = []
+                    for anime in bar:
+                        try:
+                            Anime.create_or_update(anime, False)
+                        except Exception as e:
+                            errors.append(f'Error saving anime "{e}": {anime.animeflv_url}')
+                    for e in erros:
+                        click.secho(e, fg='red')
+            except Exception as e:
+                print(e)

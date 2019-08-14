@@ -52,8 +52,34 @@ class Anime(models.Model):
     def __str__(self):
         return f'{self.name}: {self.animeflv_url}'
 
+    @staticmethod
+    def save_images(obj, data):
+        assert isinstance(obj, Anime), 'obj must be a Anime instance'
+        assert isinstance(
+            data, AnimeScrape), 'data must be a AnimeScrape instance'
+        anime_cover = get_image(f'https://animeflv.net{data.cover}')
+        if anime_cover:
+            os.makedirs(os.path.join(settings.BASE_DIR, *
+                                     obj.cover.split('/')[:-1]), exist_ok=True)
+            anime_cover.save(os.path.join(
+                settings.BASE_DIR, *obj.cover.split('/')))
+        anime_banner = get_image(f'https://animeflv.net{data.banner}')
+        if anime_banner:
+            os.makedirs(os.path.join(settings.BASE_DIR, *
+                                     obj.banner.split('/')[:-1]), exist_ok=True)
+            anime_banner.save(os.path.join(
+                settings.BASE_DIR, *obj.banner.split('/')))
+        for e in data.episodes:
+            episode_cover = get_image(f'https://cdn.animeflv.net{e.cover}')
+            if episode_cover:
+                dir_ = os.path.join(
+                    settings.BASE_DIR, settings.MEDIA_ROOT, *e.cover.split('/')[:-1])
+                os.makedirs(dir_, exist_ok=True)
+                episode_cover.save(os.path.join(
+                    settings.BASE_DIR, settings.MEDIA_ROOT, *e.cover.split('/')))
+
     @classmethod
-    def create(cls, anime_data):
+    def create(cls, anime_data, get_images=False):
         assert isinstance(
             anime_data, AnimeScrape), 'anime_data must be a AnimeScrape instance'
 
@@ -84,31 +110,12 @@ class Anime(models.Model):
         anime.episode_set.add(*episodes)
 
         # Download the images
-        anime_cover = get_image(f'https://animeflv.net{anime_data.cover}')
-        if anime_cover:
-            os.makedirs(os.path.join(settings.BASE_DIR, *
-                                     anime.cover.split('/')[:-1]), exist_ok=True)
-            anime_cover.save(os.path.join(
-                settings.BASE_DIR, *anime.cover.split('/')))
-        anime_banner = get_image(f'https://animeflv.net{anime_data.banner}')
-        if anime_banner:
-            os.makedirs(os.path.join(settings.BASE_DIR, *
-                                     anime.banner.split('/')[:-1]), exist_ok=True)
-            anime_banner.save(os.path.join(
-                settings.BASE_DIR, *anime.banner.split('/')))
-        for e in anime_data.episodes:
-            episode_cover = get_image(f'https://cdn.animeflv.net{e.cover}')
-            if episode_cover:
-                path = os.path.join(
-                    settings.BASE_DIR, settings.MEDIA_ROOT, *e.cover.split('/')[:-1])
-                os.makedirs(os.path.join(
-                    settings.BASE_DIR, settings.MEDIA_ROOT, *e.cover.split('/')[:-1]), exist_ok=True)
-                episode_cover.save(os.path.join(
-                    settings.BASE_DIR, settings.MEDIA_ROOT, *e.cover.split('/')))
+        if get_images:
+            cls.save_images(anime, anime_data)
 
         return anime
 
-    def update(self, new_anime_data):
+    def update(self, new_anime_data, get_images=False):
         assert isinstance(
             new_anime_data, AnimeScrape), 'new_anime_data must be a AnimeScrape instance'
         data = new_anime_data.to_dict()
@@ -143,26 +150,22 @@ class Anime(models.Model):
         self.episode_set.add(*episodes)
 
         # Update the images
-        anime_cover = get_image(f'https://animeflv.net{new_anime_data.cover}')
-        if anime_cover:
-            os.makedirs(os.path.join(settings.BASE_DIR, *
-                                     self.cover.split('/')[:-1]), exist_ok=True)
-            anime_cover.save(os.path.join(
-                settings.BASE_DIR, *self.cover.split('/')))
-        anime_banner = get_image(
-            f'https://animeflv.net{new_anime_data.banner}')
-        if anime_banner:
-            os.makedirs(os.path.join(settings.BASE_DIR, *
-                                     self.banner.split('/')[:-1]), exist_ok=True)
-            anime_banner.save(os.path.join(
-                settings.BASE_DIR, *self.banner.split('/')))
-        for e in new_anime_data.episodes:
-            episode_cover = get_image(f'https://cdn.animeflv.net{e.cover}')
-            if episode_cover:
-                os.makedirs(os.path.join(
-                    settings.BASE_DIR, settings.MEDIA_ROOT, *e.cover.split('/')[:-1]), exist_ok=True)
-                episode_cover.save(os.path.join(
-                    settings.BASE_DIR, settings.MEDIA_ROOT, *e.cover.split('/')))
+        if get_images:
+            self.save_images(self, new_anime_data)
+
+    @classmethod
+    def create_or_update(cls, data, get_images=False):
+        assert isinstance(
+            data, AnimeScrape), 'data must be a AnimeScrape instance'
+        assert isinstance(data.aid, int), 'aid must be a integer'
+        try:
+            a = cls.objects.get(aid=data.aid)
+            a.update(data, get_images=get_images)
+            return True
+        except:
+            cls.create(data, get_images=get_image)
+            return True
+        return False
 
 
 class Relation(models.Model):

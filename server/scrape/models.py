@@ -65,3 +65,15 @@ class AnimeScrape:
             'banner': self.banner,
             'score': self.score,
         }
+
+    @classmethod
+    def load_from_dict(cls, _dict):
+        if not type(_dict) is dict:
+            return None
+        try:
+            return cls(aid=_dict['aid'], name=_dict['name'], slug=_dict['slug'], animeflv_url=_dict['animeflv_url'],
+                        state=_dict['state']['name'], typea=_dict['typea']['name'], cover=_dict['cover'], synopsis=_dict['synopsis'],
+                        banner=_dict['banner'], score=_dict['score'], genres=[g['name'] for g in _dict['genres']],
+                        relations=[AnimeReltionScrape(**r) for r in _dict['relations']], episodes=[EpisodeScrape(**e) for e in _dict['episodes']])
+        except:
+            pass
