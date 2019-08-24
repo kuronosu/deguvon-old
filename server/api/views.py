@@ -1,8 +1,10 @@
 import os
 import json
+from pathlib import Path
 from collections import OrderedDict
 from PIL import Image
 from django.conf import settings
+from django.views.static import serve
 from django.http import HttpResponse, Http404
 from rest_framework import viewsets, views
 from rest_framework.response import Response
@@ -98,3 +100,43 @@ class DirectoryViewSet(viewsets.ViewSet):
         except Exception as e:
             print(e)  # TODO logger
         raise APIException('Could not be created the directory')
+
+
+def serve_image(request, urlpath, Model, attr, req_url):
+    if f'{settings.MEDIA_URL}{urlpath}' in Model.objects.all().values_list(attr, flat=True):
+        fullpath = Path(os.path.join(settings.BASE_DIR,
+                                     settings.MEDIA_ROOT, *urlpath.split('/')))
+        if fullpath.is_dir():
+            raise Http404()
+        if fullpath.exists():
+            return serve(request, urlpath, document_root=settings.MEDIA_ROOT)
+        episode_cover = get_image(f'{req_url}{urlpath}')
+        if episode_cover:
+            dir_ = os.path.join(settings.BASE_DIR,
+                                settings.MEDIA_ROOT, *urlpath.split('/')[:-1])
+            os.makedirs(dir_, exist_ok=True)
+            episode_cover.save(os.path.join(
+                settings.BASE_DIR, settings.MEDIA_ROOT, *urlpath.split('/')))
+            return serve(request, urlpath, document_root=settings.MEDIA_ROOT)
+    raise Http404()
+
+
+def screenshots(request, aid, episode, file):
+    return serve_image(request, f'screenshots/{aid}/{episode}/{file}',
+                       Episode,
+                       'cover',
+                       'https://cdn.animeflv.net/')
+
+
+def covers(request, file):
+    return serve_image(request, f'uploads/animes/covers/{file}',
+                       Anime,
+                       'cover',
+                       'https://animeflv.net/')
+
+
+def banners(request, file):
+    return serve_image(request, f'uploads/animes/banners/{file}',
+                       Anime,
+                       'banner',
+                       'https://animeflv.net/')
