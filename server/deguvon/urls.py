@@ -14,15 +14,14 @@ api_router.register(r'recents', api_views.RecentsViewSet, base_name='recents')
 api_router.register(r'directory', api_views.DirectoryViewSet,
                     base_name='directory')
 
+media_router = routers.SimpleRouter(trailing_slash=False)
+media_router.register(
+    r'media', api_views.ServeImagesViewSet, base_name='media')
+
 # Wire up our API using automatic URL routing.
 urlpatterns = [
+    path('', include(media_router.urls)),
     path('api/', include(api_router.urls)),
-    path('media/screenshots/<aid>/<episode>/<file>',
-         api_views.screenshots, name='screenshots'),
-    path('media/uploads/animes/covers/<file>',
-         api_views.covers, name='covers'),
-    path('media/uploads/animes/banners/<file>',
-         api_views.banners, name='banners')
 ]
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

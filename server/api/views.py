@@ -8,13 +8,21 @@ from django.views.static import serve
 from django.http import HttpResponse, Http404
 from rest_framework import viewsets, views
 from rest_framework.response import Response
+from rest_framework.decorators import action
 from rest_framework.exceptions import APIException
 from scrape.main import get_recents
 from scrape.utils import get_image
 from api.pagination import AnimeSetPagination
 from api.models import Anime, Episode, Relation, State, Type, Genre
-from api.serializers import AnimeSerializer, EpisodeSerializer, RelationSerializer, StateSerializer, TypeSerializer, GenreSerializer
 from api.utils import verify_recents, cache_directory
+from api.serializers import (
+    AnimeSerializer,
+    EpisodeSerializer,
+    RelationSerializer,
+    StateSerializer,
+    TypeSerializer,
+    GenreSerializer
+)
 
 
 class AnimeViewSet(viewsets.ReadOnlyModelViewSet):
@@ -102,41 +110,55 @@ class DirectoryViewSet(viewsets.ViewSet):
         raise APIException('Could not be created the directory')
 
 
-def serve_image(request, urlpath, Model, attr, req_url):
-    if f'{settings.MEDIA_URL}{urlpath}' in Model.objects.all().values_list(attr, flat=True):
-        fullpath = Path(os.path.join(settings.BASE_DIR,
-                                     settings.MEDIA_ROOT, *urlpath.split('/')))
-        if fullpath.is_dir():
-            raise Http404()
-        if fullpath.exists():
-            return serve(request, urlpath, document_root=settings.MEDIA_ROOT)
-        episode_cover = get_image(f'{req_url}{urlpath}')
-        if episode_cover:
-            dir_ = os.path.join(settings.BASE_DIR,
-                                settings.MEDIA_ROOT, *urlpath.split('/')[:-1])
-            os.makedirs(dir_, exist_ok=True)
-            episode_cover.save(os.path.join(
-                settings.BASE_DIR, settings.MEDIA_ROOT, *urlpath.split('/')))
-            return serve(request, urlpath, document_root=settings.MEDIA_ROOT)
-    raise Http404()
+class ServeImagesViewSet(viewsets.ViewSet):
 
+    SCREENSHOTS_URL_PATH = {
+        'regex': r'screenshots/(?P<aid>[0-9]+)/(?P<episode>[0-9]+)/(?P<file>th_[0-9]+.jpg)',
+        'url': 'screenshots/{aid}/{episode}/{file}'
+    }
+    COVERS_URL_PATH = {
+        'regex': r'uploads/animes/covers/(?P<file>[0-9]+.jpg)',
+        'url': 'uploads/animes/covers/{file}'
+    }
+    BANNERS_URL_PATH = {
+        'regex': r'uploads/animes/banners/(?P<file>[0-9]+.jpg)',
+        'url': 'uploads/animes/banners/{file}'
+    }
 
-def screenshots(request, aid, episode, file):
-    return serve_image(request, f'screenshots/{aid}/{episode}/{file}',
-                       Episode,
-                       'cover',
-                       'https://cdn.animeflv.net/')
+    def serve_image(self, urlpath, Model, attr, req_url):
+        if f'{settings.MEDIA_URL}{urlpath}' in Model.objects.all().values_list(attr, flat=True):
+            fullpath = Path(os.path.join(settings.BASE_DIR,
+                                         settings.MEDIA_ROOT, *urlpath.split('/')))
+            if fullpath.is_dir():
+                raise Http404()
+            if fullpath.exists():
+                return serve(self.request, urlpath, document_root=settings.MEDIA_ROOT)
+            episode_cover = get_image(f'{req_url}{urlpath}')
+            if episode_cover:
+                dir_ = os.path.join(settings.BASE_DIR,
+                                    settings.MEDIA_ROOT,
+                                    *urlpath.split('/')[:-1])
+                os.makedirs(dir_, exist_ok=True)
+                episode_cover.save(os.path.join(
+                        settings.BASE_DIR,
+                        settings.MEDIA_ROOT,
+                        *urlpath.split('/')))
+                return serve(self.request, urlpath,
+                             document_root=settings.MEDIA_ROOT)
+        raise Http404()
 
+    @action(detail=False, url_path=SCREENSHOTS_URL_PATH['regex'])
+    def screenshots(self, request, aid, episode, file):
+        return self.serve_image(self.SCREENSHOTS_URL_PATH['url'].format(
+                                aid=aid, episode=episode, file=file),
+                                Episode, 'cover', 'https://cdn.animeflv.net/')
 
-def covers(request, file):
-    return serve_image(request, f'uploads/animes/covers/{file}',
-                       Anime,
-                       'cover',
-                       'https://animeflv.net/')
+    @action(detail=False, url_path=COVERS_URL_PATH['regex'])
+    def covers(self, request, file):
+        return self.serve_image(self.COVERS_URL_PATH['url'].format(file=file),
+                                Anime, 'cover', 'https://animeflv.net/')
 
-
-def banners(request, file):
-    return serve_image(request, f'uploads/animes/banners/{file}',
-                       Anime,
-                       'banner',
-                       'https://animeflv.net/')
+    @action(detail=False, url_path=BANNERS_URL_PATH['regex'])
+    def banners(self, request, file):
+        return serve_image(self.BANNERS_URL_PATH.format(file=file), Anime,
+                           'banner', 'https://animeflv.net/')
