@@ -10,8 +10,11 @@ from rest_framework import viewsets, views
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from rest_framework.exceptions import APIException
+from rest_framework.generics import get_object_or_404
+from rest_framework.mixins import RetrieveModelMixin, ListModelMixin
 from scrape.main import get_recents
 from scrape.utils import get_image
+from scrape.videos import scrape_episode, get_natsuki_video, get_fembed_video
 from api.pagination import AnimeSetPagination
 from api.models import Anime, Episode, Relation, State, Type, Genre
 from api.utils import verify_recents, cache_directory
@@ -73,7 +76,6 @@ class GenreViewSet(viewsets.ReadOnlyModelViewSet):
     """
     queryset = Genre.objects.all().order_by('id')
     serializer_class = GenreSerializer
-    anime_serializer_class = AnimeSerializer
 
 
 class RecentsViewSet(viewsets.ViewSet):
@@ -98,7 +100,6 @@ class DirectoryViewSet(viewsets.ViewSet):
     """
 
     def list(self, request, format=None):
-        # return Response(AnimeSerializer(Anime.objects.all().order_by('aid'), many=True, context={'request': None}).data)
         try:
             directory_path = os.path.join(settings.BASE_DIR, 'directory.json')
             if not os.path.exists(directory_path):
@@ -126,13 +127,17 @@ class ServeImagesViewSet(viewsets.ViewSet):
     }
 
     def serve_image(self, urlpath, Model, attr, req_url):
-        if f'{settings.MEDIA_URL}{urlpath}' in Model.objects.all().values_list(attr, flat=True):
+        if (f'{settings.MEDIA_URL}{urlpath}' in
+                Model.objects.all().values_list(attr, flat=True)):
             fullpath = Path(os.path.join(settings.BASE_DIR,
-                                         settings.MEDIA_ROOT, *urlpath.split('/')))
+                                         settings.MEDIA_ROOT,
+                                         *urlpath.split('/')))
             if fullpath.is_dir():
                 raise Http404()
             if fullpath.exists():
-                return serve(self.request, urlpath, document_root=settings.MEDIA_ROOT)
+                return serve(self.request, urlpath,
+                             document_root=settings.MEDIA_ROOT
+                             )
             episode_cover = get_image(f'{req_url}{urlpath}')
             if episode_cover:
                 dir_ = os.path.join(settings.BASE_DIR,
@@ -140,9 +145,9 @@ class ServeImagesViewSet(viewsets.ViewSet):
                                     *urlpath.split('/')[:-1])
                 os.makedirs(dir_, exist_ok=True)
                 episode_cover.save(os.path.join(
-                        settings.BASE_DIR,
-                        settings.MEDIA_ROOT,
-                        *urlpath.split('/')))
+                                   settings.BASE_DIR,
+                                   settings.MEDIA_ROOT,
+                                   *urlpath.split('/')))
                 return serve(self.request, urlpath,
                              document_root=settings.MEDIA_ROOT)
         raise Http404()
@@ -162,3 +167,60 @@ class ServeImagesViewSet(viewsets.ViewSet):
     def banners(self, request, file):
         return serve_image(self.BANNERS_URL_PATH.format(file=file), Anime,
                            'banner', 'https://animeflv.net/')
+
+
+class ServeVideoViewSet(RetrieveModelMixin,
+                        ListModelMixin,
+                        viewsets.GenericViewSet):
+    # class ServeVideoViewSet(viewsets.ReadOnlyModelViewSet):
+    """
+    API endpoint that allows genres to be viewed.
+    """
+    queryset = Episode.objects.all().order_by('anime')
+    serializer_class = EpisodeSerializer
+    lookup_field = 'eid'
+    available_servers = {
+        'natsuki': get_natsuki_video,
+        'fembed': get_fembed_video
+    }
+
+    def get_object(self):
+        return get_object_or_404(
+            self.filter_queryset(self.get_queryset()),
+            animeflv_url__contains=f'/{self.kwargs["eid"]}/')
+
+    def retrieve(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = self.get_serializer(instance)
+        data = {'servers': self.get_servers_data(instance)}
+        data.update(serializer.data)
+        return Response(data)
+
+    @action(detail=True,
+            url_path='server/(?P<server>[^/.]+)')
+    def _server(self, *args, **kwargs):
+        return self.server(*args, **kwargs)
+
+    @action(detail=True,
+            url_path='server/(?P<server>[^/.]+)/(?P<lang>[^/.]+)')
+    def _server_lang(self, *args, **kwargs):
+        return self.server(*args, **kwargs)
+
+    def server(self, request, eid, server, lang='ALL'):
+        server = server.lower()
+        instance = self.get_object()
+        serializer = self.get_serializer(instance)
+        controller = self.available_servers.get(server, None)
+        if not controller:
+            raise APIException("Server unsupported or invalid")
+        video_url_list = controller(self.get_servers_data(instance), lang)
+        data = {'videos': video_url_list}
+        data.update(serializer.data)
+        return Response(data)
+
+    def get_servers_data(self, episode):
+        data = scrape_episode(episode.animeflv_url)
+        return json.loads(str(data)
+                          .replace('True', "true")
+                          .replace('False', 'false')
+                          .replace("'", '"'))

@@ -11,6 +11,8 @@ api_router.register(r'genres', api_views.GenreViewSet)
 api_router.register(r'states', api_views.StateViewSet)
 api_router.register(r'types', api_views.TypeViewSet)
 api_router.register(r'recents', api_views.RecentsViewSet, base_name='recents')
+api_router.register(r'episodes', api_views.ServeVideoViewSet,
+                    base_name='episodes')
 api_router.register(r'directory', api_views.DirectoryViewSet,
                     base_name='directory')
 
