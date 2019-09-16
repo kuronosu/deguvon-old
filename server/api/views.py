@@ -36,6 +36,75 @@ class AnimeViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = AnimeSerializer
     pagination_class = AnimeSetPagination
     lookup_field = 'aid'
+    episode_serializer_class = EpisodeSerializer
+    available_servers = {
+        'natsuki': get_natsuki_video,
+        'fembed': get_fembed_video
+    }
+
+    def get_episode_object(self):
+        try:
+            return self.get_object().episode_set.get(
+                number=self.kwargs['episode'])
+        except:
+            raise Http404()
+
+    @action(detail=True, url_path='episodes')
+    def episode_list(self, request, *args, **kwargs):
+        instance = self.get_object().episode_set
+        serializer = self.episode_serializer_class(instance, many=True)
+        return Response(serializer.data)
+
+    @action(detail=True,
+            url_path='episodes/(?P<episode>[0-9]+(\.[0-9]+)?)')
+    def episode(self, request, *args, **kwargs):
+        instance = self.get_episode_object()
+        serializer = self.episode_serializer_class(instance)
+        servers = self.get_servers_data(instance)
+        servers_filtered = {}
+        for key, value in servers.items():
+            tmp = []
+            for i in value:
+                if i.get('server', None) in self.available_servers.keys():
+                    tmp.append({
+                        'server': i.get('server', None),
+                        'title': i.get('title', None),
+                    })
+            servers_filtered[key] = tmp
+        data = {'servers': servers_filtered}
+        data.update(serializer.data)
+        return Response(data)
+
+    @action(detail=True,
+            url_path='episodes/(?P<episode>[0-9]+(\.[0-9]+)?)/(?P<server>[a-z]+)')
+    def server(self, request, aid, episode, server):
+        return self.serve_video(server)
+
+    @action(detail=True,
+            url_path='episodes/(?P<episode>[0-9]+(\.[0-9]+)?)/(?P<server>[^/.]+)/(?P<lang>\w{3})')
+    def server_lang(self, request, aid, episode, server, lang):
+        if lang.upper() in ('LAT', 'SUB', 'ALL'):
+            return self.serve_video(server, lang)
+        raise APIException('Language not supported or invalid')
+
+    def serve_video(self, server, lang='ALL'):
+        server = server.lower()
+        instance = self.get_episode_object()
+        serializer = self.episode_serializer_class(instance)
+        controller = self.available_servers.get(server, None)
+        if controller is None:
+            raise APIException("Server unsupported or invalid")
+        video_url_list = controller(self.get_servers_data(instance), lang)
+        data = {'videos': video_url_list}
+        data.update(serializer.data)
+        return Response(data)
+
+    def get_servers_data(self, episode):
+        data = scrape_episode(episode.animeflv_url)
+        return json.loads(str(data)
+                          .replace('True', "true")
+                          .replace('False', 'false')
+                          .replace("'", '"'))
 
 
 class EpisodeViewSet(viewsets.ReadOnlyModelViewSet):
@@ -167,60 +236,3 @@ class ServeImagesViewSet(viewsets.ViewSet):
     def banners(self, request, file):
         return serve_image(self.BANNERS_URL_PATH.format(file=file), Anime,
                            'banner', 'https://animeflv.net/')
-
-
-class ServeVideoViewSet(RetrieveModelMixin,
-                        ListModelMixin,
-                        viewsets.GenericViewSet):
-    # class ServeVideoViewSet(viewsets.ReadOnlyModelViewSet):
-    """
-    API endpoint that allows genres to be viewed.
-    """
-    queryset = Episode.objects.all().order_by('anime')
-    serializer_class = EpisodeSerializer
-    lookup_field = 'eid'
-    available_servers = {
-        'natsuki': get_natsuki_video,
-        'fembed': get_fembed_video
-    }
-
-    def get_object(self):
-        return get_object_or_404(
-            self.filter_queryset(self.get_queryset()),
-            animeflv_url__contains=f'/{self.kwargs["eid"]}/')
-
-    def retrieve(self, request, *args, **kwargs):
-        instance = self.get_object()
-        serializer = self.get_serializer(instance)
-        data = {'servers': self.get_servers_data(instance)}
-        data.update(serializer.data)
-        return Response(data)
-
-    @action(detail=True,
-            url_path='server/(?P<server>[^/.]+)')
-    def _server(self, *args, **kwargs):
-        return self.server(*args, **kwargs)
-
-    @action(detail=True,
-            url_path='server/(?P<server>[^/.]+)/(?P<lang>[^/.]+)')
-    def _server_lang(self, *args, **kwargs):
-        return self.server(*args, **kwargs)
-
-    def server(self, request, eid, server, lang='ALL'):
-        server = server.lower()
-        instance = self.get_object()
-        serializer = self.get_serializer(instance)
-        controller = self.available_servers.get(server, None)
-        if not controller:
-            raise APIException("Server unsupported or invalid")
-        video_url_list = controller(self.get_servers_data(instance), lang)
-        data = {'videos': video_url_list}
-        data.update(serializer.data)
-        return Response(data)
-
-    def get_servers_data(self, episode):
-        data = scrape_episode(episode.animeflv_url)
-        return json.loads(str(data)
-                          .replace('True', "true")
-                          .replace('False', 'false')
-                          .replace("'", '"'))

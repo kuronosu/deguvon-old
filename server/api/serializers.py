@@ -28,10 +28,13 @@ class RelationSerializer(serializers.HyperlinkedModelSerializer):
         exclude = ['url', 'anime']
 
 
-class EpisodeSerializer(serializers.HyperlinkedModelSerializer):
+class EpisodeSerializer(serializers.ModelSerializer):
+
+    anime_aid = serializers.ReadOnlyField(source='anime.aid')
+
     class Meta:
         model = Episode
-        exclude = ['url', 'anime']
+        exclude = ['id', 'anime']
 
 
 class AnimeSerializer(serializers.HyperlinkedModelSerializer):
