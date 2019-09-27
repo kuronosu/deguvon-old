@@ -2,6 +2,10 @@
 """Django's command-line utility for administrative tasks."""
 import os
 import sys
+try:
+    import environment
+except ImportError as exc:
+    print("Couldn't import enviroment variables")
 
 
 def main():
