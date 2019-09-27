@@ -3,6 +3,10 @@ import click
 import os
 import django
 from scrape.main import get_anime
+try:
+    import environment
+except ImportError as exc:
+    print("Couldn't import enviroment variables")
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "deguvon.settings")
 django.setup()
