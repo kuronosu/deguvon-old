@@ -30,7 +30,7 @@ class Genre(models.Model):
 
 
 class Anime(models.Model):
-    aid = models.IntegerField(unique=True, verbose_name=_("Anime ID"))
+    aid = models.CharField(unique=True, max_length=5, verbose_name=_("Anime ID"))
     name = models.CharField(max_length=300, unique=True,
                             verbose_name=_('Nombre'))
     slug = models.SlugField(max_length=300, unique=True,

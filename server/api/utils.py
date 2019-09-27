@@ -70,7 +70,7 @@ def cache_directory():
     list_ = []
     with open(os.path.join(BASE_DIR, 'directory.json'), 'w') as f, click.progressbar(animes, label='Generatting directory') as bar:
         for anime in bar:
-            list_.append((str(anime.aid), AnimeSerializer(
+            list_.append((anime.aid, AnimeSerializer(
                 anime, context={'request': None}).data))
         dict_ = OrderedDict(list_)
         directory = json.dumps(dict_, indent=None)

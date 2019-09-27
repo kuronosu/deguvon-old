@@ -4,43 +4,47 @@ from rest_framework import serializers
 from api.models import State, Type, Genre, Relation, Episode, Anime
 
 
-class StateSerializer(serializers.HyperlinkedModelSerializer):
+class StateSerializer(serializers.ModelSerializer):
     class Meta:
         model = State
         fields = '__all__'
 
 
-class TypeSerializer(serializers.HyperlinkedModelSerializer):
+class TypeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Type
         fields = '__all__'
 
 
-class GenreSerializer(serializers.HyperlinkedModelSerializer):
+class GenreSerializer(serializers.ModelSerializer):
     class Meta:
         model = Genre
         fields = '__all__'
 
 
-class RelationSerializer(serializers.HyperlinkedModelSerializer):
+class RelationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Relation
-        exclude = ['url', 'anime']
+        exclude = ['anime', 'id']
 
 
 class EpisodeSerializer(serializers.ModelSerializer):
-
-    anime_aid = serializers.ReadOnlyField(source='anime.aid')
 
     class Meta:
         model = Episode
         exclude = ['id', 'anime']
 
 
-class AnimeSerializer(serializers.HyperlinkedModelSerializer):
+class EpisodeSerializerWithAnime(EpisodeSerializer):
+
+    anime_aid = serializers.ReadOnlyField(source='anime.aid')
+
+
+class AnimeSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = Anime
-        fields = '__all__'
+        exclude = ['id']
         depth = 1
         lookup_field = 'aid'
         extra_kwargs = {
@@ -51,7 +55,15 @@ class AnimeSerializer(serializers.HyperlinkedModelSerializer):
     relations = serializers.SerializerMethodField()
 
     def get_episodes(self, obj):
-        return EpisodeSerializer(obj.episode_set, many=True, context=self.context).data
+        return EpisodeSerializer(obj.episode_set.order_by('number'), many=True,
+                                 context=self.context).data
 
     def get_relations(self, obj):
-        return RelationSerializer(obj.relation_set, many=True, context=self.context).data
+        return RelationSerializer(obj.relation_set, many=True,
+                                  context=self.context).data
+
+    def to_representation(self, instance):
+        response = super().to_representation(instance)
+        response.move_to_end('relations')
+        response.move_to_end('episodes')
+        return response

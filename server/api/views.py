@@ -21,6 +21,7 @@ from api.utils import verify_recents, cache_directory
 from api.serializers import (
     AnimeSerializer,
     EpisodeSerializer,
+    EpisodeSerializerWithAnime,
     RelationSerializer,
     StateSerializer,
     TypeSerializer,
@@ -30,13 +31,13 @@ from api.serializers import (
 
 class AnimeViewSet(viewsets.ReadOnlyModelViewSet):
     """
-    API endpoint that allows animes to be viewed.
+    Punto final de API que muestra los animes.
     """
     queryset = Anime.objects.all().order_by('aid')
     serializer_class = AnimeSerializer
     pagination_class = AnimeSetPagination
     lookup_field = 'aid'
-    episode_serializer_class = EpisodeSerializer
+    episode_serializer_class = EpisodeSerializerWithAnime
     available_servers = {
         'natsuki': get_natsuki_video,
         'fembed': get_fembed_video
@@ -51,6 +52,9 @@ class AnimeViewSet(viewsets.ReadOnlyModelViewSet):
 
     @action(detail=True, url_path='episodes')
     def episode_list(self, request, *args, **kwargs):
+        """
+        Punto final de API que muestra los episodios de un anime.
+        """
         instance = self.get_object().episode_set
         serializer = self.episode_serializer_class(instance, many=True)
         return Response(serializer.data)
@@ -58,6 +62,9 @@ class AnimeViewSet(viewsets.ReadOnlyModelViewSet):
     @action(detail=True,
             url_path='episodes/(?P<episode>[0-9]+(\.[0-9]+)?)')
     def episode(self, request, *args, **kwargs):
+        """
+        Punto final de API que muestra un episodio con los servidores disponibles.
+        """
         instance = self.get_episode_object()
         serializer = self.episode_serializer_class(instance)
         servers = self.get_servers_data(instance)
@@ -78,11 +85,17 @@ class AnimeViewSet(viewsets.ReadOnlyModelViewSet):
     @action(detail=True,
             url_path='episodes/(?P<episode>[0-9]+(\.[0-9]+)?)/(?P<server>[a-z]+)')
     def server(self, request, aid, episode, server):
+        """
+        Punto final de API que muestra un episodio con un servidor específico.
+        """
         return self.serve_video(server)
 
     @action(detail=True,
             url_path='episodes/(?P<episode>[0-9]+(\.[0-9]+)?)/(?P<server>[^/.]+)/(?P<lang>\w{3})')
-    def server_lang(self, request, aid, episode, server, lang):
+    def lang(self, request, aid, episode, server, lang):
+        """
+        Punto final de API que muestra un episodio con un servidor e idioma especifico.
+        """
         if lang.upper() in ('LAT', 'SUB', 'ALL'):
             return self.serve_video(server, lang)
         raise APIException('Language not supported or invalid')
@@ -105,22 +118,6 @@ class AnimeViewSet(viewsets.ReadOnlyModelViewSet):
                           .replace('True', "true")
                           .replace('False', 'false')
                           .replace("'", '"'))
-
-
-class EpisodeViewSet(viewsets.ReadOnlyModelViewSet):
-    """
-    API endpoint that allows episodes to be viewed.
-    """
-    queryset = Episode.objects.all().order_by('id')
-    serializer_class = EpisodeSerializer
-
-
-class RelationViewSet(viewsets.ReadOnlyModelViewSet):
-    """
-    API endpoint that allows relations to be viewed.
-    """
-    queryset = Relation.objects.all().order_by('id')
-    serializer_class = RelationSerializer
 
 
 class StateViewSet(viewsets.ReadOnlyModelViewSet):
