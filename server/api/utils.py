@@ -90,10 +90,9 @@ def cache_directory_soft():
                     anime,
                     context={'request': None}).data
             }, separators=(',', ':'))[1:-1] + ","
-        with open(directory_file, 'a') as f:
-            f.write('{')
-            f.write(data[:-1])
-            f.write('}')
+        data = ('{' + data[:-1] + '}').encode().decode('unicode-escape')
+        with open('directory.json', 'w', encoding='utf-8') as f:
+            f.write(data)
 
 
 def load_directory(json_path='directory.json'):
