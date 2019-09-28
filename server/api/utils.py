@@ -79,9 +79,6 @@ def cache_directory():
 
 def cache_directory_soft():
     animes = Anime.objects.all().order_by('aid')
-    directory_file = os.path.join(BASE_DIR, 'directory.json')
-    if os.path.exists(directory_file):
-        os.remove(directory_file)
     with click.progressbar(animes, label='Generatting directory') as bar:
         data = ""
         for anime in bar:
@@ -91,7 +88,8 @@ def cache_directory_soft():
                     context={'request': None}).data
             }, separators=(',', ':'))[1:-1] + ","
         data = ('{' + data[:-1] + '}').encode().decode('unicode-escape')
-        with open('directory.json', 'w', encoding='utf-8') as f:
+        with open(os.path.join(BASE_DIR, 'directory.json'),
+                  'w', encoding='utf-8') as f:
             f.write(data)
 
 
