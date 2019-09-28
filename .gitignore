@@ -68,6 +68,7 @@ animes.txt
 scaracter.txt
 cookies
 directory.json
+.env
 
 api/images/
 geckodriver.log
