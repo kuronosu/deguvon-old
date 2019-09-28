@@ -170,8 +170,9 @@ class DirectoryViewSet(viewsets.ViewSet):
             directory_path = os.path.join(settings.BASE_DIR, 'directory.json')
             if not os.path.exists(directory_path):
                 cache_directory_soft()
-            with open(directory_path, 'r') as f:
-                return Response(json.load(f))
+            return serve(request,
+                         'directory.json',
+                         document_root=settings.BASE_DIR)
         except Exception as e:
             print(e)  # TODO logger
         raise APIException('Could not be created the directory')
