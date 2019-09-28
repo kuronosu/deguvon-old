@@ -77,6 +77,25 @@ def cache_directory():
         f.write(directory)
 
 
+def cache_directory_soft():
+    animes = Anime.objects.all().order_by('aid')
+    directory_file = os.path.join(BASE_DIR, 'directory.json')
+    if os.path.exists(directory_file):
+        os.remove(directory_file)
+    with click.progressbar(animes, label='Generatting directory') as bar:
+        data = ""
+        for anime in bar:
+            data += json.dumps({
+                anime.aid: AnimeSerializer(
+                    anime,
+                    context={'request': None}).data
+            }, separators=(',', ':'))[1:-1] + ","
+        with open(directory_file, 'a') as f:
+            f.write('{')
+            f.write(data[:-1])
+            f.write('}')
+
+
 def load_directory(json_path='directory.json'):
     if os.path.exists(json_path):
         with open(json_path, 'r') as f:
@@ -94,8 +113,9 @@ def load_directory(json_path='directory.json'):
                         try:
                             Anime.create_or_update(anime, False)
                         except Exception as e:
-                            errors.append(f'Error saving anime "{e}": {anime.animeflv_url}')
-                    for e in erros:
+                            errors.append(
+                                f'Error saving anime "{e}": {anime.animeflv_url}')
+                    for e in errors:
                         click.secho(e, fg='red')
             except Exception as e:
                 print(e)

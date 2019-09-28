@@ -8,7 +8,7 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "deguvon.settings")
 django.setup()
 
 from api.models import Anime
-from api.utils import create_directory
+from api.utils import create_directory, cache_directory_soft
 
 
 @click.group()
@@ -20,6 +20,14 @@ def cli():
 def fill():
     t = time.time()
     create_directory()
+    click.secho(f'La operacion duró {time.time() - t} segundos')
+
+
+@cli.command()
+def cache_directory():
+    click.secho(f'Creando directory.json', fg='green')
+    t = time.time()
+    cache_directory_soft()
     click.secho(f'La operacion duró {time.time() - t} segundos')
 
 

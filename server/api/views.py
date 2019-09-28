@@ -17,7 +17,7 @@ from scrape.utils import get_image
 from scrape.videos import scrape_episode, get_natsuki_video, get_fembed_video
 from api.pagination import AnimeSetPagination
 from api.models import Anime, Episode, Relation, State, Type, Genre
-from api.utils import verify_recents, cache_directory
+from api.utils import verify_recents, cache_directory_soft
 from api.serializers import (
     AnimeSerializer,
     EpisodeSerializer,
@@ -169,7 +169,7 @@ class DirectoryViewSet(viewsets.ViewSet):
         try:
             directory_path = os.path.join(settings.BASE_DIR, 'directory.json')
             if not os.path.exists(directory_path):
-                cache_directory()
+                cache_directory_soft()
             with open(directory_path, 'r') as f:
                 return Response(json.load(f))
         except Exception as e:
