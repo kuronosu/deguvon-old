@@ -1,8 +1,10 @@
+import re
 import os
 import django
 import click
 import time
 import json
+import codecs
 from collections import OrderedDict
 from django.db import transaction
 from scrape.constants import BASE_DIR
@@ -77,6 +79,22 @@ def cache_directory():
         f.write(directory)
 
 
+ESCAPE_SEQUENCE_RE = re.compile(
+    r''' ( \\U........ # 8-digit hex escapes
+    | \\u.... # 4-digit hex escapes
+    | \\x.. # 2-digit hex escapes
+    | \\[0-7]{1,3} # Octal escapes
+    | \\N\{[^}]+\} # Unicode characters by name
+    # | \\[\\'"abfnrtv] # Single-character escapes
+)''', re.UNICODE | re.VERBOSE)
+
+
+def decode_unicode(s):
+    def decode_match(match):
+        return codecs.decode(match.group(0), 'unicode-escape')
+    return ESCAPE_SEQUENCE_RE.sub(decode_match, s)
+
+
 def cache_directory_soft():
     animes = Anime.objects.all().order_by('aid')
     with click.progressbar(animes, label='Generatting directory') as bar:
@@ -87,7 +105,7 @@ def cache_directory_soft():
                     anime,
                     context={'request': None}).data
             }, separators=(',', ':'))[1:-1] + ","
-        data = ('{' + data[:-1] + '}').encode().decode('unicode-escape')
+        data = decode_unicode('{' + data[:-1] + '}')
         with open(os.path.join(BASE_DIR, 'directory.json'),
                   'w', encoding='utf-8') as f:
             f.write(data)
