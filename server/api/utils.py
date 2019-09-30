@@ -97,18 +97,19 @@ def decode_unicode(s):
 
 def cache_directory_soft():
     animes = Anime.objects.all().order_by('aid')
+    data = ""
     with click.progressbar(animes, label='Generatting directory') as bar:
-        data = ""
         for anime in bar:
             data += json.dumps({
                 anime.aid: AnimeSerializer(
                     anime,
                     context={'request': None}).data
             }, separators=(',', ':'))[1:-1] + ","
-        data = decode_unicode('{' + data[:-1] + '}')
-        with open(os.path.join(BASE_DIR, 'directory.json'),
-                  'w', encoding='utf-8') as f:
-            f.write(data)
+    click.secho("Saving", fg='blue')
+    data = decode_unicode('{' + data[:-1] + '}')
+    with open(os.path.join(BASE_DIR, 'directory.json'),
+              'w', encoding='utf-8') as f:
+        f.write(data)
 
 
 def load_directory(json_path='directory.json'):
