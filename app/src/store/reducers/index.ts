@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux'
 
-import { StoreState } from '../types'
+import { StoreState } from '../../'
 import recent from './recent'
 import nav from './navigation'
 import app from './app'

@@ -3,8 +3,8 @@ import { Dimensions } from "react-native"
 import { connect, DispatchProp } from 'react-redux'
 import updateDirectory from "../../api/update-directory"
 import GeneralLayout from "../../utils/components/general-layout"
-import { StoreState } from "../../store/types";
-import { setDeviceData } from "../../store/actions";
+import { StoreState } from "../../"
+import { setDeviceData } from "../../store/actions"
 
 interface Props extends DispatchProp {
   directoryUpdated: boolean
@@ -35,7 +35,7 @@ class AppContainer extends Component<Props> {
 
   componentDidMount() {
     if (!this.props.directoryUpdated) {
-      updateDirectory()
+      // updateDirectory()
     }
   }
 

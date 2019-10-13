@@ -1,29 +1,29 @@
 import { HOST, ROUTE } from "./constants"
-import { recent, anime, directory, servers } from "../store/types"
+import { RecentEpisode, AnimeModel, DirectoryObject, EpisodeData } from "../index"
 
-export async function getRecent(): Promise<recent.recentEpisode[]> {
-  const base = `${HOST}${ROUTE}/recent`
+export async function getRecent(): Promise<RecentEpisode[]> {
+  const base = `${HOST}${ROUTE}/recents`
   const query = await fetch(base)
-  const recent: recent.recentEpisode[] = await query.json()
+  const recent: RecentEpisode[] = await query.json()
   return recent
 }
 
-export async function getAnimeDetails(aid: number): Promise<anime.AnimeRequest> {
-  const base = `${HOST}${ROUTE}/anime/${aid}`
+export async function getAnimeDetails(aid: string): Promise<AnimeModel> {
+  const base = `${HOST}${ROUTE}/animes/${aid}`
   const query = await fetch(base)
-  const anime: anime.AnimeRequest = await query.json()
+  const anime: AnimeModel = await query.json()
   return anime
 }
 
-export async function getDirectory(): Promise<directory.directory> {
-  const base = `${HOST}${ROUTE}/directory`
+export async function getDirectory(): Promise<DirectoryObject> {
+  const base = `${HOST}${ROUTE}/directory/`
   const query = await fetch(base)
-  const directory: directory.directory = await query.json()
+  const directory: DirectoryObject = await query.json()
   return directory
 }
 
-export async function getServers(eid: number): Promise<servers.videos> {
-  const servers = await fetch(`${HOST}${ROUTE}/episode/${eid}/videos`)
+export async function getEpisodeData(anime_id: string ,episode: number): Promise<EpisodeData> {
+  const servers = await fetch(`${HOST}${ROUTE}/animes/${anime_id}/episodes/${episode}/`)
   if (!servers.ok) {
     throw Error("Error al obtener informacion de servidores")
   }
@@ -36,5 +36,5 @@ export default {
   getRecent,
   getAnimeDetails,
   getDirectory,
-  getServers
+  getServers: getEpisodeData
 }

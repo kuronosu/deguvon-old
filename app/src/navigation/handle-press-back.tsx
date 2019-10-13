@@ -2,8 +2,8 @@ import React from 'react'
 import { BackHandler } from 'react-native'
 import { connect, DispatchProp } from 'react-redux'
 import { NavigationActions } from 'react-navigation'
+import { StoreState } from '../'
 import getCurrentRoute from './get-current-route'
-import { StoreState } from '../store/types'
 
 /**
  * Permite que un componente maneje el evento de atras en android

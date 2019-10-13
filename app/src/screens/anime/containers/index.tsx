@@ -9,7 +9,7 @@ import { DispatchProp } from 'react-redux'
 import { getAnimeDetails } from '../../../api'
 import DetailCard from '../components/detail-card'
 import { setAnimeData } from '../../../store/actions'
-import { anime, StoreState } from '../../../store/types'
+import { StoreState, AnimeModel } from '../../..'
 import DropDownHolder from '../../../utils/dropdownholder'
 import { NavigationInjectedProps } from 'react-navigation'
 import GeneralLayout from '../../../utils/components/general-layout'
@@ -17,26 +17,24 @@ import withHandlePressBack from '../../../navigation/handle-press-back'
 
 type State = {
   loadded: boolean
-  anime?: anime.AnimeModel
-  relations: anime.relation[]
+  anime?: AnimeModel
 }
 
 type Props = {
-  anime: anime.AnimeModel
+  anime: AnimeModel
 }
 
 class AnimeDetail extends Component<Props & DispatchProp & NavigationInjectedProps, State> {
 
   state: State = {
-    loadded: false,
-    relations: [],
+    loadded: false
   }
 
   fetchData = (aid: string) => {
-    getAnimeDetails(parseInt(aid))
+    getAnimeDetails(aid)
       .then(data => {
-        this.setState({ anime: data.anime, relations: Object.values(data.relations), loadded: true })
-        this.props.dispatch(setAnimeData(data.anime))
+        this.props.dispatch(setAnimeData(data))
+        this.setState({ anime: data, loadded: true })
       }).catch(e => {
         this.setState({ loadded: false })
         DropDownHolder.alert('error', "Error", e.message)
@@ -48,7 +46,7 @@ class AnimeDetail extends Component<Props & DispatchProp & NavigationInjectedPro
     if (executeFetch) {
       this.fetchData(this.props.anime.aid)
     } else {
-      this.setState({ anime: this.props.anime, relations: this.props.anime.listAnmRel, loadded: true })
+      this.setState({ anime: this.props.anime, loadded: true })
     }
   }
 
@@ -68,12 +66,12 @@ class AnimeDetail extends Component<Props & DispatchProp & NavigationInjectedPro
             <View>
               {
                 this.state.anime.genres.map(g => (
-                  <Text key={`genre_${g}_${this.state.anime? this.state.anime.aid: ''}`}>{g}</Text>
+                  <Text key={`genre_${g.name}_${this.state.anime? this.state.anime.aid: ''}`}>{g.name}</Text>
                 ))
               }
             </View>
             <Text>{this.state.anime.synopsis}</Text>
-            <Text>{this.state.anime.typea}</Text>
+            <Text>{this.state.anime.typea.name}</Text>
           </ScrollView>
         </GeneralLayout>
       )

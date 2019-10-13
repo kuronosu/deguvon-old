@@ -2,60 +2,57 @@ import { NavigationState } from 'react-navigation'
 import { ScaledSize } from 'react-native'
 
 export type RecentEpisode = {
-  id: string
   number: number
-  url: string
+  animeflv_url: string
   anime: {
-    url: string
     name: string
-    image: string
+    cover: string
     aid: string
   }
 }
 
-export type LastRecent = {
-  id: string | null | undefined
-}
-
 export type RecentStore = {
   list: RecentEpisode[]
-  last: LastRecent
+  last?: string | null
 }
-
-export type AnimeModel = {
-  aid: string
-  url: string
-  slug: string
+export type StateModel = {
+  id: number
   name: string
-  image: string
-  typea: string
-  synopsis: string
-  genres: string[]
-  listAnmRel: RelationModel[]
-  episodeList: EpisodeModel[]
 }
-
+export type TypeModel = {
+  id: number
+  name: string
+}
+export type GenreModel = {
+  id: number
+  name: string
+}
 export type RelationModel = {
-  url: string
-  rel: string
-  name?: string
-  aid?: string
-  image?: string
+  ra_name: string
+  animeflv_url: string
+  relation: string
 }
 
 export type EpisodeModel = {
   number: number
-  url: string
-  image: string
+  animeflv_url: string
+  cover: string
 }
 
-export type RelationObject = {
-  [animeUrl: string]: RelationModel
-}
-
-export type AnimeRequest = {
-  anime: AnimeModel
-  relations: RelationObject
+export type AnimeModel = {
+  aid: string
+  name: string
+  slug: string
+  animeflv_url: string
+  cover: string
+  synopsis: string
+  banner: string
+  score: number
+  state: StateModel
+  typea: TypeModel
+  genres: GenreModel[]
+  relations: RelationModel[]
+  episodes: EpisodeModel[]
 }
 
 export type DirectoryStore = {
@@ -64,7 +61,7 @@ export type DirectoryStore = {
   data: AnimeModel[]
 }
 
-export type DirectoryObject = {
+export type DirectoryModel = {
   [aid: string]: AnimeModel
 }
 
@@ -72,6 +69,16 @@ export type SearchState = {
   text: string
   data: AnimeModel[]
 }
+
+type SearchProps = {
+  searchText: string
+  data: AnimeModel[]
+  mode: boolean
+  screenWidth: number
+  directoryData: AnimeModel[]
+}
+
+// -----------------------------------------------------
 
 export type AppDevice = {
   screenMode: boolean
@@ -85,20 +92,27 @@ export type AppData = {
   config?: AppConfig
 }
 
+// -----------------------------------------------------
+
 export type LangKeys = 'LAT' | 'SUB'
 
 export type ServerInfo = {
   server: string
   title: string
-  allow_mobile: boolean
-  code: string
+  allow_mobile?: boolean
+  code?: string
   url?: string
 }
 
-export type Videos = {
-  LAT?: ServerInfo[]
-  SUB?: ServerInfo[]
-  available_servers: string[]
+export type EpisodeData = {
+  servers: {
+    LAT?: ServerInfo[]
+    SUB?: ServerInfo[]
+  }
+  anime_aid: number
+  number: number,
+  animeflv_url: string,
+  cover: string
 }
 
 export type StoreState = {
@@ -114,12 +128,4 @@ export type TabBarIconProps = {
   tintColor: string | null
   focused: boolean
   horizontal: boolean
-}
-
-type SearchProps = {
-  searchText: string
-  data: AnimeModel[]
-  mode: boolean
-  screenWidth: number
-  directoryData: AnimeModel[]
 }

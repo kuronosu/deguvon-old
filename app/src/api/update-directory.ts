@@ -21,8 +21,8 @@ const updateDirectory = async () => {
       updated: false,
     }))
     dispatch(resetLastRecent())
-    DropDownHolder.alert('error', 'Error', 'Error al actualizar el directorio')
-    console.log(error)
+    console.error(error)
+    DropDownHolder.alert('error', 'Error', `${error}`)
   }
 }
 

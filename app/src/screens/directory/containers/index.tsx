@@ -6,7 +6,7 @@ import { NavigationActions } from 'react-navigation'
 import Card from '../../../utils/components/card'
 import Empty from '../../../utils/components/empty'
 import { setAnimeData } from '../../../store/actions'
-import { StoreState, anime } from '../../../store/types'
+import { StoreState, AnimeModel } from '../../../'
 import FilterMaganer from '../../../utils/filter-maganer'
 import VerticalSeparator from '../../../utils/components/separator'
 import GeneralLayout from '../../../utils/components/general-layout'
@@ -14,7 +14,7 @@ import withHandlePressBack from '../../../navigation/handle-press-back'
 import DirectoryFloatActionButton from '../components/float-action-button'
 
 type Props = {
-  data: anime.AnimeModel[],
+  data: AnimeModel[],
   updated: boolean
   mode: boolean
   screenWidth: number,
@@ -22,18 +22,20 @@ type Props = {
 }
 
 type State = {
-  filterIndex: number
-  data: anime.AnimeModel[]
+  data: AnimeModel[]
 }
 
 class Directory extends Component<Props & DispatchProp, State> {
+  filterObject: FilterMaganer
+  state: State
 
-  state: State = {
-    filterIndex: 0,
-    data: []
+  constructor(props: Props & DispatchProp) {
+    super(props);
+    this.state = { data: props.data }
+    this.filterObject = new FilterMaganer(props.data)
   }
 
-  _onPressAnimeCard = (anime: anime.AnimeModel) => {
+  _onPressAnimeCard = (anime: AnimeModel) => {
     this.props.dispatch(setAnimeData(anime))
     this.props.dispatch(NavigationActions.navigate({
       routeName: 'Anime',
@@ -45,26 +47,23 @@ class Directory extends Component<Props & DispatchProp, State> {
 
   _itemSeparator = () => <VerticalSeparator numCards={this.props.mode ? 3 : 4} />
 
-  _keyExtractor = (item: anime.AnimeModel) => `anime_${item.aid.toString()}`
+  _keyExtractor = (item: AnimeModel) => `anime_${item.aid}`
 
-  _renderItem = ({ item, index }: {item: anime.AnimeModel, index: number}) => <Card
+  _renderItem = ({ item, index }: { item: AnimeModel, index: number }) => <Card
     pressData={item}
     mode={this.props.mode}
     screenWidth={this.props.screenWidth}
     index={index}
     onPressCard={this._onPressAnimeCard}
-    image={item.image}
+    image={item.cover}
     primaryText={item.name}
-    secondaryText={item.typea}
+    secondaryText={item.typea.name}
     cardsPerRowPortrait={3}
     cardsPerRowLandscape={4}
   />
 
   _filter = () => {
-    this.setState(pState => {
-      const { data, index } = FilterMaganer.next(this.props.data, pState.filterIndex)
-      return { data, filterIndex: index }
-    })
+    this.setState({ data: this.filterObject.next().data })
   }
 
   // Para futuros usos
@@ -94,15 +93,16 @@ class Directory extends Component<Props & DispatchProp, State> {
           initialNumToRender={12}
           removeClippedSubviews
         />
-        <DirectoryFloatActionButton filterType={FilterMaganer.getText(this.state.filterIndex)} onPressFilter={this._filter} />
+        <DirectoryFloatActionButton filterType={this.filterObject.getText()} onPressFilter={this._filter} />
       </GeneralLayout>
     )
   }
 }
 
 const mapStateToProps = (state: StoreState): Props => {
+  // console.log(state.directory.data)
   return {
-    data: state.directory.data,
+    data: Object.values(state.directory.data),
     updated: state.directory.updated,
     mode: state.app && state.app.device ? state.app.device.screenMode : true,
     screenWidth: state.app && state.app.device ? state.app.device.screenSize.width : Dimensions.get('screen').width,

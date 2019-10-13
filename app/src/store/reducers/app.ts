@@ -1,4 +1,4 @@
-import { StoreState } from "../types"
+import { StoreState } from "../../"
 import { SET_DEVICE_DATA, SET_CONFIG } from "../constants"
 import { AppDataAction } from "../actions"
 

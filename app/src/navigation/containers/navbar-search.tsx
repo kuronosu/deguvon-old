@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { TextInput, StyleSheet } from 'react-native'
+import { StoreState } from '../../'
 import BackButton from './back-button'
 import NavbarSearchLayout from '../components/navbar-search-layout'
 import Icon from '../../utils/components/icon'
-import { StoreState } from '../../store/types'
 
 type Props = {
   onChangeText: (text: string) => void,

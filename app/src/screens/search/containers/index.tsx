@@ -3,11 +3,10 @@ import { DispatchProp } from 'react-redux'
 import { FlatList, Dimensions } from 'react-native'
 import { NavigationActions, NavigationInjectedProps } from 'react-navigation'
 
-import { SearchProps } from '../../..'
+import { SearchProps, StoreState, AnimeModel } from '../../..'
 import Card from '../../../utils/components/card'
 import Empty from '../../../utils/components/empty'
 import { setAnimeData, setSearchData } from '../../../store/actions'
-import { anime, StoreState } from '../../../store/types'
 import VerticalSeparator from '../../../utils/components/separator'
 import GeneralLayout from '../../../utils/components/general-layout'
 import withHandlePressBack from '../../../navigation/handle-press-back'
@@ -22,7 +21,7 @@ class Search extends Component<SearchProps & DispatchProp & NavigationInjectedPr
     this.props.navigation.setParams({ handleChangeText: (text: string) => this._onChangeText(text) })
   }
 
-  _onPressAnimeCard = (anime: anime.AnimeModel) => {
+  _onPressAnimeCard = (anime: AnimeModel) => {
     this.props.dispatch(setAnimeData(anime))
     this.props.dispatch(NavigationActions.navigate({
       routeName: 'Anime',
@@ -34,17 +33,17 @@ class Search extends Component<SearchProps & DispatchProp & NavigationInjectedPr
 
   _itemSeparator = () => <VerticalSeparator numCards={this.props.mode ? 3 : 4} />
 
-  _keyExtractor = (item: anime.AnimeModel) => `anime_${item.aid.toString()}`
+  _keyExtractor = (item: AnimeModel) => `anime_${item.aid.toString()}`
 
-  _renderItem = ({ item, index }: {item: anime.AnimeModel, index: number}) => <Card
+  _renderItem = ({ item, index }: {item: AnimeModel, index: number}) => <Card
     pressData={item}
     mode={this.props.mode}
     screenWidth={this.props.screenWidth}
     index={index}
     onPressCard={this._onPressAnimeCard}
-    image={item.image}
+    image={item.cover}
     primaryText={item.name}
-    secondaryText={item.typea}
+    secondaryText={item.typea.name}
     cardsPerRowPortrait={3}
     cardsPerRowLandscape={4}
   />

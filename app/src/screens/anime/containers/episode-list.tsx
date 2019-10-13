@@ -1,26 +1,26 @@
 import { Dispatch } from 'redux'
 import { FlatList } from 'react-native'
 import { DispatchProp } from 'react-redux'
-import { Button } from 'react-native-paper'
+import { Button, Text } from 'react-native-paper'
 import React, { useState, useEffect } from 'react'
 import { NavigationActions } from 'react-navigation'
 
-import { getServers } from '../../../api'
+import { EpisodeModel, AnimeModel, StoreState } from '../../../'
+import { getEpisodeData } from '../../../api'
 import Episode from '../components/episode'
-import { anime, StoreState } from '../../../store/types'
 import DropDownHolder from '../../../utils/dropdownholder'
 import EpisodeSeparator from '../components/episode-separator'
 import GeneralLayout from '../../../utils/components/general-layout'
 import withHandlePressBack from '../../../navigation/handle-press-back'
-import { getAvailableServers, getNatsukiVideo } from '../../../api/video-servers'
+import { getNatsukiVideo } from '../../../api/video-servers'
 
-const playEpisode = (id: number, number: number, name: string, dispatch: Dispatch) => {
+const playEpisode = (anime_id: string, number: number, name: string, dispatch: Dispatch) => {
   (async () => {
     try {
-      const server = await getServers(id)
-      const availableServers = getAvailableServers(server)
-      const natsukiVideoList = await getNatsukiVideo(id, availableServers)
-      const video = natsukiVideoList.length > 0 ? natsukiVideoList[0].file : null
+      // const server = await getServers(id)
+      // const availableServers = getAvailableServers(server)
+      const natsukiData = await getNatsukiVideo(anime_id, number)
+      const video = natsukiData.videos.length > 0 ? natsukiData.videos[0].file : null
       if (video) {
         dispatch(NavigationActions.navigate({
           routeName: 'Player',
@@ -38,32 +38,33 @@ const playEpisode = (id: number, number: number, name: string, dispatch: Dispatc
   })()
 }
 
-const renderEpisode = (episode: anime.episode, animeName: string, dispatch: Dispatch) => (
+const renderEpisode = (episode: EpisodeModel, animeName: string, animeID: string ,dispatch: Dispatch) => (
   <Episode
     episode={episode}
-    handlePlay={() => playEpisode(parseInt(episode.url.split('/')[2]), episode.number, animeName, dispatch)}
+    handlePlay={() => playEpisode(animeID, episode.number, animeName, dispatch)}
   />
 )
 
-const keyExtractor = (item: anime.episode, index: number) => `episode_${item.number}_${index}`
+const keyExtractor = (item: EpisodeModel, index: number) => `episode_${item.number}_${index}`
 
-const reverse = (data: anime.episode[], setData: React.Dispatch<React.SetStateAction<anime.episode[]>>) => {
+const reverse = (data: EpisodeModel[], setData: React.Dispatch<React.SetStateAction<EpisodeModel[]>>) => {
   let tmp = data.slice()
   tmp.reverse()
   setData(tmp)
 }
 
-const getOrderText = (data: anime.episode[]) => {
+const getOrderText = (data: EpisodeModel[]) => {
   if (data.length > 0 && data[0].number < data[data.length - 1].number) return 'Menor a mayor'
   return 'Mayor a menor'
 }
 
 type Props = {
   animeName: string
-  list: anime.episode[]
+  list: EpisodeModel[]
+  animeID: string
 }
 
-const EpisodeList: React.FC<Props & DispatchProp> = ({ dispatch, animeName, list }) => {
+const EpisodeList: React.FC<Props & DispatchProp> = ({ dispatch, animeName, list, animeID }) => {
   const [data, setData] = useState(list)
   useEffect(() => {
     setData(data.length ? data : list)
@@ -77,18 +78,20 @@ const EpisodeList: React.FC<Props & DispatchProp> = ({ dispatch, animeName, list
       <FlatList
         data={data}
         keyExtractor={keyExtractor}
-        renderItem={({ item }) => renderEpisode(item, animeName, dispatch)}
+        renderItem={({ item }) => renderEpisode(item, animeName, animeID, dispatch)}
         ItemSeparatorComponent={EpisodeSeparator}
+        ListEmptyComponent={<Text>Nada</Text>}
       />
     </GeneralLayout>
   )
 }
 
 const mapStateToProps = (state: StoreState): Props => {
-  let animeStote = state.anime as anime.AnimeModel
+  let animeStote = state.anime as AnimeModel
   return {
-  list: state.anime && animeStote.episodeList ? animeStote.episodeList : [],
-  animeName: state.anime  && animeStote.name ? animeStote.name : ''
+  list: state.anime && animeStote.episodes ? animeStote.episodes : [],
+  animeName: state.anime  && animeStote.name ? animeStote.name : '',
+  animeID: state.anime  && animeStote.aid ? animeStote.aid : '-1'
 }}
 
 const EpisodeListScreen = withHandlePressBack<Props>(mapStateToProps)(EpisodeList)

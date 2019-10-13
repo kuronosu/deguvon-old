@@ -3,7 +3,7 @@ import { createReduxContainer } from 'react-navigation-redux-helpers'
 
 
 import AppNavigator from './app-navigator'
-import { StoreState } from '../store/types'
+import { StoreState } from '../'
 
 const App = createReduxContainer(AppNavigator)
 const mapStateToProps = (state: StoreState) => ({

@@ -7,18 +7,18 @@ import {
 } from 'react-native'
 
 import Icon from '../../../utils/components/icon'
-import { anime } from '../../../store/types'
+import { EpisodeModel } from '../../../'
 import { HOST } from '../../../api/constants'
 
 type Props = {
-  episode: anime.episode
+  episode: EpisodeModel
   handlePlay: () => void
 }
 
 const Episode: React.FC<Props> = ({ episode, handlePlay }) => (
   <View style={styles.container}>
     <Image
-      source={{ uri: HOST + episode.image }}
+      source={{ uri: HOST + episode.cover }}
       style={styles.image}
       resizeMode='contain'
     />

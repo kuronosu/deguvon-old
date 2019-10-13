@@ -3,7 +3,7 @@ import { persistStore, persistReducer, PersistConfig } from 'redux-persist'
 import { createReactNavigationReduxMiddleware } from 'react-navigation-redux-helpers'
 import FilesystemStorage from 'redux-persist-filesystem-storage'
 import reducer from './reducers'
-import { StoreState } from './types'
+import { StoreState } from '../'
 import { Dimensions } from 'react-native'
 
 // const store = createStore(reducer, {
@@ -18,7 +18,7 @@ const persistConfig: PersistConfig = {
 }
 
 const defaultStore: StoreState = {
-  recent: { list: [], last: {id: null} }, // valores por defecto para el Reducer recent
+  recent: { list: [], last: null }, // valores por defecto para el Reducer recent
   app: { // valores por defecto para el Reducer general
     device: {screenMode: true, screenSize: Dimensions.get('window')}
   },

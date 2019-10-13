@@ -1,15 +1,15 @@
 import * as constants from './constants'
-import { anime, recent, directory, search, app } from './types';
+import { AnimeModel, RecentEpisode, SearchState, AppDevice, AppConfig } from '../';
 
 export type directoryPayload = {
   updated?: boolean
   updating?: boolean
-  data?: anime.AnimeModel[]
+  data?: AnimeModel[]
 }
 
 export interface SetAnimeData {
   type: constants.SET_ANIME_DATA
-  payload: anime.AnimeModel | recent.recentEpisode['anime']
+  payload: AnimeModel | RecentEpisode['anime']
 }
 
 export interface SetDirectoryData {
@@ -19,7 +19,7 @@ export interface SetDirectoryData {
 
 export interface SetRecentData {
   type: constants.SET_RECENT_DATA
-  payload: recent.recentEpisode[]
+  payload: RecentEpisode[]
 }
 
 export interface ClearLastRecent {
@@ -28,17 +28,17 @@ export interface ClearLastRecent {
 
 export interface SetSearchData {
   type: constants.SET_SEARCH_DATA
-  payload: search
+  payload: SearchState
 }
 
 export interface SetDeviceData {
   type: constants.SET_DEVICE_DATA
-  payload: app.device
+  payload: AppDevice
 }
 
 export interface SetConfigData {
   type: constants.SET_CONFIG
-  payload: app.config
+  payload: AppConfig
 }
 
 export type AppDataAction = SetDeviceData | SetConfigData
@@ -47,7 +47,7 @@ export type RecentAction = SetRecentData | ClearLastRecent
 
 // export type EnthusiasmAction = IncrementEnthusiasm | DecrementEnthusiasm; // Example
 
-export function setAnimeData(anime: anime.AnimeModel | recent.recentEpisode['anime']): SetAnimeData {
+export function setAnimeData(anime: AnimeModel | RecentEpisode['anime']): SetAnimeData {
   return {
     type: constants.SET_ANIME_DATA,
     payload: anime
@@ -61,7 +61,7 @@ export function setDirectoryData(directory: directoryPayload): SetDirectoryData 
   }
 }
 
-export function setRecentData(recent: recent.recentEpisode[]): SetRecentData {
+export function setRecentData(recent: RecentEpisode[]): SetRecentData {
   return {
     type: constants.SET_RECENT_DATA,
     payload: recent
@@ -72,7 +72,7 @@ export function resetLastRecent(): ClearLastRecent {
   return { type: constants.CLEAR_LAST }
 }
 
-export function setSearchData(text: string, data: anime.AnimeModel[]): SetSearchData {
+export function setSearchData(text: string, data: AnimeModel[]): SetSearchData {
   return {
     type: constants.SET_SEARCH_DATA,
     payload: {
@@ -82,14 +82,14 @@ export function setSearchData(text: string, data: anime.AnimeModel[]): SetSearch
   }
 }
 
-export function setDeviceData(data: app.device): SetDeviceData {
+export function setDeviceData(data: AppDevice): SetDeviceData {
   return {
     type: constants.SET_DEVICE_DATA,
     payload: data
   }
 }
 
-export function setConfigData(data: app.config): SetConfigData {
+export function setConfigData(data: AppConfig): SetConfigData {
   return {
     type: constants.SET_CONFIG,
     payload: data
