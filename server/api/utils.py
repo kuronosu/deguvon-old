@@ -20,7 +20,7 @@ def create_directory():
     with click.progressbar(links, label='Getting and save animes') as bar, transaction.atomic():
         for l in bar:
             try:
-                if not l in Anime.objects.all().values_list('animeflv_url', flat=True):
+                if l not in Anime.objects.all().values_list('animeflv_url', flat=True):
                     anime = get_anime(l)
                     Anime.create_or_update(anime)
             except Exception as e:
@@ -95,7 +95,7 @@ def decode_unicode(s):
     return ESCAPE_SEQUENCE_RE.sub(decode_match, s)
 
 
-def cache_directory_soft():
+def cache_directory_soft(output=True):
     animes = Anime.objects.all().order_by('aid')
     data = ""
     with click.progressbar(animes, label='Generatting directory') as bar:
@@ -105,7 +105,6 @@ def cache_directory_soft():
                     anime,
                     context={'request': None}).data
             }, separators=(',', ':'))[1:-1] + ","
-    click.secho("Saving", fg='blue')
     data = decode_unicode('{' + data[:-1] + '}')
     with open(os.path.join(BASE_DIR, 'directory.json'),
               'w', encoding='utf-8') as f:

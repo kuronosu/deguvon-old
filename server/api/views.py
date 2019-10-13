@@ -232,5 +232,5 @@ class ServeImagesViewSet(viewsets.ViewSet):
 
     @action(detail=False, url_path=BANNERS_URL_PATH['regex'])
     def banners(self, request, file):
-        return serve_image(self.BANNERS_URL_PATH.format(file=file), Anime,
-                           'banner', 'https://animeflv.net/')
+        return self.serve_image(self.BANNERS_URL_PATH['url'].format(file=file),
+                                Anime, 'banner', 'https://animeflv.net/')
