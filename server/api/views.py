@@ -126,6 +126,7 @@ class StateViewSet(viewsets.ReadOnlyModelViewSet):
     """
     queryset = State.objects.all().order_by('id')
     serializer_class = StateSerializer
+    pagination_class = None
 
 
 class TypeViewSet(viewsets.ReadOnlyModelViewSet):
@@ -134,6 +135,7 @@ class TypeViewSet(viewsets.ReadOnlyModelViewSet):
     """
     queryset = Type.objects.all().order_by('id')
     serializer_class = TypeSerializer
+    pagination_class = None
 
 
 class GenreViewSet(viewsets.ReadOnlyModelViewSet):
@@ -142,6 +144,7 @@ class GenreViewSet(viewsets.ReadOnlyModelViewSet):
     """
     queryset = Genre.objects.all().order_by('id')
     serializer_class = GenreSerializer
+    pagination_class = None
 
 
 class RecentsViewSet(viewsets.ViewSet):

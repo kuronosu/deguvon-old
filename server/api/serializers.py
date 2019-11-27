@@ -45,7 +45,7 @@ class AnimeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Anime
         exclude = ['id']
-        depth = 1
+        depth = 0
         lookup_field = 'aid'
         extra_kwargs = {
             'url': {'lookup_field': 'aid'}
