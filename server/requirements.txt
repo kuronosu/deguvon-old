@@ -20,7 +20,7 @@ Js2Py==0.66
 kombu==4.6.3
 lazy-object-proxy==1.4.1
 mccabe==0.6.1
-Pillow==6.1.0
+Pillow==6.2.0
 pycodestyle==2.5.0
 pycparser==2.19
 pyjsparser==2.7.1
