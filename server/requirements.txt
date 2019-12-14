@@ -10,7 +10,7 @@ cfscrape==2.0.7
 chardet==3.0.4
 Click==7.0
 colorama==0.4.1
-Django==2.2.4
+Django==2.2.8
 djangorestframework==3.10.1
 gevent==1.4.0
 greenlet==0.4.15
