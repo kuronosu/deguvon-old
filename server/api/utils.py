@@ -1,17 +1,27 @@
 import re
 import os
-import django
-import click
 import time
 import json
 import codecs
+import click
 from collections import OrderedDict
 from django.db import transaction
 from scrape.constants import BASE_DIR
-from scrape.main import get_anime, scrape_page, get_all_animes, get_animes_info, get_animeUrl_by_ep
+from scrape.main import (
+    get_anime,
+    scrape_page,
+    get_all_animes,
+    get_animes_info,
+    get_animeUrl_by_ep
+)
 from scrape.models import AnimeScrape
 from api.models import Anime, Episode, Relation, State, Type, Genre
-from api.serializers import AnimeSerializer
+from api.serializers import (
+    AnimeSerializer,
+    StateSerializer,
+    TypeSerializer,
+    GenreSerializer
+)
 
 
 def create_directory():
@@ -68,9 +78,10 @@ def verify_recents(recent_links):
 
 
 def cache_directory():
+    """Do not use, this function does not save states, types and genres"""
     animes = Anime.objects.all().order_by('aid')
     list_ = []
-    with open(os.path.join(BASE_DIR, 'directory.json'), 'w') as f, click.progressbar(animes, label='Generatting directory') as bar:
+    with open(os.path.join(BASE_DIR, '_directory.json'), 'w') as f, click.progressbar(animes, label='Generatting directory') as bar:
         for anime in bar:
             list_.append((anime.aid, AnimeSerializer(
                 anime, context={'request': None}).data))
@@ -95,20 +106,26 @@ def decode_unicode(s):
     return ESCAPE_SEQUENCE_RE.sub(decode_match, s)
 
 
-def cache_directory_soft(output=True):
-    animes = Anime.objects.all().order_by('aid')
-    data = ""
-    with click.progressbar(animes, label='Generatting directory') as bar:
-        for anime in bar:
-            data += json.dumps({
-                anime.aid: AnimeSerializer(
-                    anime,
-                    context={'request': None}).data
-            }, separators=(',', ':'))[1:-1] + ","
-    data = decode_unicode('{' + data[:-1] + '}')
+def cache_directory_soft():
+    state_list = StateSerializer(State.objects.all().order_by('id'),
+                                 many=True, context={'request': None}).data
+    type_list = TypeSerializer(Type.objects.all().order_by('id'),
+                               many=True, context={'request': None}).data
+    genre_list = GenreSerializer(Genre.objects.all().order_by('id'),
+                                 many=True, context={'request': None}).data
+    anime_list = AnimeSerializer(Anime.objects.all().order_by(
+        'aid'), many=True, context={'request': None}).data
+
+    data = {
+        'states': state_list,
+        'types': type_list,
+        'genres': genre_list,
+        'animes': anime_list
+    }
+
     with open(os.path.join(BASE_DIR, 'directory.json'),
               'w', encoding='utf-8') as f:
-        f.write(data)
+        f.write(decode_unicode(json.dumps(data, separators=(',', ':'))))
 
 
 def load_directory(json_path='directory.json'):

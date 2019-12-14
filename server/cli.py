@@ -40,7 +40,7 @@ def recents(v):
             click.secho("Saving", fg='blue')
         r = get_recents()
         verify_recents(r)
-        cache_directory_soft(v)
+        cache_directory_soft()
         click.secho(f'Saved in {abs(t-time.time()):.2f}s', fg='green')
     except Exception as e:
         click.secho(f'{e}', fg='red', err=True)
