@@ -1,3 +1,6 @@
 [submodule "app"]
 	path = app
 	url = https://github.com/kuronosu/deguvon-app.git
+[submodule "server"]
+	path = server
+	url = https://github.com/kuronosu/deguvon-server.git
