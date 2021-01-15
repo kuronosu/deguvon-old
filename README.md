@@ -2,4 +2,4 @@
 
 Aplicacion movil multiplataforma para streaming de anime, basado en AnimeFLV.
 
-<img src="https://github.com/kuronosu/deguvon/blob/master/img/recent.png" alt="Deguvon main screeen" width="300">
+<img src="https://github.com/kuronosu/deguvon-old/blob/master/img/recent.png" alt="Deguvon main screeen" width="300">
